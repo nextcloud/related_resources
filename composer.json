@@ -1,0 +1,24 @@
+{
+  "name": "artificialowl/related_resources",
+  "description": "RelatedResources App",
+  "minimum-stability": "stable",
+  "license": "agpl",
+  "config": {
+    "optimize-autoloader": true,
+    "classmap-authoritative": true,
+    "autoloader-suffix": "RelatedResources"
+  },
+  "authors": [
+    {
+      "name": "Maxence Lange",
+      "email": "maxence@artificial-owl.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "OCA\\RelatedResources\\": "lib/"
+    }
+  },
+  "require": {
+  }
+}
