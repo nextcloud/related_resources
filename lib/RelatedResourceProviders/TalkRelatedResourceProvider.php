@@ -74,8 +74,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	public function getSharesRecipients(string $itemId): array {
 		$itemId = (int)$itemId;
 
-		// 1 is useless in our case, and can occur on failed int conversion via cast
-		if ($itemId <= 1) {
+		if ($itemId < 1) {
 			return [];
 		}
 
@@ -160,16 +159,16 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	 */
 	private function generateSingleId(TalkRoom $share): void {
 		try {
-			switch ($share->getShareType()) {
-				case IShare::TYPE_USER:
+			switch ($share->getActorType()) {
+				case 'users':
 					$type = Member::TYPE_USER;
 					break;
 
-				case IShare::TYPE_GROUP:
+				case 'groups':
 					$type = Member::TYPE_GROUP;
 					break;
 
-				case IShare::TYPE_CIRCLE:
+				case 'circles':
 					$type = Member::TYPE_SINGLE;
 					break;
 
@@ -177,7 +176,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 					throw new Exception();
 			}
 
-			$entity = $this->circlesManager->getFederatedUser($share->getSharedWith(), $type);
+			$entity = $this->circlesManager->getFederatedUser($share->getActorId(), $type);
 
 			$share->setEntity($entity);
 		} catch (Exception $e) {
