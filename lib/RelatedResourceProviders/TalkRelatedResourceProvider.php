@@ -42,7 +42,7 @@ use OCA\RelatedResources\IRelatedResourceProvider;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Model\TalkRoom;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
-use OCP\Share\IShare;
+use OCP\IURLGenerator;
 
 
 class TalkRelatedResourceProvider implements IRelatedResourceProvider {
@@ -53,9 +53,11 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 
 	private TalkRoomRequest $talkRoomRequest;
 	private CirclesManager $circlesManager;
+	private IURLGenerator $urlGenerator;
 
 
-	public function __construct(TalkRoomRequest $talkRoomRequest) {
+	public function __construct(IURLGenerator $urlGenerator, TalkRoomRequest $talkRoomRequest) {
+		$this->urlGenerator = $urlGenerator;
 		$this->talkRoomRequest = $talkRoomRequest;
 		$this->circlesManager = \OC::$server->get(CirclesManager::class);
 	}
@@ -138,8 +140,17 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	private function convertToRelatedResource(TalkRoom $share): IRelatedResource {
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getRoomId());
 		$related->setTitle($share->getRoomName());
-		$related->setDescription('token: ' . $share->getToken());
+		$related->setDescription('Talk Room');
 		$related->setRange(1);
+		$related->setLink(
+			$this->urlGenerator->linkToRouteAbsolute('spreed.Page.showCall',
+													 [
+														 'token' => $share->getToken()
+													 ]
+			)
+		);
+
+		//['name' => 'Page#showCall', 'url' => '/call/{token}', 'root' => '', 'verb' => 'GET'],
 
 		return $related;
 	}

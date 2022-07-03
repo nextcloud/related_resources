@@ -42,25 +42,22 @@ use OCA\RelatedResources\IRelatedResourceProvider;
 use OCA\RelatedResources\Model\FilesShare;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
+use OCP\IURLGenerator;
 use OCP\Share\IShare;
 
-
-/**
- * Class RelatedResource
- *
- * @package OCA\RelatedResources\Model
- */
 class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	use TArrayTools;
 
 
 	private const PROVIDER_ID = 'files';
 
+	private IURLGenerator $urlGenerator;
 	private FilesShareRequest $filesShareRequest;
 	private CirclesManager $circlesManager;
 
 
-	public function __construct(FilesShareRequest $filesShareRequest) {
+	public function __construct(IURLGenerator $urlGenerator, FilesShareRequest $filesShareRequest) {
+		$this->urlGenerator = $urlGenerator;
 		$this->filesShareRequest = $filesShareRequest;
 		$this->circlesManager = \OC::$server->get(CirclesManager::class);
 	}
@@ -144,7 +141,9 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	private function convertToRelatedResource(FilesShare $share): IRelatedResource {
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getFileId());
 		$related->setTitle($share->getFileTarget());
+		$related->setDescription('Files');
 		$related->setRange(1);
+		$related->setLink('/index.php/f/' . $share->getFileId());
 
 		return $related;
 	}

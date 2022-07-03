@@ -32,7 +32,6 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\RelatedResourceProviders;
 
 
-use Exception;
 use OCA\Circles\CirclesManager;
 use OCA\Circles\Model\FederatedUser;
 use OCA\Circles\Model\Member;
@@ -42,7 +41,7 @@ use OCA\RelatedResources\IRelatedResourceProvider;
 use OCA\RelatedResources\Model\DeckShare;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
-use OCP\Share\IShare;
+use OCP\IURLGenerator;
 
 
 /**
@@ -56,11 +55,13 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 
 	private const PROVIDER_ID = 'deck';
 
+	private IUrlGenerator $urlGenerator;
 	private DeckShareRequest $deckSharesRequest;
 	private CirclesManager $circlesManager;
 
 
-	public function __construct(DeckShareRequest $deckSharesRequest) {
+	public function __construct(IUrlGenerator $urlGenerator, DeckShareRequest $deckSharesRequest) {
+		$this->urlGenerator = $urlGenerator;
 		$this->deckSharesRequest = $deckSharesRequest;
 		$this->circlesManager = \OC::$server->get(CirclesManager::class);
 	}
@@ -139,7 +140,10 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	private function convertToRelatedResource(DeckShare $share): IRelatedResource {
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getBoardId());
 		$related->setTitle($share->getBoardName());
-
+		$related->setDescription('Deck board');
+		$related->setLink(
+			$this->urlGenerator->linkToRouteAbsolute('deck.page.index') . '#/board/' . $share->getBoardId()
+		);
 		$related->setRange(1);
 
 		return $related;
