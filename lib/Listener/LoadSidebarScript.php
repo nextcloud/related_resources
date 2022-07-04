@@ -2,15 +2,11 @@
 
 declare(strict_types=1);
 
-
 /**
- * Nextcloud - Related Resources
+ * @copyright Copyright (c) 2019, John Molakvoæ <skjnldsv@protonmail.com>
  *
- * This file is licensed under the Affero General Public License version 3 or
- * later. See the COPYING file.
+ * @author John Molakvoæ <skjnldsv@protonmail.com>
  *
- * @author Maxence Lange <maxence@pontapreta.net>
- * @copyright 2022
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,29 +25,23 @@ declare(strict_types=1);
  */
 
 
-namespace OCA\RelatedResources;
+namespace OCA\RelatedResources\Listener;
 
 
-interface IRelatedResource {
+use OCA\RelatedResources\AppInfo\Application;
+use OCA\Files\Event\LoadSidebar;
+use OCP\EventDispatcher\Event;
+use OCP\EventDispatcher\IEventListener;
+use OCP\Util;
 
-	public function getProviderId(): string;
 
-	public function getItemId(): string;
+class LoadSidebarScript implements IEventListener {
+	public function handle(Event $event): void {
+		if (!($event instanceof LoadSidebar)) {
+			return;
+		}
 
-	public function setTitle(string $title): self;
-
-	public function getTitle(): string;
-
-	public function setSubtitle(string $subtitle): self;
-
-	public function getSubtitle(): string;
-
-	public function setLink(string $link): self;
-
-	public function getLink(): string;
-
-	public function setRange(int $range): self;
-
-	public function getRange(): int;
+		Util::addScript(Application::APP_ID, 'related_resources-main');
+		Util::addStyle(Application::APP_ID, 'icons');
+	}
 }
-

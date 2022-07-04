@@ -32,8 +32,8 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\AppInfo;
 
 
-use OCA\Circles\CirclesManager;
-use OCA\RelatedResources\FederatedItems\TestFederatedSync;
+use OCA\Files\Event\LoadSidebar;
+use OCA\RelatedResources\Listener\LoadSidebarScript;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -64,6 +64,8 @@ class Application extends App implements IBootstrap {
 	 * @param IRegistrationContext $context
 	 */
 	public function register(IRegistrationContext $context): void {
+		$context->registerEventListener(LoadSidebar::class, LoadSidebarScript::class);
+
 	}
 
 

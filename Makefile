@@ -64,6 +64,28 @@ github-upload:
 		--name "$(package_name)-$(version).tar.gz" \
 		--file $(build_dir)/$(package_name)-$(version).tar.gz
 
+npm-init:
+	npm install
+
+npm-update:
+	npm update
+
+ # Building
+build-js:
+	npm run dev
+
+build-js-production:
+	npm run build
+
+watch-js:
+	npm run watch
+
+clean-js:
+	rm -rf js
+
+clean-dev:
+	rm -rf node_modules
+
 cs-check: composer-dev
 	composer cs:check
 

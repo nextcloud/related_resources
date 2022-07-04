@@ -141,7 +141,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	private function convertToRelatedResource(FilesShare $share): IRelatedResource {
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getFileId());
 		$related->setTitle($share->getFileTarget());
-		$related->setDescription('Files');
+		$related->setSubtitle('Files');
 		$related->setRange(1);
 		$related->setLink('/index.php/f/' . $share->getFileId());
 

@@ -50,7 +50,8 @@ class RelatedResource implements IRelatedResource, JsonSerializable, IDeserializ
 	private string $providerId;
 	private string $itemId;
 	private string $title = '';
-	private string $description = '';
+	private string $subtitle = '';
+	private string $tooltip = '';
 	private string $link = '';
 	private int $range = 0;
 
@@ -80,14 +81,33 @@ class RelatedResource implements IRelatedResource, JsonSerializable, IDeserializ
 	}
 
 
-	public function setDescription(string $description): IRelatedResource {
-		$this->description = $description;
+	public function setSubtitle(string $subtitle): IRelatedResource {
+		$this->subtitle = $subtitle;
 
 		return $this;
 	}
 
-	public function getDescription(): string {
-		return $this->description;
+	public function getSubtitle(): string {
+		return $this->subtitle;
+	}
+
+
+	/**
+	 * @param string $tooltip
+	 *
+	 * @return RelatedResource
+	 */
+	public function setTooltip(string $tooltip): self {
+		$this->tooltip = $tooltip;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTooltip(): string {
+		return $this->tooltip;
 	}
 
 
@@ -121,7 +141,7 @@ class RelatedResource implements IRelatedResource, JsonSerializable, IDeserializ
 		$this->providerId = $this->get('providerId', $data);
 		$this->itemId = $this->get('itemId', $data);
 		$this->setTitle($this->get('title', $data))
-			 ->setDescription($this->get('description', $data))
+			 ->setSubtitle($this->get('subtitle', $data))
 			 ->setLink($this->get('link', $data));
 
 		return $this;
@@ -135,7 +155,8 @@ class RelatedResource implements IRelatedResource, JsonSerializable, IDeserializ
 			'providerId' => $this->getProviderId(),
 			'itemId' => $this->getItemId(),
 			'title' => $this->getTitle(),
-			'description' => $this->getDescription(),
+			'subtitle' => $this->getSubtitle(),
+			'tooltip' => '>>>> ' . $this->getTooltip(),
 			'link' => $this->getLink()
 		];
 	}

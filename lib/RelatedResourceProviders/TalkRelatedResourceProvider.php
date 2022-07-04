@@ -140,7 +140,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	private function convertToRelatedResource(TalkRoom $share): IRelatedResource {
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getRoomId());
 		$related->setTitle($share->getRoomName());
-		$related->setDescription('Talk Room');
+		$related->setSubtitle('Talk Room');
 		$related->setRange(1);
 		$related->setLink(
 			$this->urlGenerator->linkToRouteAbsolute('spreed.Page.showCall',

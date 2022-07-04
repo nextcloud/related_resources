@@ -72,13 +72,14 @@ class ApiController extends OcsController {
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param string $type
-	 * @param string $param
+	 * @param string $providerId
+	 * @param string $itemId
 	 *
 	 * @return DataResponse
 	 * @throws OCSException
 	 */
 	public function getRelatedResources(string $providerId, string $itemId): DataResponse {
+		\OC::$server->getLogger()->log(3, '### ' . $providerId . ' ' . $itemId);
 		try {
 			$this->circlesManager->startSession();
 

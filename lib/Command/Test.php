@@ -137,7 +137,7 @@ class Test extends Base {
 					$entry->getProviderId(),
 					$entry->getItemId(),
 					$entry->getTitle(),
-					$entry->getDescription(),
+					$entry->getSubtitle(),
 					$entry->getRange(),
 					$entry->getLink()
 				]
