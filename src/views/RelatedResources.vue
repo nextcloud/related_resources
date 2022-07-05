@@ -78,8 +78,8 @@ export default {
       return t('related_resources', 'Related resources')
     },
     subTitle() {
-      if (this.loaded === false) {
-        return t('related_resources', 'loading')
+      if (this.loading) {
+        return t('related_resources', 'Loading')
       }
       return (this.resources.length === 0)
           ? t('related_resources', 'No related resources found')
@@ -95,6 +95,10 @@ export default {
     fileInfo() {
       this.resetState()
     },
+  },
+
+  beforeMount() {
+    this.fetchRelatedResources()
   },
 
   methods: {
