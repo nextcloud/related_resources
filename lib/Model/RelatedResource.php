@@ -171,7 +171,7 @@ class RelatedResource implements IRelatedResource, JsonSerializable {
 			'itemId' => $this->getItemId(),
 			'title' => $this->getTitle(),
 			'subtitle' => $this->getSubtitle(),
-			'tooltip' => '>>>> ' . $this->getTooltip(),
+			'tooltip' => $this->getTooltip(),
 			'link' => $this->getLink(),
 			'lastUpdate' => $this->getLastUpdate(),
 			'occurrence' => $this->getOccurrence()

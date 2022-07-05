@@ -155,6 +155,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getFileId());
 		$related->setTitle($share->getFileTarget());
 		$related->setSubtitle('Files');
+		$related->setTooltip('File ' . $share->getFileTarget());
 		$related->setRange(1);
 		$related->setLink('/index.php/f/' . $share->getFileId());
 
