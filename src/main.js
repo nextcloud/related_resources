@@ -22,6 +22,11 @@
 import Vue from 'vue'
 import {translate, translatePlural} from '@nextcloud/l10n'
 
+// eslint-disable-next-line
+__webpack_nonce__ = btoa(OC.requestToken)
+// eslint-disable-next-line
+__webpack_public_path__ = OC.linkTo('related_resources', 'js/')
+
 Vue.prototype.t = translate
 Vue.prototype.n = translatePlural
 Vue.config.devtools = true
@@ -31,10 +36,8 @@ window.addEventListener('DOMContentLoaded', () => {
 		return
 	}
 
-	import(/* webpackChunkName: "related" */'./views/RelatedResources').then((Module) => {
+	import('./views/RelatedResources').then((Module) => {
 		OCA.Sharing.ShareTabSections.registerSection((el, fileInfo) => {
-			// is there a better way ?
-			Module.default.methods.fetchRelatedResources()
 			return Module.default
 		})
 	})
