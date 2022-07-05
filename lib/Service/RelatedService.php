@@ -36,9 +36,11 @@ use OCA\RelatedResources\Db\ItemRequest;
 use OCA\RelatedResources\Exceptions\RelatedResourceProviderNotFound;
 use OCA\RelatedResources\IRelatedResource;
 use OCA\RelatedResources\IRelatedResourceProvider;
+use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\RelatedResourceProviders\DeckRelatedResourceProvider;
 use OCA\RelatedResources\RelatedResourceProviders\FilesRelatedResourceProvider;
 use OCA\RelatedResources\RelatedResourceProviders\TalkRelatedResourceProvider;
+use OCA\RelatedResources\Tools\Exceptions\ItemNotFoundException;
 
 class RelatedService {
 
@@ -58,8 +60,24 @@ class RelatedService {
 	 * @throws RelatedResourceProviderNotFound
 	 */
 	public function getRelatedToItem(string $providerId, string $itemId): array {
+		$result = $this->retrieveRelatedToItem($providerId, $itemId);
+
+		return $this->orderedResult($result);
+	}
+
+
+	/**
+	 * @param string $providerId
+	 * @param string $itemId
+	 *
+	 * @return IRelatedResource[]
+	 * @throws RelatedResourceProviderNotFound
+	 */
+	private function retrieveRelatedToItem(string $providerId, string $itemId): array {
 		$recipients = $this->getRelatedResourceProvider($providerId)
 						   ->getSharesRecipients($itemId);
+
+//		$this->filterRecipients($recipients);
 
 		$result = [];
 		foreach ($this->getRelatedResourceProviders() as $provider) {
@@ -70,6 +88,13 @@ class RelatedService {
 
 			foreach ($provider->getRelatedToEntities($recipients) as $related) {
 				if (in_array($related->getItemId(), $known)) {
+					try {
+						$knownRecipient = $this->extractRecipientFromResult(
+							$related->getProviderId(), $related->getItemId(), $result
+						);
+						$knownRecipient->found();
+					} catch (ItemNotFoundException $e) {
+					}
 					continue;
 				}
 
@@ -79,6 +104,42 @@ class RelatedService {
 		}
 
 		return $result;
+	}
+
+
+	/**
+	 * @param string $providerId
+	 * @param string $itemId
+	 * @param IRelatedResource[] $resources
+	 *
+	 * @return RelatedResource
+	 * @throws ItemNotFoundException
+	 */
+	private function extractRecipientFromResult(
+		string $providerId,
+		string $itemId,
+		array $resources
+	): IRelatedResource {
+		foreach ($resources as $resource) {
+			if ($providerId === $resource->getProviderId()
+				&& $itemId === $resource->getItemId()) {
+				return $resource;
+			}
+		}
+
+		throw new ItemNotFoundException();
+	}
+
+
+	/**
+	 * @param IRelatedResource[] $result
+	 *
+	 * @return IRelatedResource[]
+	 */
+	private function orderedResult(array $result): array {
+		$ordered = $result;
+
+		return $ordered;
 	}
 
 
@@ -108,7 +169,5 @@ class RelatedService {
 
 		throw new RelatedResourceProviderNotFound();
 	}
-
-
 }
 

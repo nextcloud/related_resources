@@ -53,5 +53,13 @@ interface IRelatedResource {
 	public function setRange(int $range): self;
 
 	public function getRange(): int;
+
+	public function setLastUpdate(int $time): self;
+
+	public function getLastUpdate(): int;
+
+	public function found(): self;
+
+	public function getOccurrence(): int;
 }
 

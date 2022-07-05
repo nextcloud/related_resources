@@ -33,6 +33,7 @@ namespace OCA\RelatedResources\RelatedResourceProviders;
 
 
 use Exception;
+use OC\User\NoUserException;
 use OCA\Circles\CirclesManager;
 use OCA\Circles\Model\FederatedUser;
 use OCA\Circles\Model\Member;
@@ -42,6 +43,10 @@ use OCA\RelatedResources\IRelatedResourceProvider;
 use OCA\RelatedResources\Model\FilesShare;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
+use OCP\Files\InvalidPathException;
+use OCP\Files\IRootFolder;
+use OCP\Files\NotFoundException;
+use OCP\Files\NotPermittedException;
 use OCP\IURLGenerator;
 use OCP\Share\IShare;
 
@@ -51,12 +56,18 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 
 	private const PROVIDER_ID = 'files';
 
+	private IRootFolder $rootFolder;
 	private IURLGenerator $urlGenerator;
 	private FilesShareRequest $filesShareRequest;
 	private CirclesManager $circlesManager;
 
 
-	public function __construct(IURLGenerator $urlGenerator, FilesShareRequest $filesShareRequest) {
+	public function __construct(
+		IRootFolder $rootFolder,
+		IURLGenerator $urlGenerator,
+		FilesShareRequest $filesShareRequest
+	) {
+		$this->rootFolder = $rootFolder;
 		$this->urlGenerator = $urlGenerator;
 		$this->filesShareRequest = $filesShareRequest;
 		$this->circlesManager = \OC::$server->get(CirclesManager::class);
@@ -81,7 +92,8 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 			return [];
 		}
 
-		$shares = $this->filesShareRequest->getSharesByItemId($itemId);
+		$itemIds = $this->getItemIdsFromParentPath($itemId);
+		$shares = $this->filesShareRequest->getSharesByItemIds($itemIds);
 		$this->generateSingleIds($shares);
 
 		return array_filter(
@@ -105,6 +117,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 
 		return $result;
 	}
+
 
 	/**
 	 * @param FederatedUser $federatedUser
@@ -185,5 +198,37 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 			$share->setEntity($entity);
 		} catch (Exception $e) {
 		}
+	}
+
+
+	/**
+	 * @param int $itemId
+	 *
+	 * @return int[]
+	 * @throws InvalidPathException
+	 * @throws NotFoundException
+	 * @throws NotPermittedException
+	 * @throws NoUserException
+	 */
+	private function getItemIdsFromParentPath(int $itemId): array {
+		$itemIds = [$itemId];
+		$current = $this->circlesManager->getCurrentFederatedUser();
+		if (!$current->isLocal() || $current->getUserType() !== Member::TYPE_USER) {
+			return $itemIds;
+		}
+		$paths = $this->rootFolder->getUserFolder($current->getUserId())
+								  ->getById($itemId);
+
+		foreach ($paths as $path) {
+			while (true) {
+				$path = $path->getParent();
+				if ($path->getId() === 0) {
+					break;
+				}
+				$itemIds[] = $path->getId();
+			}
+		}
+
+		return $itemIds;
 	}
 }

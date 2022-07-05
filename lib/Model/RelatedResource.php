@@ -34,7 +34,6 @@ namespace OCA\RelatedResources\Model;
 
 use JsonSerializable;
 use OCA\RelatedResources\IRelatedResource;
-use OCA\RelatedResources\Tools\IDeserializable;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 
 
@@ -43,7 +42,7 @@ use OCA\RelatedResources\Tools\Traits\TArrayTools;
  *
  * @package OCA\RelatedResources\Model
  */
-class RelatedResource implements IRelatedResource, JsonSerializable, IDeserializable {
+class RelatedResource implements IRelatedResource, JsonSerializable {
 	use TArrayTools;
 
 
@@ -54,6 +53,9 @@ class RelatedResource implements IRelatedResource, JsonSerializable, IDeserializ
 	private string $tooltip = '';
 	private string $link = '';
 	private int $range = 0;
+	private int $lastUpdate = 0;
+	private int $occurrence = 1;
+
 
 	public function __construct(string $providerId = '', string $itemId = '') {
 		$this->providerId = $providerId;
@@ -132,20 +134,33 @@ class RelatedResource implements IRelatedResource, JsonSerializable, IDeserializ
 	}
 
 
-	/**
-	 * @param array $data
-	 *
-	 * @return IDeserializable
-	 */
-	public function import(array $data): IDeserializable {
-		$this->providerId = $this->get('providerId', $data);
-		$this->itemId = $this->get('itemId', $data);
-		$this->setTitle($this->get('title', $data))
-			 ->setSubtitle($this->get('subtitle', $data))
-			 ->setLink($this->get('link', $data));
+	public function setLastUpdate(int $time): IRelatedResource {
+		$this->lastUpdate = $time;
 
 		return $this;
 	}
+
+	public function getLastUpdate(): int {
+		return $this->lastUpdate;
+	}
+
+
+	/**
+	 * @return IRelatedResource
+	 */
+	public function found(): IRelatedResource {
+		$this->occurrence++;
+
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getOccurrence(): int {
+		return $this->occurrence;
+	}
+
 
 	/**
 	 * @return array
@@ -157,7 +172,9 @@ class RelatedResource implements IRelatedResource, JsonSerializable, IDeserializ
 			'title' => $this->getTitle(),
 			'subtitle' => $this->getSubtitle(),
 			'tooltip' => '>>>> ' . $this->getTooltip(),
-			'link' => $this->getLink()
+			'link' => $this->getLink(),
+			'lastUpdate' => $this->getLastUpdate(),
+			'occurrence' => $this->getOccurrence()
 		];
 	}
 }

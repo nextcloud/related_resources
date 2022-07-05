@@ -52,6 +52,19 @@ class FilesShareRequest extends FilesShareRequestBuilder {
 
 
 	/**
+	 * @param array $itemIds
+	 *
+	 * @return FilesShare[]
+	 */
+	public function getSharesByItemIds(array $itemIds): array {
+		$qb = $this->getFilesShareSelectSql();
+		$qb->limitInArray('file_source', $itemIds);
+
+		return $this->getItemsFromRequest($qb);
+	}
+
+
+	/**
 	 * @param string $singleId
 	 *
 	 * @return FilesShare[]
