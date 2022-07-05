@@ -93,7 +93,7 @@ export default {
 
   watch: {
     fileInfo() {
-      this.resetState()
+      this.fetchRelatedResources()
     },
   },
 
@@ -103,11 +103,9 @@ export default {
 
   methods: {
     async fetchRelatedResources() {
-      if (this.loading === true || this.loaded === true) {
-        return
-      }
-
       this.loading = true
+      this.loaded = false
+	  this.resources = []
       try {
         const url = generateOcsUrl(`apps/related_resources/resources/files/10?format=json`, 2)
         const resources = await axios.get(url.replace(/\/$/, ''))
@@ -124,15 +122,6 @@ export default {
         this.error = false
         this.loading = false
       }
-    },
-
-    /**
-     * Reset current component state
-     */
-    resetState() {
-      this.loaded = false
-      this.loading = false
-      this.resources = []
     },
 
     /**
