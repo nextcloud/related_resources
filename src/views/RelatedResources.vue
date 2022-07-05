@@ -33,8 +33,9 @@
                          :key="resource.itemId"
                          class="related-entry__resource"
                          :title="resource.title"
-                         :subtitle="resource.subtitle">
-      <ActionLink icon="icon-confirm" :href="resource.link">
+                         :subtitle="resource.subtitle"
+						 :tooltip="resource.tooltip">
+      <ActionLink icon="icon-confirm" :href="resource.link" target="_blank">
         {{ resource.link }}
       </ActionLink>
     </RelatedResourceItem>
@@ -107,7 +108,7 @@ export default {
       this.loaded = false
 	  this.resources = []
       try {
-        const url = generateOcsUrl(`apps/related_resources/resources/files/10?format=json`, 2)
+        const url = generateOcsUrl(`apps/related_resources/resources/files/${this.fileInfo.id}?format=json`, 2)
         const resources = await axios.get(url.replace(/\/$/, ''))
         this.resources = resources.data.ocs.data
 
@@ -115,6 +116,7 @@ export default {
 
         this.loaded = true
       } catch (error) {
+		console.error(error)
         OC.Notification.showTemporary(t('related_resources', 'Unable to fetch the related resources'),
             {type: 'error'})
         this.error = true

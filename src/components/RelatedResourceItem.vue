@@ -22,13 +22,15 @@
 
 <template>
 	<li class="related-entry">
-		<slot name="avatar" />
 		<div v-tooltip="tooltip" class="related-entry__desc">
 			<h5>{{ title }}</h5>
 			<p v-if="subtitle">
 				{{ subtitle }}
 			</p>
 		</div>
+		<Actions v-if="$slots['default']" menu-align="right" class="sharing-entry__actions">
+			<slot />
+		</Actions>
 	</li>
 </template>
 

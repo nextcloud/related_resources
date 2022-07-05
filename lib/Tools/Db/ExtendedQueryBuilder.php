@@ -555,7 +555,7 @@ class ExtendedQueryBuilder extends QueryBuilder {
 
 		$expr = $this->expr();
 
-		return $expr->in($field, $this->createNamedParameter($values, IQueryBuilder::PARAM_STR_ARRAY));
+		return (string)$expr->in($field, $this->createNamedParameter($values, IQueryBuilder::PARAM_STR_ARRAY));
 	}
 
 
