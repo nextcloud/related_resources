@@ -34,6 +34,7 @@ namespace OCA\RelatedResources;
 
 interface IRelatedResource {
 
+	// too many method, needs to create sub-model ?
 	public function getProviderId(): string;
 
 	public function getItemId(): string;
@@ -46,20 +47,34 @@ interface IRelatedResource {
 
 	public function getSubtitle(): string;
 
-	public function setLink(string $link): self;
+	public function setUrl(string $url): self;
 
-	public function getLink(): string;
+	public function getUrl(): string;
 
 	public function setRange(int $range): self;
 
 	public function getRange(): int;
 
-	public function setLastUpdate(int $time): self;
+	public function getLinkCreator(): string;
 
-	public function getLastUpdate(): int;
+	public function getLinkRecipient(): string;
 
-	public function found(): self;
+	public function setLinkCreator(string $linkCreator): self;
 
-	public function getOccurrence(): int;
+	public function setLinkRecipient(string $linkRecipient): self;
+
+	public function getLinkCreation(): int;
+
+	public function getItemCreation(): int;
+
+	public function setItemLastUpdate(int $time): self;
+
+	public function getItemLastUpdate(): int;
+
+	public function improve(float $quality = 0, string $type = 'undefined'): self;
+
+	public function getImprovements(): array;
+
+	public function getScore(): float;
 }
 

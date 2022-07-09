@@ -72,6 +72,11 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	}
 
 
+	public function loadWeightCalculator(): array {
+		return [];
+	}
+
+
 	/**
 	 * @param string $itemId
 	 *
@@ -92,36 +97,22 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 
 
 	/**
-	 * @param FederatedUser[] $entities
+	 * @param FederatedUser $entity
 	 *
 	 * @return IRelatedResource[]
 	 */
-	public function getRelatedToEntities(array $entities): array {
-		$result = [];
-		foreach ($entities as $entity) {
-			$result = array_merge($result, $this->getRelatedToEntity($entity));
-		}
-
-		return $result;
-	}
-
-	/**
-	 * @param FederatedUser $federatedUser
-	 *
-	 * @return IRelatedResource[]
-	 */
-	public function getRelatedToEntity(FederatedUser $federatedUser): array {
-		switch ($federatedUser->getBasedOn()->getSource()) {
+	public function getRelatedToEntity(FederatedUser $entity): array {
+		switch ($entity->getBasedOn()->getSource()) {
 			case Member::TYPE_USER:
 				// TODO: check other direct share from the same origin and from around the same time of creation !?
 				return [];
 
 			case Member::TYPE_GROUP:
-				$shares = $this->deckSharesRequest->getSharesToGroup($federatedUser->getUserId());
+				$shares = $this->deckSharesRequest->getSharesToGroup($entity->getUserId());
 				break;
 
 			case Member::TYPE_CIRCLE:
-				$shares = $this->deckSharesRequest->getSharesToCircle($federatedUser->getSingleId());
+				$shares = $this->deckSharesRequest->getSharesToCircle($entity->getSingleId());
 				break;
 
 			default:
@@ -142,7 +133,7 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		$related->setTitle($share->getBoardName());
 		$related->setSubtitle('Deck board');
 		$related->setTooltip('Deck board \'' . $share->getBoardName() . '\'');
-		$related->setLink(
+		$related->setUrl(
 			$this->urlGenerator->linkToRouteAbsolute('deck.page.index') . '#/board/' . $share->getBoardId()
 		);
 		$related->setRange(1);

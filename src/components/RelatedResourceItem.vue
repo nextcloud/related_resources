@@ -73,7 +73,7 @@ export default {
       type: String,
       default: '',
     },
-    link: {
+    url: {
 			type: String,
 			default: '',
 		},

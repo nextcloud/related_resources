@@ -47,7 +47,9 @@ class FilesShare implements IQueryRow, JsonSerializable {
 	private ?FederatedUser $entity = null;
 	private int $fileId = 0;
 	private string $fileTarget = '';
-
+	private int $fileLastUpdate = 0;
+	private int $shareTime = 0;
+	private string $shareCreator = '';
 
 	public function __construct() {
 	}
@@ -149,6 +151,63 @@ class FilesShare implements IQueryRow, JsonSerializable {
 
 
 	/**
+	 * @param int $fileLastUpdate
+	 *
+	 * @return FilesShare
+	 */
+	public function setFileLastUpdate(int $fileLastUpdate): self {
+		$this->fileLastUpdate = $fileLastUpdate;
+
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getFileLastUpdate(): int {
+		return $this->fileLastUpdate;
+	}
+
+
+	/**
+	 * @param int $shareTime
+	 *
+	 * @return FilesShare
+	 */
+	public function setShareTime(int $shareTime): self {
+		$this->shareTime = $shareTime;
+
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getShareTime(): int {
+		return $this->shareTime;
+	}
+
+
+	/**
+	 * @param string $shareCreator
+	 *
+	 * @return FilesShare
+	 */
+	public function setShareCreator(string $shareCreator): self {
+		$this->shareCreator = $shareCreator;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getShareCreator(): string {
+		return $this->shareCreator;
+	}
+
+
+	/**
 	 * @param array $data
 	 *
 	 * @return IQueryRow
@@ -156,8 +215,10 @@ class FilesShare implements IQueryRow, JsonSerializable {
 	public function importFromDatabase(array $data): IQueryRow {
 		$this->setShareType($this->getInt('share_type', $data))
 			 ->setSharedWith($this->get('share_with', $data))
+			 ->setShareCreator($this->get('uid_initiator', $data))
 			 ->setFileId($this->getInt('file_source', $data))
-			 ->setFileTarget($this->get('file_target', $data));
+			 ->setFileTarget($this->get('file_target', $data))
+			 ->setShareTime($this->getInt('stime', $data));
 
 		return $this;
 	}
@@ -169,8 +230,11 @@ class FilesShare implements IQueryRow, JsonSerializable {
 		return [
 			'shareType' => $this->getShareType(),
 			'sharedWith' => $this->getSharedWith(),
+			'shareCreator' => $this->getShareCreator(),
 			'fileId' => $this->getFileId(),
 			'fileTarget' => $this->getFileTarget(),
+			'fileLastUpdate' => $this->getFileLastUpdate(),
+			'shareTime' => $this->getShareTime(),
 			'entity' => $this->getEntity()
 		];
 	}

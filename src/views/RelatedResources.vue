@@ -35,8 +35,8 @@
                          :title="resource.title"
                          :subtitle="resource.subtitle"
 						 :tooltip="resource.tooltip">
-      <ActionLink icon="icon-confirm" :href="resource.link" target="_blank">
-        {{ resource.link }}
+      <ActionLink icon="icon-confirm" :href="resource.url" target="_blank">
+        {{ resource.url }}
       </ActionLink>
     </RelatedResourceItem>
   </div>

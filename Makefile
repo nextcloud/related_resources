@@ -105,7 +105,7 @@ composer-dev:
 	composer install --prefer-dist --dev
 	composer upgrade --prefer-dist --dev
 
-appstore: clean composer
+appstore: clean clean-js composer npm-init build-js-production
 	mkdir -p $(sign_dir)
 	rsync -a \
 	--exclude=/build \
@@ -121,6 +121,7 @@ appstore: clean composer
 	--exclude=/README.md \
 	--exclude=/composer.json \
 	--exclude=/testConfiguration.json \
+	--exclude=node_modules \
 	--exclude=/composer.lock \
 	--exclude=/.gitattributes \
 	--exclude=/.gitignore \

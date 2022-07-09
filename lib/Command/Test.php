@@ -125,7 +125,7 @@ class Test extends Base {
 				'Item Id',
 				'Title',
 				'Description',
-				'Range',
+				'Score',
 				'Link'
 			]
 		);
@@ -138,8 +138,8 @@ class Test extends Base {
 					$entry->getItemId(),
 					$entry->getTitle(),
 					$entry->getSubtitle(),
-					$entry->getRange(),
-					$entry->getLink()
+					$entry->getScore(),
+					$entry->getUrl()
 				]
 			);
 		}

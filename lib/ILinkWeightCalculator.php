@@ -32,36 +32,13 @@ declare(strict_types=1);
 namespace OCA\RelatedResources;
 
 
-use OCA\Circles\Model\FederatedUser;
-
-interface IRelatedResourceProvider {
-
-	public function getProviderId(): string;
+interface ILinkWeightCalculator {
 
 	/**
-	 * returns the list of ILinkWeightCalculator provided by this app
-	 *
-	 * @return string[]
+	 * @param IRelatedResource[] $paths
+	 * @param IRelatedResource[] $result
 	 */
-	public function loadWeightCalculator(): array;
-
-	/**
-	 * returns all circles singleId an item is shared to.
-	 *
-	 * @param string $itemId
-	 *
-	 * @return FederatedUser[]
-	 */
-	public function getSharesRecipients(string $itemId): array;
-
-	/**
-	 * returns all shares done to multiple entities
-	 *
-	 * @param FederatedUser $entity
-	 *
-	 * @return IRelatedResource[]
-	 */
-	public function getRelatedToEntity(FederatedUser $entity): array;
+	public function weight(array $paths, array &$result): void;
 
 }
 

@@ -79,6 +79,11 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	}
 
 
+	public function loadWeightCalculator(): array {
+		return [];
+	}
+
+
 	/**
 	 * @param string $itemId
 	 *
@@ -105,37 +110,22 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 
 
 	/**
-	 * @param FederatedUser[] $entities
+	 * @param FederatedUser $entity
 	 *
 	 * @return IRelatedResource[]
 	 */
-	public function getRelatedToEntities(array $entities): array {
-		$result = [];
-		foreach ($entities as $entity) {
-			$result = array_merge($result, $this->getRelatedToEntity($entity));
-		}
-
-		return $result;
-	}
-
-
-	/**
-	 * @param FederatedUser $federatedUser
-	 *
-	 * @return IRelatedResource[]
-	 */
-	public function getRelatedToEntity(FederatedUser $federatedUser): array {
-		switch ($federatedUser->getBasedOn()->getSource()) {
+	public function getRelatedToEntity(FederatedUser $entity): array {
+		switch ($entity->getBasedOn()->getSource()) {
 			case Member::TYPE_USER:
 				// TODO: check other direct share from the same origin and from around the same time of creation !?
 				return [];
 
 			case Member::TYPE_GROUP:
-				$shares = $this->filesShareRequest->getSharesToGroup($federatedUser->getUserId());
+				$shares = $this->filesShareRequest->getSharesToGroup($entity->getUserId());
 				break;
 
 			case Member::TYPE_CIRCLE:
-				$shares = $this->filesShareRequest->getSharesToCircle($federatedUser->getSingleId());
+				$shares = $this->filesShareRequest->getSharesToCircle($entity->getSingleId());
 				break;
 
 			default:
@@ -157,7 +147,10 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 		$related->setSubtitle('Files');
 		$related->setTooltip('File ' . $share->getFileTarget());
 		$related->setRange(1);
-		$related->setLink('/index.php/f/' . $share->getFileId());
+		$related->setItemLastUpdate($share->getFileLastUpdate());
+		$related->setLinkCreator($share->getShareCreator());
+		$related->setLinkCreation($share->getShareTime());
+		$related->setUrl('/index.php/f/' . $share->getFileId());
 
 		return $related;
 	}

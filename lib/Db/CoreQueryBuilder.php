@@ -61,8 +61,10 @@ class CoreQueryBuilder {
 		self::TABLE_FILES_SHARE => [
 			'share_type',
 			'share_with',
+			'uid_initiator',
 			'file_source',
-			'file_target'
+			'file_target',
+			'stime'
 		],
 		self::TABLE_DECK_SHARE => [
 			'board_id',

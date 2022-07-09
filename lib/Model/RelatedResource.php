@@ -46,16 +46,28 @@ class RelatedResource implements IRelatedResource, JsonSerializable {
 	use TArrayTools;
 
 
+	public static float $IMPROVE_LOW_LINK = 1.1;
+	public static float $IMPROVE_MEDIUM_LINK = 1.3;
+	public static float $IMPROVE_HIGH_LINK = 1.8;
+	public static float $IMPROVE_OCCURRENCE = 1.4;
+
+
 	private string $providerId;
 	private string $itemId;
 	private string $title = '';
 	private string $subtitle = '';
 	private string $tooltip = '';
-	private string $link = '';
+	private string $url = '';
 	private int $range = 0;
-	private int $lastUpdate = 0;
-	private int $occurrence = 1;
+	private int $linkCreation = 0;
+	private int $itemCreation = 0;
+	private int $itemLastUpdate = 0;
+	private float $score = 1;
+	private array $improvements = [];
+	private string $linkCreator = '';
+	private string $linkRecipient = '';
 
+//	private ?FederatedUser $entity = null;
 
 	public function __construct(string $providerId = '', string $itemId = '') {
 		$this->providerId = $providerId;
@@ -113,14 +125,14 @@ class RelatedResource implements IRelatedResource, JsonSerializable {
 	}
 
 
-	public function setLink(string $link): IRelatedResource {
-		$this->link = $link;
+	public function setUrl(string $url): IRelatedResource {
+		$this->url = $url;
 
 		return $this;
 	}
 
-	public function getLink(): string {
-		return $this->link;
+	public function getUrl(): string {
+		return $this->url;
 	}
 
 	public function setRange(int $range): IRelatedResource {
@@ -134,22 +146,13 @@ class RelatedResource implements IRelatedResource, JsonSerializable {
 	}
 
 
-	public function setLastUpdate(int $time): IRelatedResource {
-		$this->lastUpdate = $time;
-
-		return $this;
-	}
-
-	public function getLastUpdate(): int {
-		return $this->lastUpdate;
-	}
-
-
 	/**
-	 * @return IRelatedResource
+	 * @param int $linkCreation
+	 *
+	 * @return RelatedResource
 	 */
-	public function found(): IRelatedResource {
-		$this->occurrence++;
+	public function setLinkCreation(int $linkCreation): self {
+		$this->linkCreation = $linkCreation;
 
 		return $this;
 	}
@@ -157,10 +160,118 @@ class RelatedResource implements IRelatedResource, JsonSerializable {
 	/**
 	 * @return int
 	 */
-	public function getOccurrence(): int {
-		return $this->occurrence;
+	public function getLinkCreation(): int {
+		return $this->linkCreation;
 	}
 
+
+	public function setLinkCreator(string $linkCreator): self {
+		$this->linkCreator = $linkCreator;
+
+		return $this;
+	}
+
+	public function getLinkCreator(): string {
+		return $this->linkCreator;
+	}
+
+
+	public function setLinkRecipient(string $linkRecipient): self {
+		$this->linkRecipient = $linkRecipient;
+
+		return $this;
+	}
+
+	public function getLinkRecipient(): string {
+		return $this->linkRecipient;
+	}
+
+
+	/**
+	 * @param int $itemCreation
+	 *
+	 * @return RelatedResource
+	 */
+	public function setItemCreation(int $itemCreation): self {
+		$this->itemCreation = $itemCreation;
+
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getItemCreation(): int {
+		return $this->itemCreation;
+	}
+
+
+	public function setItemLastUpdate(int $time): IRelatedResource {
+		$this->itemLastUpdate = $time;
+
+		return $this;
+	}
+
+	public function getItemLastUpdate(): int {
+		return $this->itemLastUpdate;
+	}
+
+
+	/**
+	 * @param float|int $quality
+	 * @param string $type
+	 *
+	 * @return IRelatedResource
+	 */
+	public function improve(float $quality = 0, string $type = 'undefined'): IRelatedResource {
+		if ($quality === 0) {
+			$quality = self::$IMPROVE_LOW_LINK;
+		}
+
+		$this->score = $this->score * $quality;
+		$this->improvements[] = [
+			'type' => $type,
+			'quality' => $quality
+		];
+
+		return $this;
+	}
+
+
+	/**
+	 * @return float
+	 */
+	public function getScore(): float {
+		return $this->score;
+	}
+
+
+	/**
+	 * @return array
+	 */
+	public function getImprovements(): array {
+		return $this->improvements;
+	}
+
+//
+//	/**
+//	 * @param FederatedUser $entity
+//	 *
+//	 * @return RelatedResource
+//	 */
+//	public function setEntity(FederatedUser $entity): self {
+//		$this->entity = $entity;
+//
+//		return $this;
+//	}
+//
+//	/**
+//	 * @return FederatedUser
+//	 */
+//	public function getEntity(): ?FederatedUser {
+//		return $this->entity;
+//	}
+//
 
 	/**
 	 * @return array
@@ -172,9 +283,13 @@ class RelatedResource implements IRelatedResource, JsonSerializable {
 			'title' => $this->getTitle(),
 			'subtitle' => $this->getSubtitle(),
 			'tooltip' => $this->getTooltip(),
-			'link' => $this->getLink(),
-			'lastUpdate' => $this->getLastUpdate(),
-			'occurrence' => $this->getOccurrence()
+			'url' => $this->getUrl(),
+			'lastUpdate' => $this->getItemLastUpdate(),
+			'linkRecipient' => $this->getLinkRecipient(),
+			'linkCreator' => $this->getLinkCreator(),
+			'creation' => $this->getLinkCreation(),
+			'score' => $this->getScore(),
+			'improvements' => $this->getImprovements()
 		];
 	}
 }
