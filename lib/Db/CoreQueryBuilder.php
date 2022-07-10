@@ -52,6 +52,12 @@ class CoreQueryBuilder {
 	public const TABLE_TALK_ATTENDEE = 'talk_attendees';
 	public const TABLE_TALK_ROOM = 'talk_rooms';
 
+	public const TABLE_DAV_SHARE = 'dav_shares';
+	public const TABLE_CALENDARS = 'calendars';
+	public const TABLE_CAL_OBJECTS = 'calendarobjects';
+	public const TABLE_CAL_OBJ_PROPS = 'calendarobjects_props';
+
+
 	protected ConfigService $configService;
 	private array $tables = [
 	];
@@ -82,6 +88,21 @@ class CoreQueryBuilder {
 		self::TABLE_TALK_ROOM => [
 			'name',
 			'token'
+		],
+		self::TABLE_DAV_SHARE => [
+			'principaluri',
+			'resourceid'
+		],
+		self::TABLE_CALENDARS => [
+			'principaluri',
+			'displayname'
+		],
+		self::TABLE_CAL_OBJECTS => [
+			'firstoccurence',
+			'lastoccurence'
+		],
+		self::TABLE_CAL_OBJ_PROPS => [
+			'value'
 		]
 	];
 

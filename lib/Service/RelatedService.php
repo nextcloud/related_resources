@@ -39,6 +39,7 @@ use OCA\RelatedResources\IRelatedResource;
 use OCA\RelatedResources\IRelatedResourceProvider;
 use OCA\RelatedResources\LinkWeightCalculators\TimeWeightCalculator;
 use OCA\RelatedResources\Model\RelatedResource;
+use OCA\RelatedResources\RelatedResourceProviders\CalendarRelatedResourceProvider;
 use OCA\RelatedResources\RelatedResourceProviders\DeckRelatedResourceProvider;
 use OCA\RelatedResources\RelatedResourceProviders\FilesRelatedResourceProvider;
 use OCA\RelatedResources\RelatedResourceProviders\TalkRelatedResourceProvider;
@@ -111,6 +112,13 @@ class RelatedService {
 				foreach ($provider->getRelatedToEntity($entity) as $related) {
 					$related->setLinkRecipient($entity->getSingleId());
 
+					// if RelatedResource is based on current item, store it for weightResult() later in the process
+					// also we do not want to filter duplicate
+					if ($provider->getProviderId() === $providerId && $related->getItemId() === $itemId) {
+						$itemPaths[] = $related;
+					}
+
+
 					// improve score on duplicate result
 					if (in_array($related->getItemId(), $known)) {
 						try {
@@ -123,13 +131,11 @@ class RelatedService {
 							$knownRecipient->improve(RelatedResource::$IMPROVE_OCCURRENCE, 'occurrence');
 						} catch (ItemNotFoundException $e) {
 						}
+
 						continue;
 					}
 
-					// if RelatedResource is based on current item, store it for weightResult() later in the process
-					if ($provider->getProviderId() === $providerId && $related->getItemId() === $itemId) {
-						$itemPaths[] = $related;
-					} else {
+					if ($provider->getProviderId() !== $providerId || $related->getItemId() !== $itemId) {
 						$result[] = $related;
 					}
 
@@ -153,8 +159,6 @@ class RelatedService {
 	 * @return void
 	 */
 	private function weightResult(array $paths, array &$result): void {
-		// eventually, add the score of paths to related result if doable.
-
 		foreach ($this->getWeightCalculators() as $weightCalculator) {
 			$weightCalculator->weight($paths, $result);
 		}
@@ -223,6 +227,7 @@ class RelatedService {
 			\OC::$server->get(FilesRelatedResourceProvider::class),
 			\OC::$server->get(DeckRelatedResourceProvider::class),
 			\OC::$server->get(TalkRelatedResourceProvider::class),
+			\OC::$server->get(CalendarRelatedResourceProvider::class),
 		];
 	}
 
