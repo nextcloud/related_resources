@@ -2,7 +2,7 @@
 
 return [
 	'ocs'    => [
-		['name' => 'Api#getRelatedResources', 'url' => '/resources/{providerId}/{itemId}', 'verb' => 'GET']
+		['name' => 'Api#getRelatedResources', 'url' => '/related/{providerId}/{itemId}', 'verb' => 'GET']
 	],
 	'routes' => []
 ];

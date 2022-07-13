@@ -108,11 +108,9 @@ export default {
       this.loaded = false
 	  this.resources = []
       try {
-        const url = generateOcsUrl(`apps/related_resources/resources/files/${this.fileInfo.id}?format=json`, 2)
+        const url = generateOcsUrl(`apps/related_resources/related/files/${this.fileInfo.id}?format=json`, 2)
         const resources = await axios.get(url.replace(/\/$/, ''))
         this.resources = resources.data.ocs.data
-
-        console.log('--- ' + JSON.stringify(this.resources))
 
         this.loaded = true
       } catch (error) {
