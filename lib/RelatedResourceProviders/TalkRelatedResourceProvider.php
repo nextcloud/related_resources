@@ -86,7 +86,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 		}
 
 		$shares = $this->talkRoomRequest->getSharesByItemId($itemId);
-		$this->generateSingleIds($shares);
+		$this->assignEntities($shares);
 
 		return array_filter(
 			array_map(function (TalkRoom $share): ?FederatedUser {
@@ -104,7 +104,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	public function getRelatedToEntity(FederatedUser $entity): array {
 		switch ($entity->getBasedOn()->getSource()) {
 			case Member::TYPE_USER:
-				// TODO: check other direct share from the same origin and from around the same time of creation !?
+				$shares = $this->talkRoomRequest->getSharesToUser($entity->getUserId());
 				return [];
 
 			case Member::TYPE_GROUP:
@@ -151,16 +151,16 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	/**
 	 * @param TalkRoom[] $shares
 	 */
-	private function generateSingleIds(array $shares): void {
+	private function assignEntities(array $shares): void {
 		foreach ($shares as $share) {
-			$this->generateSingleId($share);
+			$this->assignEntity($share);
 		}
 	}
 
 	/**
 	 * @param TalkRoom $share
 	 */
-	private function generateSingleId(TalkRoom $share): void {
+	private function assignEntity(TalkRoom $share): void {
 		try {
 			switch ($share->getActorType()) {
 				case 'users':

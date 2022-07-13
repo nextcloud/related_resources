@@ -88,4 +88,24 @@ class TalkRoomRequest extends TalkRoomRequestBuilder {
 
 		return $this->getItemsFromRequest($qb);
 	}
+
+	/**
+	 * @param string $userName
+	 *
+	 * @return TalkRoom[]
+	 */
+	public function getSharesToUser(string $userName): array {
+		$qb = $this->getTalkRoomSelectSql();
+		$qb->limit('actor_type', 'users');
+		$qb->limit('actor_id', $userName);
+
+		$qb->generateSelectAlias(self::$externalTables[self::TABLE_TALK_ROOM], 'tr', 'tr');
+		$qb->innerJoin(
+			$qb->getDefaultSelectAlias(), self::TABLE_TALK_ROOM, 'tr',
+			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.room_id', 'tr.id')
+		);
+
+		return $this->getItemsFromRequest($qb);
+	}
+
 }
