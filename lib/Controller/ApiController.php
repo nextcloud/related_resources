@@ -34,6 +34,7 @@ namespace OCA\RelatedResources\Controller;
 
 use Exception;
 use OCA\Circles\CirclesManager;
+use OCA\RelatedResources\Service\ConfigService;
 use OCA\RelatedResources\Service\RelatedService;
 use OCA\RelatedResources\Tools\Traits\TDeserialize;
 use OCA\RelatedResources\Tools\Traits\TNCLogger;
@@ -52,19 +53,21 @@ class ApiController extends OcsController {
 
 	private IUserSession $userSession;
 	private RelatedService $relatedService;
+	private ConfigService $configService;
 	private CirclesManager $circlesManager;
-
 
 	public function __construct(
 		string $appName,
 		IRequest $request,
 		IUserSession $userSession,
-		RelatedService $relatedService
+		RelatedService $relatedService,
+		ConfigService $configService
 	) {
 		parent::__construct($appName, $request);
 
 		$this->userSession = $userSession;
 		$this->relatedService = $relatedService;
+		$this->configService = $configService;
 		$this->circlesManager = \OC::$server->get(CirclesManager::class);
 	}
 
@@ -82,7 +85,13 @@ class ApiController extends OcsController {
 		try {
 			$this->circlesManager->startSession();
 
-			return new DataResponse($this->relatedService->getRelatedToItem($providerId, $itemId, 17));
+			return new DataResponse(
+				$this->relatedService->getRelatedToItem(
+					$providerId,
+					$itemId,
+					$this->configService->getAppValueInt(ConfigService::RESULT_MAX)
+				)
+			);
 		} catch (Exception $e) {
 			throw new OCSException(
 				($e->getMessage() === '') ? get_class($e) : $e->getMessage(),

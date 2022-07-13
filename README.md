@@ -44,3 +44,9 @@ using `providerId` and `itemId`
 
 >     curl "https://cloud.example.net/ocs/v2.php/apps/related_resources/related/<providerId>/<itemId>?format=json" -u 'admin:admin' -H "OCS-ApiRequest: true" -H "Accept: application/json"
 
+
+### configuration
+
+- set the maximum number of result to be returned by the ocs endpoint
+
+>     ./occ config:app:set related_resources result_max --value 7
