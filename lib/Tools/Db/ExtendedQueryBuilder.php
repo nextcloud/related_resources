@@ -618,9 +618,9 @@ class ExtendedQueryBuilder extends QueryBuilder {
 		$expr = $this->expr();
 
 		if ($gte) {
-			return $expr->gte($field, $this->createNamedParameter($value, IQueryBuilder::PARAM_INT));
+			return (string)$expr->gte($field, $this->createNamedParameter($value, IQueryBuilder::PARAM_INT));
 		} else {
-			return $expr->gt($field, $this->createNamedParameter($value, IQueryBuilder::PARAM_INT));
+			return (string)$expr->gt($field, $this->createNamedParameter($value, IQueryBuilder::PARAM_INT));
 		}
 	}
 
