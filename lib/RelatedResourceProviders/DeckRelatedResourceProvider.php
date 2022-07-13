@@ -32,6 +32,7 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\RelatedResourceProviders;
 
 
+use Exception;
 use OCA\Circles\CirclesManager;
 use OCA\Circles\Model\FederatedUser;
 use OCA\Circles\Model\Member;
@@ -42,6 +43,7 @@ use OCA\RelatedResources\Model\DeckShare;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 use OCP\IURLGenerator;
+use OCP\Share\IShare;
 
 
 /**
@@ -104,8 +106,8 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	public function getRelatedToEntity(FederatedUser $entity): array {
 		switch ($entity->getBasedOn()->getSource()) {
 			case Member::TYPE_USER:
-				// TODO: check other direct share from the same origin and from around the same time of creation !?
-				return [];
+				$shares = $this->deckSharesRequest->getSharesToUser($entity->getUserId());
+				break;
 
 			case Member::TYPE_GROUP:
 				$shares = $this->deckSharesRequest->getSharesToGroup($entity->getUserId());
@@ -137,6 +139,7 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 			$this->urlGenerator->linkToRouteAbsolute('deck.page.index') . '#/board/' . $share->getBoardId()
 		);
 		$related->setRange(1);
+		$related->setItemLastUpdate($share->getLastModified());
 
 		return $related;
 	}

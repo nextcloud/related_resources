@@ -91,6 +91,7 @@ class Test extends Base {
 	 * @param OutputInterface $output
 	 *
 	 * @return int
+	 * @throws \OCA\RelatedResources\Exceptions\RelatedResourceProviderNotFound
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$userId = $input->getArgument('userId');
@@ -108,13 +109,61 @@ class Test extends Base {
 		$circleManager = \OC::$server->get(CirclesManager::class);
 		$circleManager->startSession($circleManager->getLocalFederatedUser($userId));
 
+
+		if ($input->getOption('output') !== 'json') {
+			$this->displayRecipients($providerId, $itemId, ($input->getOption('output') === 'json'));
+		}
+		$this->displayRelated($providerId, $itemId, ($input->getOption('output') === 'json'));
+
+		return 0;
+	}
+
+
+	private function displayRecipients(string $providerId, string $itemId, bool $json): void {
+		$result = $this->relatedService->getSharesRecipients($providerId, $itemId);
+
+		$output = new ConsoleOutput();
+		if ($json) {
+			$output->writeln(json_encode($result, JSON_PRETTY_PRINT));
+
+			return;
+		}
+
+		$output = $output->section();
+		$table = new Table($output);
+		$table->setHeaders(
+			[
+				'Single Id',
+				'User Type',
+				'User Id',
+				'Source'
+			]
+		);
+
+		$table->render();
+		foreach ($result as $entry) {
+			$table->appendRow(
+				[
+					$entry->getSingleId(),
+					$entry->getUserType(),
+					$entry->getUserId(),
+					$entry->getBasedOn()->getSource()
+				]
+			);
+		}
+
+		$output->writeln('');
+	}
+
+
+	private function displayRelated(string $providerId, string $itemId, bool $json): void {
 		$result = $this->relatedService->getRelatedToItem($providerId, $itemId);
 
 		$output = new ConsoleOutput();
-		if ($input->getOption('output') === 'json') {
+		if ($json) {
 			$output->writeln(json_encode($result, JSON_PRETTY_PRINT));
 
-			return 0;
+			return;
 		}
 
 		$output = $output->section();
@@ -144,7 +193,7 @@ class Test extends Base {
 			);
 		}
 
-		return 0;
+		$output->writeln('');
 	}
 
 }

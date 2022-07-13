@@ -91,5 +91,19 @@ class FilesShareRequest extends FilesShareRequestBuilder {
 	}
 
 
+	/**
+	 * @param string $userId
+	 *
+	 * @return FilesShare[]
+	 */
+	public function getSharesToUser(string $userId): array {
+		$qb = $this->getFilesShareSelectSql();
+		$qb->limitInt('share_type', IShare::TYPE_USER);
+		$qb->limit('share_with', $userId);
+
+		return $this->getItemsFromRequest($qb);
+	}
+
+
 }
 

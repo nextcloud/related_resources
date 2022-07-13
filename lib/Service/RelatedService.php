@@ -32,6 +32,9 @@ namespace OCA\RelatedResources\Service;
 
 
 use OCA\Circles\CirclesManager;
+use OCA\Circles\Exceptions\MembershipNotFoundException;
+use OCA\Circles\Model\FederatedUser;
+use OCA\Circles\Model\Member;
 use OCA\RelatedResources\AppInfo\Application;
 use OCA\RelatedResources\Exceptions\RelatedResourceProviderNotFound;
 use OCA\RelatedResources\ILinkWeightCalculator;
@@ -98,8 +101,7 @@ class RelatedService {
 	 * @throws RelatedResourceProviderNotFound
 	 */
 	private function retrieveRelatedToItem(string $providerId, string $itemId): array {
-		$recipients = $this->getRelatedResourceProvider($providerId)
-						   ->getSharesRecipients($itemId);
+		$recipients = $this->getSharesRecipients($providerId, $itemId);
 
 		$this->debug('recipients returned by ' . $providerId . ': ' . json_encode($recipients));
 //		$this->filterRecipients($recipients);
@@ -117,7 +119,6 @@ class RelatedService {
 					if ($provider->getProviderId() === $providerId && $related->getItemId() === $itemId) {
 						$itemPaths[] = $related;
 					}
-
 
 					// improve score on duplicate result
 					if (in_array($related->getItemId(), $known)) {
@@ -144,11 +145,65 @@ class RelatedService {
 			}
 		}
 
+		$result = $this->filterUnavailableResults($result);
 		if (!empty($itemPaths)) {
 			$this->weightResult($itemPaths, $result);
 		}
 
 		return $result;
+	}
+
+
+	/**
+	 * @param string $providerId
+	 * @param string $itemId
+	 *
+	 * @return FederatedUser[]
+	 * @throws RelatedResourceProviderNotFound
+	 */
+	public function getSharesRecipients(string $providerId, string $itemId): array {
+		return $this->getRelatedResourceProvider($providerId)
+					->getSharesRecipients($itemId);
+	}
+
+	/**
+	 * @param IRelatedResource[] $result
+	 *
+	 * @return  IRelatedResource[]
+	 */
+	private function filterUnavailableResults(array $result): array {
+		$filtered = [];
+		$singleId = $this->circlesManager->getCurrentFederatedUser()->getSingleId();
+
+
+		foreach ($result as $entry) {
+			// check item owner, to not filter away item owner by current user.
+			if ($entry->getLinkRecipient() === '') {
+				continue;
+			}
+
+			try {
+				$this->circlesManager->getLink($entry->getLinkRecipient(), $singleId);
+				$filtered[] = $entry;
+			} catch (MembershipNotFoundException $e) {
+				$curr = $this->circlesManager->getCurrentFederatedUser();
+				if ($curr->getUserType() === Member::TYPE_USER
+					&& $entry->getItemOwner() === $curr->getUserId()) {
+					$filtered[] = $entry;
+				} else {
+					// might be heavy, but fastest way to implement a fix to verify the access on shares to users
+					$recipients = $this->getSharesRecipients($entry->getProviderId(), $entry->getItemId());
+					foreach ($recipients as $recipient) {
+						if ($recipient->getSingleId() === $curr->getSingleId()) {
+							$filtered[] = $entry;
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		return $filtered;
 	}
 
 
@@ -237,7 +292,7 @@ class RelatedService {
 	 * @return IRelatedResourceProvider
 	 * @throws RelatedResourceProviderNotFound
 	 */
-	private function getRelatedResourceProvider(string $relatedProviderId): IRelatedResourceProvider {
+	public function getRelatedResourceProvider(string $relatedProviderId): IRelatedResourceProvider {
 		foreach ($this->getRelatedResourceProviders() as $provider) {
 			if ($provider->getProviderId() === $relatedProviderId) {
 				return $provider;

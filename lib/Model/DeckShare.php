@@ -45,7 +45,7 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	private string $boardName = '';
 	private int $type = 0;
 	private string $participant = '';
-
+	private int $lastModified = 0;
 
 	public function __construct() {
 	}
@@ -128,6 +128,25 @@ class DeckShare implements IQueryRow, JsonSerializable {
 
 
 	/**
+	 * @param int $lastModified
+	 *
+	 * @return DeckShare
+	 */
+	public function setLastModified(int $lastModified): self {
+		$this->lastModified = $lastModified;
+
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getLastModified(): int {
+		return $this->lastModified;
+	}
+
+
+	/**
 	 * @param FederatedUser $entity
 	 *
 	 * @return DeckShare
@@ -154,7 +173,8 @@ class DeckShare implements IQueryRow, JsonSerializable {
 		$this->setBoardId($this->getInt('board_id', $data))
 			 ->setBoardName($this->get('db_title', $data))
 			 ->setType($this->getInt('type', $data))
-			 ->setParticipant($this->get('participant', $data));
+			 ->setParticipant($this->get('participant', $data))
+			 ->setLastModified($this->getInt('last_modified', $data));
 
 		return $this;
 	}
@@ -168,6 +188,7 @@ class DeckShare implements IQueryRow, JsonSerializable {
 			'boardName' => $this->getBoardName(),
 			'type' => $this->getType(),
 			'participant' => $this->getParticipant(),
+			'last_modified' => $this->getLastModified(),
 			'entity' => $this->getEntity()
 		];
 	}

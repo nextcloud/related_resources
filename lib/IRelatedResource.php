@@ -63,6 +63,10 @@ interface IRelatedResource {
 
 	public function setLinkRecipient(string $linkRecipient): self;
 
+	public function getItemOwner(): string;
+
+	public function setItemOwner(string $owner): self;
+
 	public function getLinkCreation(): int;
 
 	public function getItemCreation(): int;

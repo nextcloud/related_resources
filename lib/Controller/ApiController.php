@@ -82,7 +82,7 @@ class ApiController extends OcsController {
 		try {
 			$this->circlesManager->startSession();
 
-			return new DataResponse($this->relatedService->getRelatedToItem($providerId, $itemId, 7));
+			return new DataResponse($this->relatedService->getRelatedToItem($providerId, $itemId, 17));
 		} catch (Exception $e) {
 			throw new OCSException(
 				($e->getMessage() === '') ? get_class($e) : $e->getMessage(),

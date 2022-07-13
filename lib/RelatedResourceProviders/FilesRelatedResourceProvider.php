@@ -117,8 +117,8 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	public function getRelatedToEntity(FederatedUser $entity): array {
 		switch ($entity->getBasedOn()->getSource()) {
 			case Member::TYPE_USER:
-				// TODO: check other direct share from the same origin and from around the same time of creation !?
-				return [];
+				$shares = $this->filesShareRequest->getSharesToUser($entity->getUserId());
+				break;
 
 			case Member::TYPE_GROUP:
 				$shares = $this->filesShareRequest->getSharesToGroup($entity->getUserId());
@@ -148,6 +148,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 		$related->setTooltip('File ' . $share->getFileTarget());
 		$related->setRange(1);
 		$related->setItemLastUpdate($share->getFileLastUpdate());
+		$related->setItemOwner($share->getFileOwner());
 		$related->setLinkCreator($share->getShareCreator());
 		$related->setLinkCreation($share->getShareTime());
 		$related->setUrl('/index.php/f/' . $share->getFileId());

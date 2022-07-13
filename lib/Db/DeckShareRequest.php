@@ -89,4 +89,24 @@ class DeckShareRequest extends DeckShareRequestBuilder {
 
 		return $this->getItemsFromRequest($qb);
 	}
+
+
+	/**
+	 * @param string $userName
+	 *
+	 * @return DeckShare[]
+	 */
+	public function getSharesToUser(string $userName): array {
+		$qb = $this->getDeckShareSelectSql();
+		$qb->limitInt('type', IShare::TYPE_USER);
+		$qb->limit('participant', $userName);
+
+		$qb->generateSelectAlias(self::$externalTables[self::TABLE_DECK_BOARD], 'db', 'db');
+		$qb->innerJoin(
+			$qb->getDefaultSelectAlias(), self::TABLE_DECK_BOARD, 'db',
+			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.board_id', 'db.id')
+		);
+
+		return $this->getItemsFromRequest($qb);
+	}
 }

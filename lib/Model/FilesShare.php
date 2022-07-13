@@ -47,6 +47,7 @@ class FilesShare implements IQueryRow, JsonSerializable {
 	private ?FederatedUser $entity = null;
 	private int $fileId = 0;
 	private string $fileTarget = '';
+	private string $fileOwner = '';
 	private int $fileLastUpdate = 0;
 	private int $shareTime = 0;
 	private string $shareCreator = '';
@@ -150,6 +151,21 @@ class FilesShare implements IQueryRow, JsonSerializable {
 	}
 
 
+
+	public function setFileOwner(string $fileOwner): self {
+		$this->fileOwner = $fileOwner;
+
+		return $this;
+	}
+
+	public function getFileOwner(): string {
+		return $this->fileOwner;
+	}
+
+
+
+
+
 	/**
 	 * @param int $fileLastUpdate
 	 *
@@ -217,6 +233,7 @@ class FilesShare implements IQueryRow, JsonSerializable {
 			 ->setSharedWith($this->get('share_with', $data))
 			 ->setShareCreator($this->get('uid_initiator', $data))
 			 ->setFileId($this->getInt('file_source', $data))
+			 ->setFileOwner($this->get('uid_owner', $data))
 			 ->setFileTarget($this->get('file_target', $data))
 			 ->setShareTime($this->getInt('stime', $data));
 

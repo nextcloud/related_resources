@@ -61,6 +61,7 @@ class RelatedResource implements IRelatedResource, JsonSerializable {
 	private int $range = 0;
 	private int $linkCreation = 0;
 	private int $itemCreation = 0;
+	private string $itemOwner = '';
 	private int $itemLastUpdate = 0;
 	private float $score = 1;
 	private array $improvements = [];
@@ -203,6 +204,17 @@ class RelatedResource implements IRelatedResource, JsonSerializable {
 	 */
 	public function getItemCreation(): int {
 		return $this->itemCreation;
+	}
+
+
+	public function setItemOwner(string $itemOwner): self {
+		$this->itemOwner = $itemOwner;
+
+		return $this;
+	}
+
+	public function getItemOwner(): string {
+		return $this->itemOwner;
 	}
 
 

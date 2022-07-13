@@ -67,6 +67,7 @@ class CoreQueryBuilder {
 		self::TABLE_FILES_SHARE => [
 			'share_type',
 			'share_with',
+			'uid_owner',
 			'uid_initiator',
 			'file_source',
 			'file_target',
@@ -78,7 +79,8 @@ class CoreQueryBuilder {
 			'participant'
 		],
 		self::TABLE_DECK_BOARD => [
-			'title'
+			'title',
+			'last_modified'
 		],
 		self::TABLE_TALK_ATTENDEE => [
 			'room_id',
