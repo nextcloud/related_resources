@@ -48,12 +48,14 @@ use OCA\RelatedResources\RelatedResourceProviders\FilesRelatedResourceProvider;
 use OCA\RelatedResources\RelatedResourceProviders\TalkRelatedResourceProvider;
 use OCA\RelatedResources\Tools\Exceptions\ItemNotFoundException;
 use OCA\RelatedResources\Tools\Traits\TNCLogger;
+use OCP\App\IAppManager;
 use ReflectionClass;
 use ReflectionException;
 
 class RelatedService {
 	use TNCLogger;
 
+	private IAppManager $appManager;
 	private CirclesManager $circlesManager;
 
 	/** @var ILinkWeightCalculator[] */
@@ -64,7 +66,8 @@ class RelatedService {
 		TimeWeightCalculator::class
 	];
 
-	public function __construct() {
+	public function __construct(IAppManager $appManager) {
+		$this->appManager = $appManager;
 		$this->circlesManager = \OC::$server->get(CirclesManager::class);
 
 		$this->setup('app', Application::APP_ID);
@@ -278,12 +281,21 @@ class RelatedService {
 	 * @return IRelatedResourceProvider[]
 	 */
 	private function getRelatedResourceProviders(): array {
-		return [
-			\OC::$server->get(FilesRelatedResourceProvider::class),
-			\OC::$server->get(DeckRelatedResourceProvider::class),
-			\OC::$server->get(TalkRelatedResourceProvider::class),
-			\OC::$server->get(CalendarRelatedResourceProvider::class),
-		];
+		$providers = [\OC::$server->get(FilesRelatedResourceProvider::class)];
+
+		if ($this->appManager->isInstalled('deck')) {
+			$providers[] = \OC::$server->get(DeckRelatedResourceProvider::class);
+		}
+
+		if ($this->appManager->isInstalled('calendar')) {
+			$providers[] = \OC::$server->get(CalendarRelatedResourceProvider::class);
+		}
+
+		if ($this->appManager->isInstalled('spreed')) {
+			$providers[] = \OC::$server->get(TalkRelatedResourceProvider::class);
+		}
+
+		return $providers;
 	}
 
 	/**
