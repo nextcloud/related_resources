@@ -75,7 +75,7 @@ interface IRelatedResource {
 
 	public function getItemLastUpdate(): int;
 
-	public function improve(float $quality = 0, string $type = 'undefined'): self;
+	public function improve(float $quality, string $type, bool $diminishingReturn): self;
 
 	public function getImprovements(): array;
 
