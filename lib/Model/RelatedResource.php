@@ -49,7 +49,8 @@ class RelatedResource implements IRelatedResource, JsonSerializable {
 	public static float $IMPROVE_LOW_LINK = 1.1;
 	public static float $IMPROVE_MEDIUM_LINK = 1.3;
 	public static float $IMPROVE_HIGH_LINK = 1.8;
-	public static float $IMPROVE_OCCURRENCE = 1.4;
+	public static float $IMPROVE_OCCURRENCE = 1.3;
+	private static float $DIMINISHING_RETURN = 0.7;
 
 
 	private string $providerId;
@@ -67,6 +68,7 @@ class RelatedResource implements IRelatedResource, JsonSerializable {
 	private array $improvements = [];
 	private string $linkCreator = '';
 	private string $linkRecipient = '';
+	private array $currentQuality = [];
 
 //	private ?FederatedUser $entity = null;
 
@@ -232,19 +234,27 @@ class RelatedResource implements IRelatedResource, JsonSerializable {
 	/**
 	 * @param float|int $quality
 	 * @param string $type
+	 * @param bool $diminishingReturn
 	 *
 	 * @return IRelatedResource
 	 */
-	public function improve(float $quality = 0, string $type = 'undefined'): IRelatedResource {
-		if ($quality === 0) {
-			$quality = self::$IMPROVE_LOW_LINK;
-		}
-
+	public function improve(
+		float $quality,
+		string $type,
+		bool $diminishingReturn = true
+	): IRelatedResource {
+		$quality = ($this->currentQuality[$type] ?? $quality);
 		$this->score = $this->score * $quality;
 		$this->improvements[] = [
 			'type' => $type,
 			'quality' => $quality
 		];
+
+		if ($diminishingReturn) {
+			$quality = 1 + (($quality - 1) * self::$DIMINISHING_RETURN);
+		}
+
+		$this->currentQuality[$type] = $quality;
 
 		return $this;
 	}
