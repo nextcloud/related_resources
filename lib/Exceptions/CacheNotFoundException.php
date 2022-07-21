@@ -33,5 +33,5 @@ namespace OCA\RelatedResources\Exceptions;
 
 use Exception;
 
-class CachedSharesNotFoundException extends Exception {
+class CacheNotFoundException extends Exception {
 }

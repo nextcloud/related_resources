@@ -37,6 +37,7 @@ use OCA\Circles\Model\FederatedUser;
 use OCA\Circles\Model\Member;
 use OCA\RelatedResources\AppInfo\Application;
 use OCA\RelatedResources\Exceptions\CachedSharesNotFoundException;
+use OCA\RelatedResources\Exceptions\CacheNotFoundException;
 use OCA\RelatedResources\Exceptions\RelatedResourceProviderNotFound;
 use OCA\RelatedResources\ILinkWeightCalculator;
 use OCA\RelatedResources\IRelatedResource;
@@ -61,6 +62,7 @@ class RelatedService {
 	use TDeserialize;
 
 	public const CACHE_RELATED = 'related/related';
+	public const CACHE_RECIPIENT_TTL = 3600;
 	public const CACHE_RELATED_TTL = 3600;
 
 	private IAppManager $appManager;
@@ -82,6 +84,9 @@ class RelatedService {
 		$this->appManager = $appManager;
 		$this->cache = $cacheFactory->createDistributed(self::CACHE_RELATED);
 		$this->circlesManager = \OC::$server->get(CirclesManager::class);
+
+		// TODO: if we keep using ICache, we might need to clean the cache on some actions:
+		//		$this->cache->remove($this->generateCacheKey());
 
 		$this->setup('app', Application::APP_ID);
 	}
@@ -131,7 +136,7 @@ class RelatedService {
 			$known = [];
 
 			foreach ($recipients as $entity) {
-				foreach ($provider->getRelatedToEntity($entity) as $related) {
+				foreach ($this->getRelatedToEntity($provider, $entity) as $related) {
 					$related->setLinkRecipient($entity->getSingleId());
 
 					// if RelatedResource is based on current item, store it for weightResult() later in the process
@@ -192,7 +197,7 @@ class RelatedService {
 	public function getSharesRecipients(string $providerId, string $itemId): array {
 		try {
 			return $this->getCachedSharesRecipients($providerId, $itemId);
-		} catch (CachedSharesNotFoundException $e) {
+		} catch (CacheNotFoundException $e) {
 		}
 
 		$result = $this->getRelatedResourceProvider($providerId)
@@ -209,22 +214,19 @@ class RelatedService {
 	 * @param string $itemId
 	 *
 	 * @return FederatedUser[]
-	 * @throws CachedSharesNotFoundException
+	 * @throws CacheNotFoundException
 	 */
 	private function getCachedSharesRecipients(string $providerId, string $itemId): array {
 		$key = $this->generateSharesCacheKey($providerId, $itemId);
 		$cachedData = $this->cache->get($key);
 
 		if (!is_string($cachedData)) {
-			throw new CachedSharesNotFoundException();
+			throw new CacheNotFoundException();
 		}
 
 		/** @var FederatedUser[] $result */
 		return $this->deserializeArrayFromJson($cachedData, FederatedUser::class);
 	}
-
-
-	//		$this->cache->remove($this->generateCacheKey($federatedUser));
 
 	/**
 	 * @param string $providerId
@@ -233,7 +235,7 @@ class RelatedService {
 	 */
 	private function cacheSharesRecipients(string $providerId, string $itemId, array $recipients): void {
 		$key = $this->generateSharesCacheKey($providerId, $itemId);
-		$this->cache->set($key, json_encode($recipients), self::CACHE_RELATED_TTL);
+		$this->cache->set($key, json_encode($recipients), self::CACHE_RECIPIENT_TTL);
 	}
 
 	private function generateSharesCacheKey(string $providerId, string $itemId): string {
@@ -242,65 +244,66 @@ class RelatedService {
 
 
 	/**
+	 * @param IRelatedResourceProvider $provider
 	 * @param FederatedUser $entity
-	 * @param string[] $known
-	 * @param FederatedUser[] $itemPaths
 	 *
-	 * @throws RelatedResourceProviderNotFound
+	 * @return IRelatedResource[]
 	 */
-	private function getRelatedToEntity(
-		string $providerId,
-		string $itemId,
-		FederatedUser $entity,
-		IRelatedResourceProvider $provider,
-		array $validRecipientIds,
-		array &$result,
-		array &$known,
-		array &$itemPaths
-	) {
-		foreach ($provider->getRelatedToEntity($entity) as $related) {
-			$related->setLinkRecipient($entity->getSingleId());
-
-			// if RelatedResource is based on current item, store it for weightResult() later in the process
-			// also we do not want to filter duplicate
-			if ($provider->getProviderId() === $providerId && $related->getItemId() === $itemId) {
-				$itemPaths[] = $related;
-			}
-
-			// improve score on over-shared items
-			$spread = $this->getSharesRecipients($related->getProviderId(), $related->getItemId());
-			foreach ($spread as $shareRecipient) {
-				if (!in_array($shareRecipient->getSingleId(), $validRecipientIds)) {
-					$related->improve(RelatedResource::$UNRELATED, 'unrelated', false);
-				}
-			}
-
-
-
-
-
-			// improve score on duplicate result
-			if (in_array($related->getItemId(), $known)) {
-				try {
-					$knownRecipient = $this->extractRecipientFromResult(
-						$related->getProviderId(),
-						$related->getItemId(),
-						$result
-					);
-
-					$knownRecipient->improve(RelatedResource::$IMPROVE_OCCURRENCE, 'occurrence');
-				} catch (ItemNotFoundException $e) {
-				}
-
-				continue;
-			}
-
-			if ($provider->getProviderId() !== $providerId || $related->getItemId() !== $itemId) {
-				$result[] = $related;
-			}
-
-			$known[] = $related->getItemId();
+	private function getRelatedToEntity(IRelatedResourceProvider $provider, FederatedUser $entity): array {
+		try {
+			return $this->getCachedRelatedToEntity($provider, $entity);
+		} catch (CacheNotFoundException $e) {
 		}
+
+		$result = $provider->getRelatedToEntity($entity);
+
+		$this->cacheRelatedToEntity($provider, $entity, $result);
+
+		return $result;
+	}
+
+
+	/**
+	 * @param string $providerId
+	 * @param string $itemId
+	 *
+	 * @return RelatedResource[]
+	 * @throws CacheNotFoundException
+	 */
+	private function getCachedRelatedToEntity(
+		IRelatedResourceProvider $provider,
+		FederatedUser $entity
+	): array {
+		$key = $this->generateRelatedToEntityCacheKey($provider, $entity);
+		$cachedData = $this->cache->get($key);
+
+		if (!is_string($cachedData)) {
+			throw new CacheNotFoundException();
+		}
+
+		/** @var RelatedResource[] $result */
+		return $this->deserializeArrayFromJson($cachedData, RelatedResource::class);
+	}
+
+	/**
+	 * @param IRelatedResourceProvider $provider
+	 * @param FederatedUser $entity
+	 * @param array $related
+	 */
+	private function cacheRelatedToEntity(
+		IRelatedResourceProvider $provider,
+		FederatedUser $entity,
+		array $related
+	): void {
+		$key = $this->generateRelatedToEntityCacheKey($provider, $entity);
+		$this->cache->set($key, json_encode($related), self::CACHE_RELATED_TTL);
+	}
+
+	private function generateRelatedToEntityCacheKey(
+		IRelatedResourceProvider $provider,
+		FederatedUser $entity
+	): string {
+		return 'relatedToEntity/' . $provider->getProviderId() . '::' . $entity->getSingleId();
 	}
 
 
@@ -449,5 +452,6 @@ class RelatedService {
 
 		throw new RelatedResourceProviderNotFound();
 	}
+
 }
 
