@@ -50,6 +50,7 @@ class RelatedResource implements IRelatedResource, JsonSerializable {
 	public static float $IMPROVE_MEDIUM_LINK = 1.3;
 	public static float $IMPROVE_HIGH_LINK = 1.8;
 	public static float $IMPROVE_OCCURRENCE = 1.3;
+	public static float $UNRELATED = 0.85;
 	private static float $DIMINISHING_RETURN = 0.7;
 
 
