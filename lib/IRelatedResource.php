@@ -33,8 +33,6 @@ namespace OCA\RelatedResources;
 
 
 interface IRelatedResource {
-
-	// too many method, needs to create sub-model ?
 	public function getProviderId(): string;
 
 	public function getItemId(): string;
@@ -51,34 +49,31 @@ interface IRelatedResource {
 
 	public function getUrl(): string;
 
-	public function setRange(int $range): self;
-
-	public function getRange(): int;
-
-	public function getLinkCreator(): string;
-
-	public function getLinkRecipient(): string;
-
-	public function setLinkCreator(string $linkCreator): self;
-
-	public function setLinkRecipient(string $linkRecipient): self;
-
-	public function getItemOwner(): string;
-
-	public function setItemOwner(string $owner): self;
-
-	public function getLinkCreation(): int;
-
-	public function getItemCreation(): int;
-
-	public function setItemLastUpdate(int $time): self;
-
-	public function getItemLastUpdate(): int;
-
 	public function improve(float $quality, string $type, bool $diminishingReturn): self;
 
 	public function getImprovements(): array;
 
 	public function getScore(): float;
-}
 
+	public function setRange(int $range): self;
+
+	public function getRange(): int;
+
+	public function setMeta(string $k, string $v): self;
+
+	public function setMetaInt(string $k, int $v): self;
+
+	public function setMetaArray(string $k, array $v): self;
+
+	public function setMetas(array $metas): self;
+
+	public function hasMeta(string $k): bool;
+
+	public function getMeta(string $k): string;
+
+	public function getMetaInt(string $k): int;
+
+	public function getMetaArray(string $k): array;
+
+	public function getMetas(): array;
+}

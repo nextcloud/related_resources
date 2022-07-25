@@ -41,6 +41,7 @@ use OCA\RelatedResources\Exceptions\RelatedResourceProviderNotFound;
 use OCA\RelatedResources\ILinkWeightCalculator;
 use OCA\RelatedResources\IRelatedResource;
 use OCA\RelatedResources\IRelatedResourceProvider;
+use OCA\RelatedResources\LinkWeightCalculators\KeywordWeightCalculator;
 use OCA\RelatedResources\LinkWeightCalculators\TimeWeightCalculator;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\RelatedResourceProviders\CalendarRelatedResourceProvider;
@@ -74,7 +75,8 @@ class RelatedService {
 
 	/** @var string[] */
 	private static array $weightCalculators_ = [
-		TimeWeightCalculator::class
+		TimeWeightCalculator::class,
+		KeywordWeightCalculator::class
 	];
 
 	private int $requestShares = 0,
@@ -151,7 +153,7 @@ class RelatedService {
 
 			foreach ($recipients as $entity) {
 				foreach ($this->getRelatedToEntity($provider, $entity) as $related) {
-					$related->setLinkRecipient($entity->getSingleId());
+					$related->setMeta(RelatedResource::LINK_RECIPIENT, $entity->getSingleId());
 
 					// if RelatedResource is based on current item, store it for weightResult() later in the process
 					// also we do not want to filter duplicate
@@ -340,17 +342,18 @@ class RelatedService {
 
 		foreach ($result as $entry) {
 			// check item owner, to not filter away item owner by current user.
-			if ($entry->getLinkRecipient() === '') {
+			if (!$entry->hasMeta(RelatedResource::LINK_RECIPIENT)) {
 				continue;
 			}
 
 			try {
-				$this->circlesManager->getLink($entry->getLinkRecipient(), $singleId);
+				$this->circlesManager->getLink($entry->getMeta(RelatedResource::LINK_RECIPIENT), $singleId);
 				$filtered[] = $entry;
 			} catch (MembershipNotFoundException $e) {
 				$curr = $this->circlesManager->getCurrentFederatedUser();
 				if ($curr->getUserType() === Member::TYPE_USER
-					&& $entry->getItemOwner() === $curr->getUserId()) {
+					&& $entry->hasMeta(RelatedResource::ITEM_OWNER)
+					&& $entry->getMeta(RelatedResource::ITEM_OWNER) === $curr->getUserId()) {
 					$filtered[] = $entry;
 				} else {
 					// might be heavy, but fastest way to implement a fix to verify the access on shares to users

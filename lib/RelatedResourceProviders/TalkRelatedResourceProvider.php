@@ -105,6 +105,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 		switch ($entity->getBasedOn()->getSource()) {
 			case Member::TYPE_USER:
 				$shares = $this->talkRoomRequest->getSharesToUser($entity->getUserId());
+
 				return [];
 
 			case Member::TYPE_GROUP:
@@ -130,19 +131,18 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 
 	private function convertToRelatedResource(TalkRoom $share): IRelatedResource {
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getRoomId());
-		$related->setTitle($share->getRoomName());
-		$related->setSubtitle('Talk Room');
-		$related->setTooltip('Talk Room \'' . $share->getRoomName() . '\'');
-		$related->setRange(1);
-		$related->setUrl(
-			$this->urlGenerator->linkToRouteAbsolute('spreed.Page.showCall',
-													 [
-														 'token' => $share->getToken()
-													 ]
-			)
-		);
-
-		//['name' => 'Page#showCall', 'url' => '/call/{token}', 'root' => '', 'verb' => 'GET'],
+		$related->setTitle($share->getRoomName())
+				->setSubtitle('Talk Room')
+				->setTooltip('Talk Room \'' . $share->getRoomName() . '\'')
+				->setUrl(
+					$this->urlGenerator->linkToRouteAbsolute(
+						'spreed.Page.showCall',
+						[
+							'token' => $share->getToken()
+						]
+					)
+				)
+				->improve(0.5, 'talk_result');
 
 		return $related;
 	}

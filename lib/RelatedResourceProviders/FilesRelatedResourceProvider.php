@@ -146,13 +146,22 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 		$related->setTitle($share->getFileTarget());
 		$related->setSubtitle('Files');
 		$related->setTooltip('File ' . $share->getFileTarget());
-		$related->setRange(1);
-		$related->setItemLastUpdate($share->getFileLastUpdate());
-		$related->setItemOwner($share->getFileOwner());
-		$related->setLinkCreator($share->getShareCreator());
-		$related->setLinkCreation($share->getShareTime());
 		$related->setUrl('/index.php/f/' . $share->getFileId());
+		$related->setMetas(
+			[
+				RelatedResource::ITEM_LAST_UPDATE => $share->getFileLastUpdate(),
+				RelatedResource::ITEM_OWNER => $share->getFileOwner(),
+				RelatedResource::LINK_CREATOR => $share->getShareCreator(),
+				RelatedResource::LINK_CREATION => $share->getShareTime()
+			]
+		);
 
+		$kws = preg_split('/[\/_\-.\ ]/', ltrim(strtolower($share->getFileTarget()), '/'));
+		if (is_array($kws)) {
+			$related->setMetaArray(RelatedResource::ITEM_KEYWORDS, $kws);
+		}
+
+		echo '>>> ' . json_encode($related->getMetaArray(RelatedResource::ITEM_KEYWORDS)) . "\n";
 		return $related;
 	}
 
