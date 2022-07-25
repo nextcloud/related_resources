@@ -138,8 +138,7 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		$related->setUrl(
 			$this->urlGenerator->linkToRouteAbsolute('deck.page.index') . '#/board/' . $share->getBoardId()
 		);
-		$related->setRange(1);
-		$related->setItemLastUpdate($share->getLastModified());
+		$related->setMetaInt(RelatedResource::ITEM_LAST_UPDATE, $share->getLastModified());
 
 		return $related;
 	}

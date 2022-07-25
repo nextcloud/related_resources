@@ -49,38 +49,45 @@ class TimeWeightCalculator implements ILinkWeightCalculator {
 	 */
 	public function weight(array $paths, array &$result): void {
 		foreach ($paths as $path) {
-			if ($path->getLinkCreation() === 0
-				|| $path->getLinkCreator() === ''
-				|| $path->getLinkRecipient() === '') {
+			if (!$path->hasMeta(RelatedResource::LINK_CREATION)
+				|| !$path->hasMeta(RelatedResource::LINK_CREATOR)
+				|| !$path->hasMeta(RelatedResource::LINK_RECIPIENT)) {
 				continue;
 			}
 
 			foreach ($result as $entry) {
-				if ($entry->getLinkCreation() === 0
-					|| $entry->getLinkCreator() === ''
-					|| $entry->getLinkRecipient() === '') {
+				if (!$entry->hasMeta(RelatedResource::LINK_CREATION)
+					|| !$entry->hasMeta(RelatedResource::LINK_CREATOR)
+					|| !$entry->hasMeta(RelatedResource::LINK_RECIPIENT)) {
 					continue;
 				}
 
 				// check if link is initiated from same entity
-				if ($entry->getLinkCreator() !== $path->getLinkCreator()) {
+				if ($entry->getMeta(RelatedResource::LINK_CREATOR)
+					!== $path->getMeta(RelatedResource::LINK_CREATOR)) {
 					continue;
 				}
 
-				if ($entry->getLinkCreation() < $path->getLinkCreation() + self::DELAY_1
-					&& $entry->getLinkCreation() > $path->getLinkCreation() - self::DELAY_1) {
+				if ($entry->getMetaInt(RelatedResource::LINK_CREATION)
+					< $path->getMetaInt(RelatedResource::LINK_CREATION) + self::DELAY_1
+					&& $entry->getMetaInt(RelatedResource::LINK_CREATION)
+					   > $path->getMetaInt(RelatedResource::LINK_CREATION) - self::DELAY_1) {
 					$entry->improve(RelatedResource::$IMPROVE_HIGH_LINK, 'time_delay_1');
 					continue;
 				}
 
-				if ($entry->getLinkCreation() < $path->getLinkCreation() + self::DELAY_2
-					&& $entry->getLinkCreation() > $path->getLinkCreation() - self::DELAY_2) {
+				if ($entry->getMetaInt(RelatedResource::LINK_CREATION)
+					< $path->getMetaInt(RelatedResource::LINK_CREATION) + self::DELAY_2
+					&& $entry->getMetaInt(RelatedResource::LINK_CREATION)
+					   > $path->getMetaInt(RelatedResource::LINK_CREATION) - self::DELAY_2) {
 					$entry->improve(RelatedResource::$IMPROVE_MEDIUM_LINK, 'time_delay_2');
 					continue;
 				}
 
-				if ($entry->getLinkCreation() < $path->getLinkCreation() + self::DELAY_3
-					&& $entry->getLinkCreation() > $path->getLinkCreation() - self::DELAY_3) {
+				if ($entry->getMetaInt(RelatedResource::LINK_CREATION)
+					< $path->getMetaInt(RelatedResource::LINK_CREATION) + self::DELAY_3
+					&& $entry->getMetaInt(RelatedResource::LINK_CREATION)
+					   > $path->getMetaInt(RelatedResource::LINK_CREATION) - self::DELAY_3) {
 					$entry->improve(RelatedResource::$IMPROVE_LOW_LINK, 'time_delay_3');
 					continue;
 				}

@@ -55,102 +55,55 @@ class FilesShare implements IQueryRow, JsonSerializable {
 	public function __construct() {
 	}
 
-
-	/**
-	 * @param string $sharedWith
-	 *
-	 * @return FilesShare
-	 */
 	public function setSharedWith(string $sharedWith): self {
 		$this->sharedWith = $sharedWith;
 
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getSharedWith(): string {
 		return $this->sharedWith;
 	}
 
-
-	/**
-	 * @param int $shareType
-	 *
-	 * @return FilesShare
-	 */
 	public function setShareType(int $shareType): self {
 		$this->shareType = $shareType;
 
 		return $this;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getShareType(): int {
 		return $this->shareType;
 	}
 
-
-	/**
-	 * @param int $fileId
-	 *
-	 * @return FilesShare
-	 */
 	public function setFileId(int $fileId): self {
 		$this->fileId = $fileId;
 
 		return $this;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getFileId(): int {
 		return $this->fileId;
 	}
 
-
-	/**
-	 * @param FederatedUser $entity
-	 *
-	 * @return FilesShare
-	 */
 	public function setEntity(FederatedUser $entity): self {
 		$this->entity = $entity;
 
 		return $this;
 	}
 
-	/**
-	 * @return FederatedUser
-	 */
 	public function getEntity(): ?FederatedUser {
 		return $this->entity;
 	}
 
-
-	/**
-	 * @param string $fileTarget
-	 *
-	 * @return FilesShare
-	 */
 	public function setFileTarget(string $fileTarget): self {
 		$this->fileTarget = $fileTarget;
 
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getFileTarget(): string {
 		return $this->fileTarget;
 	}
-
-
 
 	public function setFileOwner(string $fileOwner): self {
 		$this->fileOwner = $fileOwner;
@@ -162,72 +115,36 @@ class FilesShare implements IQueryRow, JsonSerializable {
 		return $this->fileOwner;
 	}
 
-
-
-
-
-	/**
-	 * @param int $fileLastUpdate
-	 *
-	 * @return FilesShare
-	 */
 	public function setFileLastUpdate(int $fileLastUpdate): self {
 		$this->fileLastUpdate = $fileLastUpdate;
 
 		return $this;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getFileLastUpdate(): int {
 		return $this->fileLastUpdate;
 	}
 
-
-	/**
-	 * @param int $shareTime
-	 *
-	 * @return FilesShare
-	 */
 	public function setShareTime(int $shareTime): self {
 		$this->shareTime = $shareTime;
 
 		return $this;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getShareTime(): int {
 		return $this->shareTime;
 	}
 
-
-	/**
-	 * @param string $shareCreator
-	 *
-	 * @return FilesShare
-	 */
 	public function setShareCreator(string $shareCreator): self {
 		$this->shareCreator = $shareCreator;
 
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getShareCreator(): string {
 		return $this->shareCreator;
 	}
 
-
-	/**
-	 * @param array $data
-	 *
-	 * @return IQueryRow
-	 */
 	public function importFromDatabase(array $data): IQueryRow {
 		$this->setShareType($this->getInt('share_type', $data))
 			 ->setSharedWith($this->get('share_with', $data))
@@ -240,9 +157,6 @@ class FilesShare implements IQueryRow, JsonSerializable {
 		return $this;
 	}
 
-	/**
-	 * @return array
-	 */
 	public function jsonSerialize(): array {
 		return [
 			'shareType' => $this->getShareType(),
@@ -255,5 +169,4 @@ class FilesShare implements IQueryRow, JsonSerializable {
 			'entity' => $this->getEntity()
 		];
 	}
-
 }

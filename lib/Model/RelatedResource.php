@@ -54,6 +54,13 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 	public static float $UNRELATED = 0.85;
 	private static float $DIMINISHING_RETURN = 0.7;
 
+	public const ITEM_OWNER = 'itemOwner';
+	public const ITEM_CREATION = 'itemCreation';
+	public const ITEM_LAST_UPDATE = 'itemLastUpdate';
+	public const ITEM_KEYWORDS = 'itemKeywords';
+	public const LINK_CREATOR = 'linkCreator';
+	public const LINK_CREATION = 'linkCreation';
+	public const LINK_RECIPIENT = 'linkRecipient';
 
 	private string $providerId;
 	private string $itemId;
@@ -62,23 +69,15 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 	private string $tooltip = '';
 	private string $url = '';
 	private int $range = 0;
-	private int $linkCreation = 0;
-	private int $itemCreation = 0;
-	private string $itemOwner = '';
-	private int $itemLastUpdate = 0;
 	private float $score = 1;
 	private array $improvements = [];
-	private string $linkCreator = '';
-	private string $linkRecipient = '';
 	private array $currentQuality = [];
-
-//	private ?FederatedUser $entity = null;
+	private array $metas = [];
 
 	public function __construct(string $providerId = '', string $itemId = '') {
 		$this->providerId = $providerId;
 		$this->itemId = $itemId;
 	}
-
 
 	public function getProviderId(): string {
 		return $this->providerId;
@@ -122,24 +121,15 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 	}
 
 
-	/**
-	 * @param string $tooltip
-	 *
-	 * @return RelatedResource
-	 */
 	public function setTooltip(string $tooltip): self {
 		$this->tooltip = $tooltip;
 
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getTooltip(): string {
 		return $this->tooltip;
 	}
-
 
 	public function setUrl(string $url): IRelatedResource {
 		$this->url = $url;
@@ -161,96 +151,6 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		return $this->range;
 	}
 
-
-	/**
-	 * @param int $linkCreation
-	 *
-	 * @return RelatedResource
-	 */
-	public function setLinkCreation(int $linkCreation): self {
-		$this->linkCreation = $linkCreation;
-
-		return $this;
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getLinkCreation(): int {
-		return $this->linkCreation;
-	}
-
-
-	public function setLinkCreator(string $linkCreator): self {
-		$this->linkCreator = $linkCreator;
-
-		return $this;
-	}
-
-	public function getLinkCreator(): string {
-		return $this->linkCreator;
-	}
-
-
-	public function setLinkRecipient(string $linkRecipient): self {
-		$this->linkRecipient = $linkRecipient;
-
-		return $this;
-	}
-
-	public function getLinkRecipient(): string {
-		return $this->linkRecipient;
-	}
-
-
-	/**
-	 * @param int $itemCreation
-	 *
-	 * @return RelatedResource
-	 */
-	public function setItemCreation(int $itemCreation): self {
-		$this->itemCreation = $itemCreation;
-
-		return $this;
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getItemCreation(): int {
-		return $this->itemCreation;
-	}
-
-
-	public function setItemOwner(string $itemOwner): self {
-		$this->itemOwner = $itemOwner;
-
-		return $this;
-	}
-
-	public function getItemOwner(): string {
-		return $this->itemOwner;
-	}
-
-
-	public function setItemLastUpdate(int $time): IRelatedResource {
-		$this->itemLastUpdate = $time;
-
-		return $this;
-	}
-
-	public function getItemLastUpdate(): int {
-		return $this->itemLastUpdate;
-	}
-
-
-	/**
-	 * @param float|int $quality
-	 * @param string $type
-	 * @param bool $diminishingReturn
-	 *
-	 * @return IRelatedResource
-	 */
 	public function improve(
 		float $quality,
 		string $type,
@@ -272,14 +172,9 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		return $this;
 	}
 
-
-	/**
-	 * @return float
-	 */
 	public function getScore(): float {
 		return $this->score;
 	}
-
 
 	public function setScore(int $score): self {
 		$this->score = $score;
@@ -287,11 +182,9 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		return $this;
 	}
 
-
 	public function getImprovements(): array {
 		return $this->improvements;
 	}
-
 
 	public function setImprovements(array $improvements): self {
 		$this->improvements = $improvements;
@@ -310,32 +203,6 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 	}
 
 
-
-
-
-
-
-//
-//	/**
-//	 * @param FederatedUser $entity
-//	 *
-//	 * @return RelatedResource
-//	 */
-//	public function setEntity(FederatedUser $entity): self {
-//		$this->entity = $entity;
-//
-//		return $this;
-//	}
-//
-//	/**
-//	 * @return FederatedUser
-//	 */
-//	public function getEntity(): ?FederatedUser {
-//		return $this->entity;
-//	}
-//
-
-
 	public function import(array $data): IDeserializable {
 		$this->setProviderId($this->get('providerId', $data));
 		$this->setItemId($this->get('itemId', $data));
@@ -344,43 +211,14 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		$this->setTooltip($this->get('tooltip', $data));
 		$this->setUrl($this->get('url', $data));
 		$this->setRange($this->getInt('range', $data));
-		$this->setLinkCreation($this->getInt('linkCreation', $data));
-		$this->setItemCreation($this->getInt('itemCreation', $data));
-		$this->setItemOwner($this->get('itemOwner', $data));
-		$this->setItemLastUpdate($this->getInt('itemLastUpdate', $data));
-		$this->setLinkRecipient($this->get('linkRecipient', $data));
-		$this->setLinkCreator($this->get('linkCreator', $data));
-
-		$this->setLinkCreation($this->getInt('linkCreation', $data));
 		$this->setScore($this->getInt('score', $data));
 		$this->setImprovements($this->getArray('improvements', $data));
 		$this->setCurrentQuality($this->getArray('currentQuality', $data));
+		$this->setMetas($this->getArray('meta', $data));
 
-//			'itemCreation' => $this->getItemCreation(),
-//			'itemOwner' => $this->getItemOwner(),
-//			'itemLastUpdate' => $this->getItemLastUpdate(),
-//			'linkRecipient' => $this->getLinkRecipient(),
-//			'linkCreator' => $this->getLinkCreator(),
-//			'creation' => $this->getLinkCreation(),
-//			'score' => $this->getScore(),
-//			'improvements' => $this->getImprovements(),
-//			'currentQuality' => $this->currentQuality
 		return $this;
 	}
 
-
-	public static function cleanData(array &$arr): void {
-		static $acceptedKeys = [
-			'providerId', 'itemId', 'title', 'subtitle', 'tooltip', 'url', 'score',
-			'improvements'
-		];
-
-
-	}
-
-	/**
-	 * @return array
-	 */
 	public function jsonSerialize(): array {
 		return [
 			'providerId' => $this->getProviderId(),
@@ -390,16 +228,67 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 			'tooltip' => $this->getTooltip(),
 			'url' => $this->getUrl(),
 			'range' => $this->getRange(),
-			'linkCreation' => $this->getLinkCreation(),
-			'itemCreation' => $this->getItemCreation(),
-			'itemOwner' => $this->getItemOwner(),
-			'itemLastUpdate' => $this->getItemLastUpdate(),
-			'linkRecipient' => $this->getLinkRecipient(),
-			'linkCreator' => $this->getLinkCreator(),
-			'creation' => $this->getLinkCreation(),
 			'score' => $this->getScore(),
 			'improvements' => $this->getImprovements(),
-			'currentQuality' => $this->getCurrentQuality()
+			'currentQuality' => $this->getCurrentQuality(),
+			'meta' => $this->getMetas()
 		];
+	}
+
+	public static function cleanData(array &$arr): void {
+		static $acceptedKeys = [
+			'providerId', 'itemId', 'title', 'subtitle', 'tooltip', 'url', 'score',
+			'improvements'
+		];
+
+		foreach (array_keys($arr) as $k) {
+			if (!in_array($k, $acceptedKeys)) {
+				unset($arr[$k]);
+			}
+		}
+	}
+
+	public function setMeta(string $k, string $v): IRelatedResource {
+		$this->metas[$k] = $v;
+
+		return $this;
+	}
+
+	public function setMetaInt(string $k, int $v): IRelatedResource {
+		$this->metas[$k] = $v;
+
+		return $this;
+	}
+
+	public function setMetaArray(string $k, array $v): IRelatedResource {
+		$this->metas[$k] = $v;
+
+		return $this;
+	}
+
+	public function setMetas(array $metas): IRelatedResource {
+		$this->metas = array_merge($this->metas, $metas);
+
+		return $this;
+	}
+
+	public function hasMeta(string $k): bool {
+		return $this->validKey($k, $this->metas);
+	}
+
+	public function getMeta(string $k): string {
+		return $this->get($k, $this->metas);
+	}
+
+	public function getMetaInt(string $k): int {
+		return $this->getInt($k, $this->metas);
+	}
+
+	public function getMetaArray(string $k): array {
+		return $this->getArray($k, $this->metas);
+	}
+
+	public function getMetas(): array {
+		return $this->metas;
 	}
 }

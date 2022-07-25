@@ -133,27 +133,31 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 
 	private function convertToRelatedResource(CalendarShare $share): IRelatedResource {
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getCalendarId());
-		$related->setTitle($share->getEventSummary() . ' on ' . date('F j, Y', $share->getEventDate()));
-		$related->setSubtitle('Calendar Event (' . $share->getCalendarName() . ')');
-		$related->setTooltip(
-			$share->getCalendarName() . '/' . $share->getEventSummary() . ' on ' . $share->getEventSummary()
-		);
-		$related->setRange(1);
+		$related->setTitle($share->getEventSummary() . ' on ' . date('F j, Y', $share->getEventDate()))
+				->setSubtitle('Calendar Event (' . $share->getCalendarName() . ')')
+				->setTooltip(
+					$share->getCalendarName() . '/' . $share->getEventSummary()
+					. ' on ' . $share->getEventSummary()
+				)
+				->setUrl(
+					$this->urlGenerator->linkToRouteAbsolute(
+						'calendar.view.indexview.timerange',
+						[
+							'view' => 'timeGridDay',
+							'timeRange' => date('Y-m-d', $share->getEventDate())
+						]
+					)
+				);
+
 
 		try {
-			$related->setLinkCreator($this->extractEntity($share->getCalendarPrincipalUri())->getSingleId());
+			$related->setMeta(
+				RelatedResource::LINK_CREATOR,
+				$this->extractEntity($share->getCalendarPrincipalUri())->getSingleId()
+			);
 		} catch (Exception $e) {
 		}
-//		$related->setLinkCreation($share->getShareTime());
-		$related->setUrl(
-			$this->urlGenerator->linkToRouteAbsolute(
-				'calendar.view.indexview.timerange',
-				[
-					'view' => 'timeGridDay',
-					'timeRange' => date('Y-m-d', $share->getEventDate())
-				]
-			)
-		);
+
 
 		return $related;
 	}
