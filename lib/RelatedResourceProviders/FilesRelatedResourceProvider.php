@@ -161,7 +161,6 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 			$related->setMetaArray(RelatedResource::ITEM_KEYWORDS, $kws);
 		}
 
-		echo '>>> ' . json_encode($related->getMetaArray(RelatedResource::ITEM_KEYWORDS)) . "\n";
 		return $related;
 	}
 
