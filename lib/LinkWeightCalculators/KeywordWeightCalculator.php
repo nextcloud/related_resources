@@ -47,11 +47,7 @@ class KeywordWeightCalculator implements ILinkWeightCalculator {
 		}
 
 		$path = $paths[0];
-		// we might only needs to work on one single path, as we are only interested on item keywords, and not generated links.
-//		foreach ($paths as $path) {
-//			if (!$path->hasMeta(RelatedResource::ITEM_KEYWORDS)) {
-//				continue;
-//			}
+		// we might only need to work on one single path, as we are only interested on item keywords, and not generated links.
 
 		foreach ($result as $entry) {
 			if (!$entry->hasMeta(RelatedResource::ITEM_KEYWORDS)) {
@@ -65,5 +61,4 @@ class KeywordWeightCalculator implements ILinkWeightCalculator {
 			}
 		}
 	}
-//	}
 }
