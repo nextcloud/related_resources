@@ -156,7 +156,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 			]
 		);
 
-		$kws = preg_split('/[\/_\-.\ ]/', ltrim(strtolower($share->getFileTarget()), '/'));
+		$kws = preg_split('/[\/_\-. ]/', ltrim(strtolower($share->getFileTarget()), '/'));
 		if (is_array($kws)) {
 			$related->setMetaArray(RelatedResource::ITEM_KEYWORDS, $kws);
 		}
