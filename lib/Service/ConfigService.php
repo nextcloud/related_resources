@@ -48,9 +48,11 @@ class ConfigService {
 	private IConfig $config;
 
 	public const RESULT_MAX = 'result_max';
+	public const STATS_CACHE = 'stats_cache';
 
 	private static $defaults = [
-		self::RESULT_MAX => 7
+		self::RESULT_MAX => 7,
+		self::STATS_CACHE => '[]'
 	];
 
 	public function __construct(IConfig $config) {
@@ -61,6 +63,9 @@ class ConfigService {
 		$this->config->deleteAppValues(Application::APP_ID);
 	}
 
+	public function setAppValue(string $key, string $value): void {
+		$this->config->setAppValue(Application::APP_ID, $key, $value);
+	}
 
 	public function getAppValue(string $key): string {
 		if (($value = $this->config->getAppValue(Application::APP_ID, $key, '')) !== '') {
@@ -90,6 +95,23 @@ class ConfigService {
 	 */
 	public function getAppValueBool(string $key): bool {
 		return ($this->getAppValueInt($key) === 1);
+	}
+
+	public function updateConfigValues(
+		int $requestShares,
+		int $cachedShares,
+		int $requestRelated,
+		int $cachedRelated
+	) {
+		$curr = json_decode($this->getAppValue(self::STATS_CACHE), true);
+		$new = [
+			'requestShares' => ($curr['requestShares'] ?? 0) + $requestShares,
+			'cachedShares' => ($curr['cachedShares'] ?? 0) + $cachedShares,
+			'requestRelated' => ($curr['requestRelated'] ?? 0) + $requestRelated,
+			'cachedRelated' => ($curr['cachedRelated'] ?? 0) + $cachedRelated
+		];
+
+		$this->setAppValue(self::STATS_CACHE, json_encode($new));
 	}
 }
 

@@ -36,11 +36,14 @@ use OC\Core\Command\Base;
 use OCA\Circles\CirclesManager;
 use OCA\RelatedResources\Service\RelatedService;
 use OCA\RelatedResources\Tools\Traits\TStringTools;
+use OCP\ICache;
+use OCP\ICacheFactory;
 use OCP\IUserManager;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -54,6 +57,7 @@ class Test extends Base {
 	use TStringTools;
 
 	private IUserManager $userManager;
+	private ICache $cache;
 	private OutputInterface $output;
 	private RelatedService $relatedService;
 
@@ -64,11 +68,14 @@ class Test extends Base {
 	 */
 	public function __construct(
 		IUserManager $userManager,
-		RelatedService $relatedService
+		RelatedService $relatedService,
+		ICacheFactory $cacheFactory
 	) {
 		parent::__construct();
 
 		$this->userManager = $userManager;
+		$this->cache = $cacheFactory->createDistributed(RelatedService::CACHE_RELATED);
+
 		$this->relatedService = $relatedService;
 	}
 
@@ -82,6 +89,7 @@ class Test extends Base {
 			 ->setDescription('returns related resource to a share')
 			 ->addArgument('userId', InputArgument::REQUIRED, 'user\'s point of view')
 			 ->addArgument('providerId', InputArgument::REQUIRED, 'Provider Id (ie. files)')
+			 ->addOption('clear-cache', '', InputOption::VALUE_NONE, 'clear cache')
 			 ->addArgument('itemId', InputArgument::REQUIRED, 'Item Id');
 	}
 
@@ -97,6 +105,11 @@ class Test extends Base {
 		$userId = $input->getArgument('userId');
 		$providerId = $input->getArgument('providerId');
 		$itemId = $input->getArgument('itemId');
+
+		if ($input->getOption('clear-cache')) {
+			$this->cache->clear();
+		}
+
 
 		$user = $this->userManager->get($userId);
 		if (is_null($user)) {

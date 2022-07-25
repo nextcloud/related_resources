@@ -31,9 +31,11 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Tools\Traits;
 
+use Exception;
 use JsonSerializable;
 use OCA\RelatedResources\Tools\Exceptions\InvalidItemException;
 use OCA\RelatedResources\Tools\IDeserializable;
+use ReflectionClass;
 
 trait TDeserialize {
 
@@ -64,8 +66,14 @@ trait TDeserialize {
 	 * @throws InvalidItemException
 	 */
 	public function deserialize(array $data, string $class): IDeserializable {
-		if ($class instanceof IDeserializable) {
-			throw new InvalidItemException(get_class($class) . ' does not implement IDeserializable');
+		try {
+			$test = new ReflectionClass($class);
+		} catch (\ReflectionException $e) {
+			throw new InvalidItemException('cannot ReflectionClass ' . $class);
+		}
+
+		if (!in_array(IDeserializable::class, $test->getInterfaceNames())) {
+			throw new InvalidItemException($class . ' does not implement IDeserializable');
 		}
 
 		/** @var IDeserializable $item */
@@ -75,6 +83,33 @@ trait TDeserialize {
 		return $item;
 	}
 
+
+	/**
+	 * force deserialize without checking for implementation of IDeserializable.
+	 * quickest solution to deserialize model from other apps.
+	 *
+	 * @param string $json
+	 * @param string $class
+	 *
+	 * @return array
+	 */
+	public function forceDeserializeArrayFromJson(string $json, string $class): array {
+		$data = json_decode($json, true);
+		if (!is_array($data)) {
+			return [];
+		}
+
+		$arr = [];
+		foreach ($data as $entry) {
+			try {
+				$item = new $class;
+				$arr[] = $item->import($entry);
+			} catch (Exception $e) {
+			}
+		}
+
+		return $arr;
+	}
 
 	/**
 	 * @param string $json

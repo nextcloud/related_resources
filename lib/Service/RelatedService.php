@@ -36,7 +36,6 @@ use OCA\Circles\Exceptions\MembershipNotFoundException;
 use OCA\Circles\Model\FederatedUser;
 use OCA\Circles\Model\Member;
 use OCA\RelatedResources\AppInfo\Application;
-use OCA\RelatedResources\Exceptions\CachedSharesNotFoundException;
 use OCA\RelatedResources\Exceptions\CacheNotFoundException;
 use OCA\RelatedResources\Exceptions\RelatedResourceProviderNotFound;
 use OCA\RelatedResources\ILinkWeightCalculator;
@@ -68,6 +67,7 @@ class RelatedService {
 	private IAppManager $appManager;
 	private ICache $cache;
 	private CirclesManager $circlesManager;
+	private ConfigService $configService;
 
 	/** @var ILinkWeightCalculator[] */
 	private array $weightCalculators = [];
@@ -77,16 +77,24 @@ class RelatedService {
 		TimeWeightCalculator::class
 	];
 
+	private int $requestShares = 0,
+		$requestRelated = 0,
+		$cachedShares = 0,
+		$cachedRelated = 0;
+
 	public function __construct(
 		IAppManager $appManager,
-		ICacheFactory $cacheFactory
+		ICacheFactory $cacheFactory,
+		ConfigService $configService
 	) {
 		$this->appManager = $appManager;
 		$this->cache = $cacheFactory->createDistributed(self::CACHE_RELATED);
+		$this->configService = $configService;
 		$this->circlesManager = \OC::$server->get(CirclesManager::class);
 
 		// TODO: if we keep using ICache, we might need to clean the cache on some actions:
-		//		$this->cache->remove($this->generateCacheKey());
+//				$this->cache->clear();
+//				$this->cache->remove();
 
 		$this->setup('app', Application::APP_ID);
 	}
@@ -110,6 +118,13 @@ class RelatedService {
 			return ($a === $b) ? 0 : (($a > $b) ? -1 : 1);
 		});
 
+		$this->configService->updateConfigValues(
+			$this->requestShares,
+			$this->cachedShares,
+			$this->requestRelated,
+			$this->cachedRelated
+		);
+
 		return ($chunk > -1) ? array_slice($result, 0, $chunk) : $result;
 	}
 
@@ -129,7 +144,6 @@ class RelatedService {
 		}, $recipients);
 
 		$this->debug('recipients returned by ' . $providerId . ': ' . json_encode($recipients));
-//		$this->filterRecipients($recipients);
 
 		$result = $itemPaths = [];
 		foreach ($this->getRelatedResourceProviders() as $provider) {
@@ -196,12 +210,16 @@ class RelatedService {
 	 */
 	public function getSharesRecipients(string $providerId, string $itemId): array {
 		try {
-			return $this->getCachedSharesRecipients($providerId, $itemId);
+			$shares = $this->getCachedSharesRecipients($providerId, $itemId);
+			$this->cachedShares++;
+
+			return $shares;
 		} catch (CacheNotFoundException $e) {
 		}
 
 		$result = $this->getRelatedResourceProvider($providerId)
 					   ->getSharesRecipients($itemId);
+		$this->requestShares++;
 
 		$this->cacheSharesRecipients($providerId, $itemId, $result);
 
@@ -225,7 +243,7 @@ class RelatedService {
 		}
 
 		/** @var FederatedUser[] $result */
-		return $this->deserializeArrayFromJson($cachedData, FederatedUser::class);
+		return $this->forceDeserializeArrayFromJson($cachedData, FederatedUser::class);
 	}
 
 	/**
@@ -251,11 +269,15 @@ class RelatedService {
 	 */
 	private function getRelatedToEntity(IRelatedResourceProvider $provider, FederatedUser $entity): array {
 		try {
-			return $this->getCachedRelatedToEntity($provider, $entity);
+			$related = $this->getCachedRelatedToEntity($provider, $entity);
+			$this->cachedRelated++;
+
+			return $related;
 		} catch (CacheNotFoundException $e) {
 		}
 
 		$result = $provider->getRelatedToEntity($entity);
+		$this->requestRelated++;
 
 		$this->cacheRelatedToEntity($provider, $entity, $result);
 
@@ -338,9 +360,7 @@ class RelatedService {
 							$filtered[] = $entry;
 							break;
 						}
-
 					}
-
 				}
 			}
 		}
