@@ -34,6 +34,7 @@ namespace OCA\RelatedResources\Model;
 
 use JsonSerializable;
 use OCA\RelatedResources\IRelatedResource;
+use OCA\RelatedResources\Tools\IDeserializable;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 
 
@@ -42,7 +43,7 @@ use OCA\RelatedResources\Tools\Traits\TArrayTools;
  *
  * @package OCA\RelatedResources\Model
  */
-class RelatedResource implements IRelatedResource, JsonSerializable {
+class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializable {
 	use TArrayTools;
 
 
@@ -50,6 +51,7 @@ class RelatedResource implements IRelatedResource, JsonSerializable {
 	public static float $IMPROVE_MEDIUM_LINK = 1.3;
 	public static float $IMPROVE_HIGH_LINK = 1.8;
 	public static float $IMPROVE_OCCURRENCE = 1.3;
+	public static float $UNRELATED = 0.85;
 	private static float $DIMINISHING_RETURN = 0.7;
 
 
@@ -82,10 +84,21 @@ class RelatedResource implements IRelatedResource, JsonSerializable {
 		return $this->providerId;
 	}
 
+	public function setProviderId(string $providerId): self {
+		$this->providerId = $providerId;
+
+		return $this;
+	}
+
 	public function getItemId(): string {
 		return $this->itemId;
 	}
 
+	public function setItemId(string $itemId): self {
+		$this->itemId = $itemId;
+
+		return $this;
+	}
 
 	public function setTitle(string $title): IRelatedResource {
 		$this->title = $title;
@@ -268,12 +281,39 @@ class RelatedResource implements IRelatedResource, JsonSerializable {
 	}
 
 
-	/**
-	 * @return array
-	 */
+	public function setScore(int $score): self {
+		$this->score = $score;
+
+		return $this;
+	}
+
+
 	public function getImprovements(): array {
 		return $this->improvements;
 	}
+
+
+	public function setImprovements(array $improvements): self {
+		$this->improvements = $improvements;
+
+		return $this;
+	}
+
+	public function setCurrentQuality(array $currentQuality): self {
+		$this->currentQuality = $currentQuality;
+
+		return $this;
+	}
+
+	public function getCurrentQuality(): array {
+		return $this->currentQuality;
+	}
+
+
+
+
+
+
 
 //
 //	/**
@@ -295,6 +335,49 @@ class RelatedResource implements IRelatedResource, JsonSerializable {
 //	}
 //
 
+
+	public function import(array $data): IDeserializable {
+		$this->setProviderId($this->get('providerId', $data));
+		$this->setItemId($this->get('itemId', $data));
+		$this->setTitle($this->get('title', $data));
+		$this->setSubtitle($this->get('subtitle', $data));
+		$this->setTooltip($this->get('tooltip', $data));
+		$this->setUrl($this->get('url', $data));
+		$this->setRange($this->getInt('range', $data));
+		$this->setLinkCreation($this->getInt('linkCreation', $data));
+		$this->setItemCreation($this->getInt('itemCreation', $data));
+		$this->setItemOwner($this->get('itemOwner', $data));
+		$this->setItemLastUpdate($this->getInt('itemLastUpdate', $data));
+		$this->setLinkRecipient($this->get('linkRecipient', $data));
+		$this->setLinkCreator($this->get('linkCreator', $data));
+
+		$this->setLinkCreation($this->getInt('linkCreation', $data));
+		$this->setScore($this->getInt('score', $data));
+		$this->setImprovements($this->getArray('improvements', $data));
+		$this->setCurrentQuality($this->getArray('currentQuality', $data));
+
+//			'itemCreation' => $this->getItemCreation(),
+//			'itemOwner' => $this->getItemOwner(),
+//			'itemLastUpdate' => $this->getItemLastUpdate(),
+//			'linkRecipient' => $this->getLinkRecipient(),
+//			'linkCreator' => $this->getLinkCreator(),
+//			'creation' => $this->getLinkCreation(),
+//			'score' => $this->getScore(),
+//			'improvements' => $this->getImprovements(),
+//			'currentQuality' => $this->currentQuality
+		return $this;
+	}
+
+
+	public static function cleanData(array &$arr): void {
+		static $acceptedKeys = [
+			'providerId', 'itemId', 'title', 'subtitle', 'tooltip', 'url', 'score',
+			'improvements'
+		];
+
+
+	}
+
 	/**
 	 * @return array
 	 */
@@ -306,12 +389,17 @@ class RelatedResource implements IRelatedResource, JsonSerializable {
 			'subtitle' => $this->getSubtitle(),
 			'tooltip' => $this->getTooltip(),
 			'url' => $this->getUrl(),
-			'lastUpdate' => $this->getItemLastUpdate(),
+			'range' => $this->getRange(),
+			'linkCreation' => $this->getLinkCreation(),
+			'itemCreation' => $this->getItemCreation(),
+			'itemOwner' => $this->getItemOwner(),
+			'itemLastUpdate' => $this->getItemLastUpdate(),
 			'linkRecipient' => $this->getLinkRecipient(),
 			'linkCreator' => $this->getLinkCreator(),
 			'creation' => $this->getLinkCreation(),
 			'score' => $this->getScore(),
-			'improvements' => $this->getImprovements()
+			'improvements' => $this->getImprovements(),
+			'currentQuality' => $this->getCurrentQuality()
 		];
 	}
 }
