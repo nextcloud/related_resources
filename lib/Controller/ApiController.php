@@ -34,6 +34,7 @@ namespace OCA\RelatedResources\Controller;
 
 use Exception;
 use OCA\Circles\CirclesManager;
+use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Service\ConfigService;
 use OCA\RelatedResources\Service\RelatedService;
 use OCA\RelatedResources\Tools\Traits\TDeserialize;
@@ -85,13 +86,31 @@ class ApiController extends OcsController {
 		try {
 			$this->circlesManager->startSession();
 
-			return new DataResponse(
-				$this->relatedService->getRelatedToItem(
-					$providerId,
-					$itemId,
-					$this->configService->getAppValueInt(ConfigService::RESULT_MAX)
-				)
+			// filters users based on a specific Circle (internal testing purpose)
+			try {
+				if ($this->configService->getAppValue(ConfigService::LIMIT_CIRCLE) !== '') {
+					$this->circlesManager->getLink(
+						$this->configService->getAppValue(ConfigService::LIMIT_CIRCLE),
+						$this->circlesManager->getCurrentFederatedUser()->getSingleId()
+					);
+				}
+			} catch (Exception $e) {
+				return new DataResponse([]);
+			}
+
+			$result = $this->relatedService->getRelatedToItem(
+				$providerId,
+				$itemId,
+				$this->configService->getAppValueInt(ConfigService::RESULT_MAX)
 			);
+
+			// cleanData on result, to not send useless data.
+			$new = [];
+			foreach ($result as $related) {
+				$new[] = RelatedResource::cleanData($this->serialize($related));
+			}
+
+			return new DataResponse($new);
 		} catch (Exception $e) {
 			throw new OCSException(
 				($e->getMessage() === '') ? get_class($e) : $e->getMessage(),

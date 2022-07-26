@@ -49,10 +49,12 @@ class ConfigService {
 
 	public const RESULT_MAX = 'result_max';
 	public const STATS_CACHE = 'stats_cache';
+	public const LIMIT_CIRCLE = 'limit_circle';
 
 	private static $defaults = [
 		self::RESULT_MAX => 7,
-		self::STATS_CACHE => '[]'
+		self::STATS_CACHE => '[]',
+		self::LIMIT_CIRCLE => ''
 	];
 
 	public function __construct(IConfig $config) {

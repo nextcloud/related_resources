@@ -235,17 +235,20 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		];
 	}
 
-	public static function cleanData(array &$arr): void {
+	public static function cleanData(array $arr): array {
 		static $acceptedKeys = [
 			'providerId', 'itemId', 'title', 'subtitle', 'tooltip', 'url', 'score',
 			'improvements'
 		];
 
+		$new = [];
 		foreach (array_keys($arr) as $k) {
-			if (!in_array($k, $acceptedKeys)) {
-				unset($arr[$k]);
+			if (in_array($k, $acceptedKeys)) {
+				$new[$k] = $arr[$k];
 			}
 		}
+
+		return $new;
 	}
 
 	public function setMeta(string $k, string $v): IRelatedResource {
