@@ -140,6 +140,11 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		);
 		$related->setMetaInt(RelatedResource::ITEM_LAST_UPDATE, $share->getLastModified());
 
+		$kws = preg_split('/[\/_\-. ]/', ltrim(strtolower($share->getBoardName()), '/'));
+		if (is_array($kws)) {
+			$related->setMetaArray(RelatedResource::ITEM_KEYWORDS, $kws);
+		}
+
 		return $related;
 	}
 

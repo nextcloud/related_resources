@@ -150,6 +150,17 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 				);
 
 
+		$kws = preg_split(
+			'/[\/_\-. ]/',
+			ltrim(
+				strtolower($share->getCalendarName() . ' ' . $share->getEventSummary()),
+				'/'
+			)
+		);
+		if (is_array($kws)) {
+			$related->setMetaArray(RelatedResource::ITEM_KEYWORDS, $kws);
+		}
+
 		try {
 			$related->setMeta(
 				RelatedResource::LINK_CREATOR,

@@ -144,6 +144,11 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 				)
 				->improve(0.5, 'talk_result');
 
+		$kws = preg_split('/[\/_\-. ]/', ltrim(strtolower($share->getRoomName()), '/'));
+		if (is_array($kws)) {
+			$related->setMetaArray(RelatedResource::ITEM_KEYWORDS, $kws);
+		}
+
 		return $related;
 	}
 

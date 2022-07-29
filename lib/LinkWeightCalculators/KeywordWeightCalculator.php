@@ -55,6 +55,9 @@ class KeywordWeightCalculator implements ILinkWeightCalculator {
 			}
 
 			foreach ($entry->getMetaArray(RelatedResource::ITEM_KEYWORDS) as $kw) {
+				if (strlen($kw) < 3) {
+					continue;
+				}
 				if (in_array($kw, $path->getMetaArray(RelatedResource::ITEM_KEYWORDS))) {
 					$entry->improve(RelatedResource::$IMPROVE_HIGH_LINK, 'keywords');
 				}

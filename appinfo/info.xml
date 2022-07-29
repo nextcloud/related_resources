@@ -7,7 +7,7 @@
 	<description>
 		display Related Resources in shares panel.
 	</description>
-	<version>24.0.0-alpha1</version>
+	<version>24.0.0-alpha2</version>
 	<licence>agpl</licence>
 	<author>Maxence Lange</author>
 	<namespace>RelatedResources</namespace>
