@@ -1068,12 +1068,12 @@ class ExtendedQueryBuilder extends QueryBuilder {
 		array $fields,
 		string $alias = ''
 	): self {
+		if ($alias === '') {
+			$alias = $table;
+		}
+
 		$selectFields = array_map(
 			function (string $item) use ($alias) {
-				if ($alias === '') {
-					return $item;
-				}
-
 				return $alias . '.' . $item;
 			}, $fields
 		);
