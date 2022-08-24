@@ -41,6 +41,7 @@ use OCA\RelatedResources\Exceptions\RelatedResourceProviderNotFound;
 use OCA\RelatedResources\ILinkWeightCalculator;
 use OCA\RelatedResources\IRelatedResource;
 use OCA\RelatedResources\IRelatedResourceProvider;
+use OCA\RelatedResources\LinkWeightCalculators\AncienShareWeightCalculator;
 use OCA\RelatedResources\LinkWeightCalculators\KeywordWeightCalculator;
 use OCA\RelatedResources\LinkWeightCalculators\TimeWeightCalculator;
 use OCA\RelatedResources\Model\RelatedResource;
@@ -76,7 +77,8 @@ class RelatedService {
 	/** @var string[] */
 	private static array $weightCalculators_ = [
 		TimeWeightCalculator::class,
-		KeywordWeightCalculator::class
+		KeywordWeightCalculator::class,
+		AncienShareWeightCalculator::class
 	];
 
 	private int $requestShares = 0,
@@ -475,6 +477,5 @@ class RelatedService {
 
 		throw new RelatedResourceProviderNotFound();
 	}
-
 }
 

@@ -34,8 +34,13 @@ use OCA\RelatedResources\ILinkWeightCalculator;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 
-class KeywordWeightCalculator implements ILinkWeightCalculator {
+class AncienShareWeightCalculator implements ILinkWeightCalculator {
 	use TArrayTools;
+
+
+	private static float $RATIO_5Y = 0.4;
+	private static float $RATIO_3Y = 0.7;
+	private static float $RATIO_1Y = 0.85;
 
 
 	/**
@@ -46,25 +51,41 @@ class KeywordWeightCalculator implements ILinkWeightCalculator {
 			return;
 		}
 
-		// we might only need to work on one single path, as we are only interested on item keywords, and not generated links.
-		$path = $paths[0];
-		if (!$path->hasMeta(RelatedResource::ITEM_KEYWORDS)) {
-			return;
-		}
-
-		foreach ($result as $entry) {
-			if (!$entry->hasMeta(RelatedResource::ITEM_KEYWORDS)) {
+		foreach ($paths as $path) {
+			if (!$path->hasMeta(RelatedResource::LINK_CREATION)) {
 				continue;
 			}
 
-			foreach ($entry->getMetaArray(RelatedResource::ITEM_KEYWORDS) as $kw) {
-				if (strlen($kw) <= 3) {
+			foreach ($result as $entry) {
+				if (!$entry->hasMeta(RelatedResource::LINK_CREATION)) {
 					continue;
 				}
-				if (in_array($kw, $path->getMetaArray(RelatedResource::ITEM_KEYWORDS))) {
-					$entry->improve(RelatedResource::$IMPROVE_HIGH_LINK, 'keyword');
+
+				$now = time();
+				$entryCreation = $entry->getMetaInt(RelatedResource::LINK_CREATION);
+				if ($entryCreation < $now - (5 * 360 * 24 * 3600)) { // 3y
+					$entry->improve(self::$RATIO_5Y, 'ancien_5y');
+				} else if ($entryCreation < $now - (3 * 360 * 24 * 3600)) { // 3y
+					$entry->improve(self::$RATIO_3Y, 'ancien_3y');
+				} else if ($entryCreation < $now - (360 * 24 * 3600)) { // 1y
+					$entry->improve(self::$RATIO_3Y, 'ancien_1y');
 				}
+
+				$diff = abs(
+					$path->getMetaInt(RelatedResource::LINK_CREATION)
+					- $entry->getMetaInt(RelatedResource::LINK_CREATION)
+				);
+
+				// calculate an improvement base on 0.75 up to 1.2, based on difference of time between 2 shares
+				// with 1.0 score for a 3 month period
+				$neutral = 90 * 24 * 3600;
+				$ratio = $diff - $neutral;
+				$impr = 1 - ($ratio * 0.2 / $neutral);
+				$impr = max($impr, 0.75);
+				$entry->improve($impr, 'ancien_3m');
 			}
+
+			return;
 		}
 	}
 }
