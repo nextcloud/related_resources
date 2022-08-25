@@ -86,18 +86,6 @@ class ApiController extends OcsController {
 		try {
 			$this->circlesManager->startSession();
 
-			// filters users based on a specific Circle (internal testing purpose)
-			try {
-				if ($this->configService->getAppValue(ConfigService::LIMIT_CIRCLE) !== '') {
-					$this->circlesManager->getLink(
-						$this->configService->getAppValue(ConfigService::LIMIT_CIRCLE),
-						$this->circlesManager->getCurrentFederatedUser()->getSingleId()
-					);
-				}
-			} catch (Exception $e) {
-				return new DataResponse([]);
-			}
-
 			$result = $this->relatedService->getRelatedToItem(
 				$providerId,
 				$itemId,

@@ -79,11 +79,6 @@ class RelatedService {
 		KeywordWeightCalculator::class
 	];
 
-	private int $requestShares = 0,
-		$requestRelated = 0,
-		$cachedShares = 0,
-		$cachedRelated = 0;
-
 	public function __construct(
 		IAppManager $appManager,
 		ICacheFactory $cacheFactory,
@@ -119,13 +114,6 @@ class RelatedService {
 
 			return ($a === $b) ? 0 : (($a > $b) ? -1 : 1);
 		});
-
-		$this->configService->updateConfigValues(
-			$this->requestShares,
-			$this->cachedShares,
-			$this->requestRelated,
-			$this->cachedRelated
-		);
 
 		return ($chunk > -1) ? array_slice($result, 0, $chunk) : $result;
 	}
@@ -213,7 +201,6 @@ class RelatedService {
 	public function getSharesRecipients(string $providerId, string $itemId): array {
 		try {
 			$shares = $this->getCachedSharesRecipients($providerId, $itemId);
-			$this->cachedShares++;
 
 			return $shares;
 		} catch (CacheNotFoundException $e) {
@@ -221,7 +208,6 @@ class RelatedService {
 
 		$result = $this->getRelatedResourceProvider($providerId)
 					   ->getSharesRecipients($itemId);
-		$this->requestShares++;
 
 		$this->cacheSharesRecipients($providerId, $itemId, $result);
 
@@ -272,15 +258,12 @@ class RelatedService {
 	private function getRelatedToEntity(IRelatedResourceProvider $provider, FederatedUser $entity): array {
 		try {
 			$related = $this->getCachedRelatedToEntity($provider, $entity);
-			$this->cachedRelated++;
 
 			return $related;
 		} catch (CacheNotFoundException $e) {
 		}
 
 		$result = $provider->getRelatedToEntity($entity);
-		$this->requestRelated++;
-
 		$this->cacheRelatedToEntity($provider, $entity, $result);
 
 		return $result;
