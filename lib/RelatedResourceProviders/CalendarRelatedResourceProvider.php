@@ -147,7 +147,8 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 							'timeRange' => date('Y-m-d', $share->getEventDate())
 						]
 					)
-				);
+				)
+				->improve(0.6, 'calendar_result');
 
 
 		$kws = preg_split(

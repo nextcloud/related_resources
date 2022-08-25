@@ -142,7 +142,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 						]
 					)
 				)
-				->improve(0.5, 'talk_result');
+				->improve(0.85, 'talk_result');
 
 		$kws = preg_split('/[\/_\-. ]/', ltrim(strtolower($share->getRoomName()), '/'));
 		if (is_array($kws)) {
