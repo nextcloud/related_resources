@@ -7,7 +7,7 @@
 	<description>
 		display Related Resources in shares panel.
 	</description>
-	<version>24.0.0-alpha2</version>
+	<version>25.0.0-beta1</version>
 	<licence>agpl</licence>
 	<author>Maxence Lange</author>
 	<namespace>RelatedResources</namespace>
@@ -19,7 +19,7 @@
 	<bugs>https://github.com/ArtificialOwl/related_resources/issues</bugs>
 	<repository>https://github.com/ArtificialOwl/related_resources.git</repository>
 	<dependencies>
-		<nextcloud min-version="24" max-version="25"/>
+		<nextcloud min-version="25" max-version="25"/>
 	</dependencies>
 
 	<commands>

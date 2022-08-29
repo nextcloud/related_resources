@@ -9,7 +9,7 @@ cert_dir=$(HOME)/.nextcloud/certificates
 github_account=ArtificialOwl
 release_account=
 branch=master
-version=24.0.0-alpha2
+version=25.0.0-beta1
 since_tag=
 
 all: appstore
