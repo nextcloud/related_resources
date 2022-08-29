@@ -63,8 +63,8 @@ class RelatedService {
 	use TDeserialize;
 
 	public const CACHE_RELATED = 'related/related';
-	public const CACHE_RECIPIENT_TTL = 3600;
-	public const CACHE_RELATED_TTL = 3600;
+	public const CACHE_RECIPIENT_TTL = 600;
+	public const CACHE_RELATED_TTL = 600;
 
 	private IAppManager $appManager;
 	private ICache $cache;
@@ -228,7 +228,7 @@ class RelatedService {
 		$key = $this->generateSharesCacheKey($providerId, $itemId);
 		$cachedData = $this->cache->get($key);
 
-		if (!is_string($cachedData)) {
+		if (!is_string($cachedData) || empty($cachedData)) {
 			throw new CacheNotFoundException();
 		}
 
@@ -286,7 +286,7 @@ class RelatedService {
 		$key = $this->generateRelatedToEntityCacheKey($provider, $entity);
 		$cachedData = $this->cache->get($key);
 
-		if (!is_string($cachedData)) {
+		if (!is_string($cachedData) || empty($cachedData)) {
 			throw new CacheNotFoundException();
 		}
 
