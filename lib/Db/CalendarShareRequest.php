@@ -56,6 +56,28 @@ class CalendarShareRequest extends CalendarShareRequestBuilder {
 	 *
 	 * @return CalendarShare[]
 	 */
+	public function getSharesToCircle(string $singleId): array {
+		$qb = $this->getCalendarShareSelectSql();
+		$qb->limit('type', 'calendar');
+		$qb->limit('principaluri', 'principals/circles/' . $singleId);
+
+		$qb->generateSelectAlias(self::$externalTables[self::TABLE_CALENDARS], 'cl', 'cl');
+		$qb->innerJoin(
+			$qb->getDefaultSelectAlias(), self::TABLE_CALENDARS, 'cl',
+			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.resourceid', 'cl.id')
+		);
+
+		$this->linkToCalendarEvents($qb);
+
+		return $this->getItemsFromRequest($qb);
+	}
+
+
+	/**
+	 * @param string $groupName
+	 *
+	 * @return CalendarShare[]
+	 */
 	public function getSharesToGroup(string $groupName): array {
 		$qb = $this->getCalendarShareSelectSql();
 		$qb->limit('type', 'calendar');
