@@ -130,18 +130,22 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 
 
 	private function convertToRelatedResource(TalkRoom $share): IRelatedResource {
+		$url = '';
+		try {
+			$url = $this->urlGenerator->linkToRouteAbsolute(
+				'spreed.Page.showCall',
+				[
+					'token' => $share->getToken()
+				]
+			);
+		} catch (Exception $e) {
+		}
+
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getRoomId());
 		$related->setTitle($share->getRoomName())
 				->setSubtitle('Talk Room')
 				->setTooltip('Talk Room \'' . $share->getRoomName() . '\'')
-				->setUrl(
-					$this->urlGenerator->linkToRouteAbsolute(
-						'spreed.Page.showCall',
-						[
-							'token' => $share->getToken()
-						]
-					)
-				)
+				->setUrl($url)
 				->improve(0.85, 'talk_result');
 
 		$kws = preg_split('/[\/_\-. ]/', ltrim(strtolower($share->getRoomName()), '/'));

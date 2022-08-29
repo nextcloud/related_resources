@@ -113,15 +113,14 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 				$shares = $this->calendarShareRequest->getSharesToGroup($entity->getUserId());
 				break;
 
-			// not supported yet by calendar
-//			case Member::TYPE_CIRCLE:
-//				$shares = $this->calendarShareRequest->getSharesToCircle($entity->getSingleId());
-//				break;
+			case Member::TYPE_CIRCLE:
+				$shares = $this->calendarShareRequest->getSharesToCircle($entity->getSingleId());
+				break;
 
 			default:
 				return [];
 		}
-//
+
 		$related = [];
 		foreach ($shares as $share) {
 			$related[] = $this->convertToRelatedResource($share);
@@ -133,23 +132,24 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 
 	private function convertToRelatedResource(CalendarShare $share): IRelatedResource {
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getCalendarId());
-		$related->setTitle($share->getEventSummary() . ' on ' . date('F j, Y', $share->getEventDate()))
-				->setSubtitle('Calendar Event (' . $share->getCalendarName() . ')')
-				->setTooltip(
-					$share->getCalendarName() . '/' . $share->getEventSummary()
-					. ' on ' . $share->getEventSummary()
-				)
-				->setUrl(
-					$this->urlGenerator->linkToRouteAbsolute(
-						'calendar.view.indexview.timerange',
-						[
-							'view' => 'timeGridDay',
-							'timeRange' => date('Y-m-d', $share->getEventDate())
-						]
-					)
-				)
-				->improve(0.6, 'calendar_result');
 
+		$url = '';
+		try {
+			$url = $this->urlGenerator->linkToRouteAbsolute(
+				'calendar.view.indexview.timerange',
+				[
+					'view' => 'dayGridMonth',
+					'timeRange' => date('Y-m-d', time())
+				]
+			);
+		} catch (Exception $e) {
+		}
+
+		$related->setTitle($share->getCalendarName())
+				->setSubtitle('Calendar')
+				->setTooltip('Calendar \'' . $share->getCalendarName() . '\'')
+				->setUrl($url)
+				->improve(0.6, 'calendar_result');
 
 		$kws = preg_split(
 			'/[\/_\-. ]/',
@@ -169,7 +169,6 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 			);
 		} catch (Exception $e) {
 		}
-
 
 		return $related;
 	}

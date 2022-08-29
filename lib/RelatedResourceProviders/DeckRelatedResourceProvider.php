@@ -131,13 +131,19 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 
 
 	private function convertToRelatedResource(DeckShare $share): IRelatedResource {
+		$url = '';
+		try {
+			$url =
+				$this->urlGenerator->linkToRouteAbsolute('deck.page.index')
+				. '#/board/' . $share->getBoardId();
+		} catch (Exception $e) {
+		}
+
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getBoardId());
 		$related->setTitle($share->getBoardName());
 		$related->setSubtitle('Deck board');
 		$related->setTooltip('Deck board \'' . $share->getBoardName() . '\'');
-		$related->setUrl(
-			$this->urlGenerator->linkToRouteAbsolute('deck.page.index') . '#/board/' . $share->getBoardId()
-		);
+		$related->setUrl($url);
 		$related->setMetaInt(RelatedResource::ITEM_LAST_UPDATE, $share->getLastModified());
 
 		$kws = preg_split('/[\/_\-. ]/', ltrim(strtolower($share->getBoardName()), '/'));
