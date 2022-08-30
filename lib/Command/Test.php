@@ -32,6 +32,7 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\Command;
 
 
+use Exception;
 use OC\Core\Command\Base;
 use OCA\Circles\CirclesManager;
 use OCA\RelatedResources\Service\RelatedService;
@@ -119,7 +120,12 @@ class Test extends Base {
 		$userId = $user->getUID();
 
 		/** @var CirclesManager $circleManager */
-		$circleManager = \OC::$server->get(CirclesManager::class);
+		try {
+			$this->circlesManager = \OC::$server->get(CirclesManager::class);
+		} catch (Exception $e) {
+			throw new Exception('Circles needs to be enabled');
+		}
+
 		$circleManager->startSession($circleManager->getLocalFederatedUser($userId));
 
 

@@ -45,6 +45,7 @@ use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
 use OCP\IUserSession;
+use Psr\Log\LoggerInterface;
 
 
 class ApiController extends OcsController {
@@ -52,24 +53,30 @@ class ApiController extends OcsController {
 	use TDeserialize;
 
 
+	private LoggerInterface $logger;
 	private IUserSession $userSession;
 	private RelatedService $relatedService;
 	private ConfigService $configService;
-	private CirclesManager $circlesManager;
+	private ?CirclesManager $circlesManager = null;
 
 	public function __construct(
 		string $appName,
 		IRequest $request,
+		LoggerInterface $logger,
 		IUserSession $userSession,
 		RelatedService $relatedService,
 		ConfigService $configService
 	) {
 		parent::__construct($appName, $request);
 
+		$this->logger = $logger;
 		$this->userSession = $userSession;
 		$this->relatedService = $relatedService;
 		$this->configService = $configService;
-		$this->circlesManager = \OC::$server->get(CirclesManager::class);
+		try {
+			$this->circlesManager = \OC::$server->get(CirclesManager::class);
+		} catch (Exception $e) {
+		}
 	}
 
 
@@ -83,6 +90,12 @@ class ApiController extends OcsController {
 	 * @throws OCSException
 	 */
 	public function getRelatedResources(string $providerId, string $itemId): DataResponse {
+		if (is_null($this->circlesManager)) {
+			$this->logger->info('RelatedResources require Circles');
+
+			return new DataResponse([]);
+		}
+
 		try {
 			$this->circlesManager->startSession();
 

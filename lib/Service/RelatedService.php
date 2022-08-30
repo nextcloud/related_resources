@@ -31,6 +31,7 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\Service;
 
 
+use Exception;
 use OCA\Circles\CirclesManager;
 use OCA\Circles\Exceptions\MembershipNotFoundException;
 use OCA\Circles\Model\FederatedUser;
@@ -89,7 +90,10 @@ class RelatedService {
 		$this->appManager = $appManager;
 		$this->cache = $cacheFactory->createDistributed(self::CACHE_RELATED);
 		$this->configService = $configService;
-		$this->circlesManager = \OC::$server->get(CirclesManager::class);
+		try {
+			$this->circlesManager = \OC::$server->get(CirclesManager::class);
+		} catch (Exception $e) {
+		}
 
 		// TODO: if we keep using ICache, we might need to clean the cache on some actions:
 //				$this->cache->clear();
