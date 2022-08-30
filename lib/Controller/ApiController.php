@@ -91,7 +91,7 @@ class ApiController extends OcsController {
 	 */
 	public function getRelatedResources(string $providerId, string $itemId): DataResponse {
 		if (is_null($this->circlesManager)) {
-			$this->logger->log(2, 'RelatedResources require Circles');
+			$this->logger->info('RelatedResources require Circles');
 
 			return new DataResponse([]);
 		}
