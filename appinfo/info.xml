@@ -2,22 +2,22 @@
 <info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>related_resources</id>
-	<name>RelatedResources</name>
-	<summary>Related Resources App</summary>
+	<name>Related Resources</name>
+	<summary>Displays resources related to current item in right panel</summary>
 	<description>
-		display Related Resources in shares panel.
+		Displays resources related to current item in right panel.
 	</description>
-	<version>25.0.0-beta1</version>
+	<version>0.9.0</version>
 	<licence>agpl</licence>
 	<author>Maxence Lange</author>
 	<namespace>RelatedResources</namespace>
 	<documentation>
-		<admin>https://github.com/ArtificialOwl/related_resources/</admin>
+		<admin>https://github.com/nextcloud/related_resources/</admin>
 	</documentation>
 	<category>tools</category>
-	<website>https://github.com/ArtificialOwl/related_resources/</website>
-	<bugs>https://github.com/ArtificialOwl/related_resources/issues</bugs>
-	<repository>https://github.com/ArtificialOwl/related_resources.git</repository>
+	<website>https://github.com/nextcloud/related_resources/</website>
+	<bugs>https://github.com/nextcloud/related_resources/issues</bugs>
+	<repository>https://github.com/nextcloud/related_resources.git</repository>
 	<dependencies>
 		<nextcloud min-version="25" max-version="25"/>
 	</dependencies>

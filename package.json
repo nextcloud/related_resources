@@ -1,6 +1,6 @@
 {
 	"name": "related_resources",
-	"version": "24.0.0",
+	"version": "0.9.0",
 	"description": "Related Resources",
 	"main": "main.js",
 	"private": true,
@@ -37,15 +37,15 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/ArtificialOwl/related_resources.git"
+		"url": "git+https://github.com/nextcloud/related_resources.git"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "AGPL",
 	"bugs": {
-		"url": "https://github.com/ArtificialOwl/related_resources/issues"
+		"url": "https://github.com/nextcloud/related_resources/issues"
 	},
-	"homepage": "https://github.com/ArtificialOwl/related_resources#readme",
+	"homepage": "https://github.com/nextcloud/related_resources#readme",
 	"engines": {
 		"node": "^14.0.0",
 		"npm": "^7.0.0"
