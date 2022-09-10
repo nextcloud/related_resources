@@ -14,4 +14,9 @@ webpackConfig.stats = {
 	modules: true,
 }
 
+webpackConfig.output = {
+	path: path.resolve('./js'),
+	filename: 'related_resources.js',
+}
+
 module.exports = webpackConfig
