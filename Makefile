@@ -7,6 +7,8 @@ version=0.9.0
 
 all: release
 
+appstore: release
+
 npm-init:
 	npm install
 
