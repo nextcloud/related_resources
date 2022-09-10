@@ -19,8 +19,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 import Vue from 'vue'
-import {translate, translatePlural} from '@nextcloud/l10n'
+import { translate, translatePlural } from '@nextcloud/l10n'
 
 // eslint-disable-next-line
 __webpack_nonce__ = btoa(OC.requestToken)
@@ -29,14 +30,13 @@ __webpack_public_path__ = OC.linkTo('related_resources', 'js/')
 
 Vue.prototype.t = translate
 Vue.prototype.n = translatePlural
-Vue.config.devtools = true
 
 window.addEventListener('DOMContentLoaded', () => {
 	if (!OCA?.Sharing?.ShareTabSections) {
 		return
 	}
 
-	import('./views/RelatedResources').then((Module) => {
+	import('@nextcloud/vue/dist/Components/NcRelatedResourcesPanel').then((Module) => {
 		OCA.Sharing.ShareTabSections.registerSection((el, fileInfo) => {
 			return Module.default
 		})
