@@ -39,6 +39,7 @@ use OCA\RelatedResources\Service\RelatedService;
 use OCA\RelatedResources\Tools\Traits\TStringTools;
 use OCP\ICache;
 use OCP\ICacheFactory;
+use OCP\IConfig;
 use OCP\IUserManager;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\Table;
@@ -58,20 +59,18 @@ class Test extends Base {
 	use TStringTools;
 
 	private IUserManager $userManager;
+	private IConfig $config;
 	private ICache $cache;
 	private OutputInterface $output;
 	private RelatedService $relatedService;
 
-
-	/**
-	 * @param IUserManager $userManager
-	 * @param RelatedService $relatedService
-	 */
 	public function __construct(
 		IUserManager $userManager,
+		IConfig $config,
 		RelatedService $relatedService,
 		ICacheFactory $cacheFactory
 	) {
+		$this->config = $config;
 		parent::__construct();
 
 		$this->userManager = $userManager;
@@ -87,6 +86,7 @@ class Test extends Base {
 	protected function configure() {
 		parent::configure();
 		$this->setName('related:test')
+			 ->setHidden(!$this->config->getSystemValueBool('debug'))
 			 ->setDescription('returns related resource to a share')
 			 ->addArgument('userId', InputArgument::REQUIRED, 'user\'s point of view')
 			 ->addArgument('providerId', InputArgument::REQUIRED, 'Provider Id (ie. files)')
