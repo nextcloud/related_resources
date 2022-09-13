@@ -67,6 +67,7 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 	private string $title = '';
 	private string $subtitle = '';
 	private string $tooltip = '';
+	private string $icon = '';
 	private string $url = '';
 	private int $range = 0;
 	private float $score = 1;
@@ -130,6 +131,18 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 	public function getTooltip(): string {
 		return $this->tooltip;
 	}
+
+
+	public function setIcon(string $icon): self {
+		$this->icon = $icon;
+
+		return $this;
+	}
+
+	public function getIcon(): string {
+		return $this->icon;
+	}
+
 
 	public function setUrl(string $url): IRelatedResource {
 		$this->url = $url;
@@ -226,6 +239,7 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 			'title' => $this->getTitle(),
 			'subtitle' => $this->getSubtitle(),
 			'tooltip' => $this->getTooltip(),
+			'icon' => $this->getIcon(),
 			'url' => $this->getUrl(),
 			'range' => $this->getRange(),
 			'score' => $this->getScore(),
@@ -237,7 +251,7 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 
 	public static function cleanData(array $arr): array {
 		static $acceptedKeys = [
-			'providerId', 'itemId', 'title', 'subtitle', 'tooltip', 'url', 'score',
+			'providerId', 'itemId', 'title', 'subtitle', 'tooltip', 'url', 'icon', 'score',
 			'improvements'
 		];
 
