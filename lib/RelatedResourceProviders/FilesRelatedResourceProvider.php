@@ -47,6 +47,7 @@ use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
+use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Share\IShare;
 
@@ -58,6 +59,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 
 	private IRootFolder $rootFolder;
 	private IURLGenerator $urlGenerator;
+	private IL10N $l10n;
 	private FilesShareRequest $filesShareRequest;
 	private CirclesManager $circlesManager;
 
@@ -65,10 +67,12 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	public function __construct(
 		IRootFolder $rootFolder,
 		IURLGenerator $urlGenerator,
+		IL10N $l10n,
 		FilesShareRequest $filesShareRequest
 	) {
 		$this->rootFolder = $rootFolder;
 		$this->urlGenerator = $urlGenerator;
+		$this->l10n = $l10n;
 		$this->filesShareRequest = $filesShareRequest;
 		$this->circlesManager = \OC::$server->get(CirclesManager::class);
 	}
@@ -144,8 +148,17 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	private function convertToRelatedResource(FilesShare $share): IRelatedResource {
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getFileId());
 		$related->setTitle($share->getFileTarget());
-		$related->setSubtitle('Files');
-		$related->setTooltip('File ' . $share->getFileTarget());
+		$related->setSubtitle($this->l10n->t('Files'));
+		$related->setTooltip($this->l10n->t('File %s', $share->getFileTarget()));
+		$related->setIcon(
+			$this->urlGenerator->getAbsoluteURL(
+				$this->urlGenerator->imagePath(
+					'files',
+					'app.svg'
+				)
+			)
+		);
+
 		$related->setUrl('/index.php/f/' . $share->getFileId());
 		$related->setMetas(
 			[

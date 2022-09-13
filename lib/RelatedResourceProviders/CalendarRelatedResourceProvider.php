@@ -43,6 +43,7 @@ use OCA\RelatedResources\Model\CalendarShare;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 use OCP\Files\IRootFolder;
+use OCP\IL10N;
 use OCP\IURLGenerator;
 
 class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
@@ -52,16 +53,19 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 
 	private IRootFolder $rootFolder;
 	private IURLGenerator $urlGenerator;
+	private IL10N $l10n;
 	private CalendarShareRequest $calendarShareRequest;
 	private CirclesManager $circlesManager;
 
 	public function __construct(
 		IRootFolder $rootFolder,
 		IURLGenerator $urlGenerator,
+		IL10N $l10n,
 		CalendarShareRequest $calendarShareRequest
 	) {
 		$this->rootFolder = $rootFolder;
 		$this->urlGenerator = $urlGenerator;
+		$this->l10n = $l10n;
 		$this->calendarShareRequest = $calendarShareRequest;
 		$this->circlesManager = \OC::$server->get(CirclesManager::class);
 	}
@@ -146,8 +150,16 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 		}
 
 		$related->setTitle($share->getCalendarName())
-				->setSubtitle('Calendar')
-				->setTooltip('Calendar \'' . $share->getCalendarName() . '\'')
+				->setSubtitle($this->l10n->t('Calendar'))
+				->setTooltip($this->l10n->t('Calendar \'%s\'', $share->getCalendarName()))
+				->setIcon(
+					$this->urlGenerator->getAbsoluteURL(
+						$this->urlGenerator->imagePath(
+							'calendar',
+							'calendar.svg'
+						)
+					)
+				)
 				->setUrl($url)
 				->improve(0.6, 'calendar_result');
 

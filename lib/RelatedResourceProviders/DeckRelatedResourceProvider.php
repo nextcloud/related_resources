@@ -42,6 +42,7 @@ use OCA\RelatedResources\IRelatedResourceProvider;
 use OCA\RelatedResources\Model\DeckShare;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
+use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Share\IShare;
 
@@ -58,12 +59,18 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	private const PROVIDER_ID = 'deck';
 
 	private IUrlGenerator $urlGenerator;
+	private IL10N $l10n;
 	private DeckShareRequest $deckSharesRequest;
 	private CirclesManager $circlesManager;
 
 
-	public function __construct(IUrlGenerator $urlGenerator, DeckShareRequest $deckSharesRequest) {
+	public function __construct(
+		IUrlGenerator $urlGenerator,
+		IL10N $l10n,
+		DeckShareRequest $deckSharesRequest
+	) {
 		$this->urlGenerator = $urlGenerator;
+		$this->l10n = $l10n;
 		$this->deckSharesRequest = $deckSharesRequest;
 		$this->circlesManager = \OC::$server->get(CirclesManager::class);
 	}
@@ -141,8 +148,16 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getBoardId());
 		$related->setTitle($share->getBoardName());
-		$related->setSubtitle('Deck board');
-		$related->setTooltip('Deck board \'' . $share->getBoardName() . '\'');
+		$related->setSubtitle($this->l10n->t('Deck'));
+		$related->setTooltip($this->l10n->t('Deck board \'%s\'', $share->getBoardName()));
+		$related->setIcon(
+			$this->urlGenerator->getAbsoluteURL(
+				$this->urlGenerator->imagePath(
+					'deck',
+					'deck.svg'
+				)
+			)
+		);
 		$related->setUrl($url);
 		$related->setMetaInt(RelatedResource::ITEM_LAST_UPDATE, $share->getLastModified());
 
