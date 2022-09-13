@@ -121,7 +121,7 @@ class Test extends Base {
 
 		/** @var CirclesManager $circleManager */
 		try {
-			$this->circlesManager = \OC::$server->get(CirclesManager::class);
+			$circleManager = \OC::$server->get(CirclesManager::class);
 		} catch (Exception $e) {
 			throw new Exception('Circles needs to be enabled');
 		}
