@@ -14,6 +14,7 @@
 	<documentation>
 		<admin>https://github.com/ArtificialOwl/related_resources/</admin>
 	</documentation>
+	<default_enable />
 	<category>tools</category>
 	<website>https://github.com/ArtificialOwl/related_resources/</website>
 	<bugs>https://github.com/ArtificialOwl/related_resources/issues</bugs>
