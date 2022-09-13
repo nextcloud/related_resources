@@ -42,6 +42,7 @@ use OCA\RelatedResources\IRelatedResourceProvider;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Model\TalkRoom;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
+use OCP\IL10N;
 use OCP\IURLGenerator;
 
 
@@ -51,13 +52,19 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 
 	private const PROVIDER_ID = 'talk';
 
+	private IURLGenerator $urlGenerator;
+	private IL10N $l10n;
 	private TalkRoomRequest $talkRoomRequest;
 	private CirclesManager $circlesManager;
-	private IURLGenerator $urlGenerator;
 
 
-	public function __construct(IURLGenerator $urlGenerator, TalkRoomRequest $talkRoomRequest) {
+	public function __construct(
+		IURLGenerator $urlGenerator,
+		IL10N $l10n,
+		TalkRoomRequest $talkRoomRequest
+	) {
 		$this->urlGenerator = $urlGenerator;
+		$this->l10n = $l10n;
 		$this->talkRoomRequest = $talkRoomRequest;
 		$this->circlesManager = \OC::$server->get(CirclesManager::class);
 	}
@@ -143,9 +150,16 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getRoomId());
 		$related->setTitle($share->getRoomName())
-				->setSubtitle('Talk Room')
-				->setTooltip('Talk Room \'' . $share->getRoomName() . '\'')
-				->setUrl($url)
+				->setSubtitle($this->l10n->t('Talk'))
+				->setTooltip($this->l10n->t('Talk Conversation \'%s\'', $share->getRoomName()))
+				->setIcon(
+					$this->urlGenerator->getAbsoluteURL(
+						$this->urlGenerator->imagePath(
+							'spreed',
+							'app.svg'
+						)
+					)
+				)->setUrl($url)
 				->improve(0.85, 'talk_result');
 
 		$kws = preg_split('/[\/_\-. ]/', ltrim(strtolower($share->getRoomName()), '/'));
