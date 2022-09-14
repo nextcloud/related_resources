@@ -151,7 +151,7 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 
 		$related->setTitle($share->getCalendarName())
 				->setSubtitle($this->l10n->t('Calendar'))
-				->setTooltip($this->l10n->t('Calendar \'%s\'', $share->getCalendarName()))
+				->setTooltip($this->l10n->t('Calendar "%s"', $share->getCalendarName()))
 				->setIcon(
 					$this->urlGenerator->getAbsoluteURL(
 						$this->urlGenerator->imagePath(
