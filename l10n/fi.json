@@ -1,0 +1,7 @@
+{ "translations": {
+    "Calendar" : "Kalenteri",
+    "Deck" : "Pakka",
+    "Files" : "Tiedostot",
+    "Talk" : "Talk"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

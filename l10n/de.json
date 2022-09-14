@@ -1,0 +1,12 @@
+{ "translations": {
+    "Calendar" : "Kalender",
+    "Calendar '%s'" : "Kalender „%s“",
+    "Deck" : "Deck",
+    "Deck board '%s'" : "Deck Board „%s“",
+    "Files" : "Dateien",
+    "File %s" : "Datei %s",
+    "Talk" : "Talk",
+    "Talk conversation '%s'" : "Talk Unterhaltung „%s“",
+    "Related Resources" : "Verwandte Resourcen"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

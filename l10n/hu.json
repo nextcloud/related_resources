@@ -1,0 +1,7 @@
+{ "translations": {
+    "Calendar" : "Naptár",
+    "Deck" : "Kártyák",
+    "Files" : "Fájlok",
+    "Talk" : "Előadás"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}
