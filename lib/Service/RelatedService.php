@@ -206,9 +206,7 @@ class RelatedService {
 	 */
 	public function getSharesRecipients(string $providerId, string $itemId): array {
 		try {
-			$shares = $this->getCachedSharesRecipients($providerId, $itemId);
-
-			return $shares;
+			return $this->getCachedSharesRecipients($providerId, $itemId);
 		} catch (CacheNotFoundException $e) {
 		}
 
@@ -263,9 +261,7 @@ class RelatedService {
 	 */
 	private function getRelatedToEntity(IRelatedResourceProvider $provider, FederatedUser $entity): array {
 		try {
-			$related = $this->getCachedRelatedToEntity($provider, $entity);
-
-			return $related;
+			return $this->getCachedRelatedToEntity($provider, $entity);
 		} catch (CacheNotFoundException $e) {
 		}
 
