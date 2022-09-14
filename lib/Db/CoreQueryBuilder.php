@@ -148,7 +148,7 @@ class CoreQueryBuilder {
 	/**
 	 * this just empty all tables from the app.
 	 */
-	public function uninstallAppTables() {
+	public function uninstallAppTables(): void {
 		$dbConn = \OC::$server->get(Connection::class);
 		$schema = new SchemaWrapper($dbConn);
 
@@ -162,10 +162,7 @@ class CoreQueryBuilder {
 	}
 
 
-	/**
-	 *
-	 */
-	public function uninstallFromMigrations() {
+	public function uninstallFromMigrations(): void {
 		$qb = $this->getQueryBuilder();
 		$qb->delete('migrations');
 		$qb->limit('app', Application::APP_ID);

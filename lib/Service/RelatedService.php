@@ -52,15 +52,14 @@ use OCA\RelatedResources\RelatedResourceProviders\FilesRelatedResourceProvider;
 use OCA\RelatedResources\RelatedResourceProviders\TalkRelatedResourceProvider;
 use OCA\RelatedResources\Tools\Exceptions\ItemNotFoundException;
 use OCA\RelatedResources\Tools\Traits\TDeserialize;
-use OCA\RelatedResources\Tools\Traits\TNCLogger;
 use OCP\App\IAppManager;
 use OCP\ICache;
 use OCP\ICacheFactory;
+use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
 
 class RelatedService {
-	use TNCLogger;
 	use TDeserialize;
 
 	public const CACHE_RELATED = 'related/related';
@@ -69,6 +68,7 @@ class RelatedService {
 
 	private IAppManager $appManager;
 	private ICache $cache;
+	private LoggerInterface $logger;
 	private CirclesManager $circlesManager;
 	private ConfigService $configService;
 
@@ -85,10 +85,12 @@ class RelatedService {
 	public function __construct(
 		IAppManager $appManager,
 		ICacheFactory $cacheFactory,
+		LoggerInterface $logger,
 		ConfigService $configService
 	) {
 		$this->appManager = $appManager;
 		$this->cache = $cacheFactory->createDistributed(self::CACHE_RELATED);
+		$this->logger = $logger;
 		$this->configService = $configService;
 		try {
 			$this->circlesManager = \OC::$server->get(CirclesManager::class);
@@ -98,8 +100,6 @@ class RelatedService {
 		// TODO: if we keep using ICache, we might need to clean the cache on some actions:
 //				$this->cache->clear();
 //				$this->cache->remove();
-
-		$this->setup('app', Application::APP_ID);
 	}
 
 
@@ -139,7 +139,7 @@ class RelatedService {
 			return $federatedUser->getSingleId();
 		}, $recipients);
 
-		$this->debug('recipients returned by ' . $providerId . ': ' . json_encode($recipients));
+		$this->logger->debug('recipients returned by ' . $providerId . ': ' . json_encode($recipients));
 
 		$result = $itemPaths = [];
 		foreach ($this->getRelatedResourceProviders() as $provider) {
@@ -396,7 +396,7 @@ class RelatedService {
 
 					$this->weightCalculators[] = \OC::$server->get($class);
 				} catch (ReflectionException $e) {
-					$this->e($e);
+					$this->logger->notice($e->getMessage());
 				}
 			}
 		}

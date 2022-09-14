@@ -32,4 +32,4 @@ jobs:
         uses: ChristophWurst/xmllint-action@v1
         with:
           xml-file: ./appinfo/info.xml
-          xml-schema-file: ./info.xsd
+          xml-schema-file: ./app-info-shipped.xsd

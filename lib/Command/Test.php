@@ -81,7 +81,7 @@ class Test extends Base {
 
 
 	/**
-	 *
+	 * @return void
 	 */
 	protected function configure() {
 		parent::configure();

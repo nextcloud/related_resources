@@ -52,7 +52,7 @@ class ConfigService {
 		$this->config = $config;
 	}
 
-	public function unsetAppConfig() {
+	public function unsetAppConfig(): void {
 		$this->config->deleteAppValues(Application::APP_ID);
 	}
 

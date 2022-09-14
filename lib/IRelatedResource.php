@@ -45,11 +45,19 @@ interface IRelatedResource {
 
 	public function getSubtitle(): string;
 
+	public function setTooltip(string $tooltip): self;
+
+	public function getTooltip(): string;
+
+	public function setIcon(string $icon): self;
+
+	public function getIcon(): string;
+
 	public function setUrl(string $url): self;
 
 	public function getUrl(): string;
 
-	public function improve(float $quality, string $type, bool $diminishingReturn): self;
+	public function improve(float $quality, string $type, bool $diminishingReturn = true): self;
 
 	public function getImprovements(): array;
 
