@@ -149,7 +149,7 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getBoardId());
 		$related->setTitle($share->getBoardName());
 		$related->setSubtitle($this->l10n->t('Deck'));
-		$related->setTooltip($this->l10n->t('Deck board \'%s\'', $share->getBoardName()));
+		$related->setTooltip($this->l10n->t('Deck board "%s"', $share->getBoardName()));
 		$related->setIcon(
 			$this->urlGenerator->getAbsoluteURL(
 				$this->urlGenerator->imagePath(
