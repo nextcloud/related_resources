@@ -6,4 +6,3 @@ build/
 .settings/
 vendor/
 node_modules/
-js/
