@@ -301,7 +301,7 @@ class RelatedService {
 	/**
 	 * @param IRelatedResourceProvider $provider
 	 * @param FederatedUser $entity
-	 * @param array $related
+	 * @param IRelatedResource[] $related
 	 */
 	private function cacheRelatedToEntity(
 		IRelatedResourceProvider $provider,

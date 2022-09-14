@@ -222,6 +222,7 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		$this->setTitle($this->get('title', $data));
 		$this->setSubtitle($this->get('subtitle', $data));
 		$this->setTooltip($this->get('tooltip', $data));
+		$this->setIcon($this->get('icon', $data));
 		$this->setUrl($this->get('url', $data));
 		$this->setRange($this->getInt('range', $data));
 		$this->setScore($this->getInt('score', $data));
