@@ -151,7 +151,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getRoomId());
 		$related->setTitle($share->getRoomName())
 				->setSubtitle($this->l10n->t('Talk'))
-				->setTooltip($this->l10n->t('Talk conversation \'%s\'', $share->getRoomName()))
+				->setTooltip($this->l10n->t('Talk conversation "%s"', $share->getRoomName()))
 				->setIcon(
 					$this->urlGenerator->getAbsoluteURL(
 						$this->urlGenerator->imagePath(
