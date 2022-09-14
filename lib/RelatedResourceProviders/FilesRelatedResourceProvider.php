@@ -149,7 +149,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getFileId());
 		$related->setTitle(trim($share->getFileTarget(), '/'));
 		$related->setSubtitle($this->l10n->t('Files'));
-		$related->setTooltip($this->l10n->t('File %s', $share->getFileTarget()));
+		$related->setTooltip($this->l10n->t('File "%s"', $share->getFileTarget()));
 		$related->setIcon(
 			$this->urlGenerator->getAbsoluteURL(
 				$this->urlGenerator->imagePath(
