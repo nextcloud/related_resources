@@ -30,13 +30,11 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Service;
 
-
 use Exception;
 use OCA\Circles\CirclesManager;
 use OCA\Circles\Exceptions\MembershipNotFoundException;
 use OCA\Circles\Model\FederatedUser;
 use OCA\Circles\Model\Member;
-use OCA\RelatedResources\AppInfo\Application;
 use OCA\RelatedResources\Exceptions\CacheNotFoundException;
 use OCA\RelatedResources\Exceptions\RelatedResourceProviderNotFound;
 use OCA\RelatedResources\ILinkWeightCalculator;
@@ -465,4 +463,3 @@ class RelatedService {
 		throw new RelatedResourceProviderNotFound();
 	}
 }
-

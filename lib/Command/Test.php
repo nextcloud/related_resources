@@ -31,7 +31,6 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Command;
 
-
 use Exception;
 use OC\Core\Command\Base;
 use OCA\Circles\CirclesManager;
@@ -48,7 +47,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-
 
 /**
  * Class Create
@@ -214,6 +212,4 @@ class Test extends Base {
 
 		$output->writeln('');
 	}
-
 }
-

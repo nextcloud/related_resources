@@ -31,7 +31,6 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\RelatedResourceProviders;
 
-
 use Exception;
 use OC\User\NoUserException;
 use OCA\Circles\CirclesManager;

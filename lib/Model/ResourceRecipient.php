@@ -31,12 +31,10 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Model;
 
-
 use JsonSerializable;
 use OCA\RelatedResources\Tools\Db\IQueryRow;
 use OCA\RelatedResources\Tools\IDeserializable;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
-
 
 /**
  * Class RelatedResource
@@ -98,7 +96,6 @@ class ResourceRecipient implements IQueryRow, JsonSerializable, IDeserializable 
 	 * @return IDeserializable
 	 */
 	public function import(array $data): IDeserializable {
-
 		return $this;
 	}
 
@@ -117,5 +114,4 @@ class ResourceRecipient implements IQueryRow, JsonSerializable, IDeserializable 
 			'singleId' => $this->getSingleId()
 		];
 	}
-
 }

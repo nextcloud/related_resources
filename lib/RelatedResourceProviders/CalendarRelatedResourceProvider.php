@@ -31,7 +31,6 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\RelatedResourceProviders;
 
-
 use Exception;
 use OCA\Circles\CirclesManager;
 use OCA\Circles\Model\FederatedUser;
@@ -228,5 +227,4 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 
 		return $this->circlesManager->getFederatedUser($recipient, $type);
 	}
-
 }

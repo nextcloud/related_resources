@@ -31,7 +31,6 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\RelatedResourceProviders;
 
-
 use Exception;
 use OCA\Circles\CirclesManager;
 use OCA\Circles\Model\FederatedUser;
@@ -44,7 +43,6 @@ use OCA\RelatedResources\Model\TalkRoom;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 use OCP\IL10N;
 use OCP\IURLGenerator;
-
 
 class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	use TArrayTools;

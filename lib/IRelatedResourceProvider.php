@@ -31,11 +31,9 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources;
 
-
 use OCA\Circles\Model\FederatedUser;
 
 interface IRelatedResourceProvider {
-
 	public function getProviderId(): string;
 
 	/**
@@ -62,6 +60,4 @@ interface IRelatedResourceProvider {
 	 * @return IRelatedResource[]
 	 */
 	public function getRelatedToEntity(FederatedUser $entity): array;
-
 }
-

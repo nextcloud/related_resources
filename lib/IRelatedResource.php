@@ -31,7 +31,6 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources;
 
-
 interface IRelatedResource {
 	public function getProviderId(): string;
 

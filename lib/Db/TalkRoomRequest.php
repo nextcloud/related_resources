@@ -31,12 +31,9 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Db;
 
-
 use OCA\RelatedResources\Model\TalkRoom;
 
-
 class TalkRoomRequest extends TalkRoomRequestBuilder {
-
 	/**
 	 * @param int $itemId
 	 *
@@ -107,5 +104,4 @@ class TalkRoomRequest extends TalkRoomRequestBuilder {
 
 		return $this->getItemsFromRequest($qb);
 	}
-
 }

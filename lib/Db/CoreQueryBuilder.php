@@ -31,19 +31,15 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Db;
 
-
 use OC\DB\Connection;
 use OC\DB\SchemaWrapper;
 use OCA\RelatedResources\AppInfo\Application;
 use OCA\RelatedResources\Service\ConfigService;
 
-
 /**
  *
  */
 class CoreQueryBuilder {
-
-
 	public const TABLE_FILES_SHARE = 'share';
 
 	public const TABLE_DECK_SHARE = 'deck_board_acl';
@@ -169,6 +165,4 @@ class CoreQueryBuilder {
 
 		$qb->execute();
 	}
-
 }
-

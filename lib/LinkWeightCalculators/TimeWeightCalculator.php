@@ -31,11 +31,9 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\LinkWeightCalculators;
 
-
 use OCA\RelatedResources\ILinkWeightCalculator;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
-
 
 class TimeWeightCalculator implements ILinkWeightCalculator {
 	use TArrayTools;

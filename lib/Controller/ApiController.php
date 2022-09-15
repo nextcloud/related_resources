@@ -31,7 +31,6 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Controller;
 
-
 use Exception;
 use OCA\Circles\CirclesManager;
 use OCA\RelatedResources\Model\RelatedResource;
@@ -45,7 +44,6 @@ use OCP\AppFramework\OCSController;
 use OCP\IRequest;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
-
 
 class ApiController extends OcsController {
 	use TDeserialize;
