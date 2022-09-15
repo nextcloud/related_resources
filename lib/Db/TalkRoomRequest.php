@@ -35,13 +35,18 @@ use OCA\RelatedResources\Model\TalkRoom;
 
 class TalkRoomRequest extends TalkRoomRequestBuilder {
 	/**
-	 * @param int $itemId
+	 * @param string $token
 	 *
 	 * @return TalkRoom[]
 	 */
-	public function getSharesByItemId(int $itemId): array {
+	public function getSharesByToken(string $token): array {
 		$qb = $this->getTalkRoomSelectSql();
-		$qb->limitInt('room_id', $itemId);
+		$qb->innerJoin(
+			$qb->getDefaultSelectAlias(), self::TABLE_TALK_ROOM, 'tr',
+			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.room_id', 'tr.id')
+		);
+
+		$qb->limit('token', $token, 'tr');
 
 		return $this->getItemsFromRequest($qb);
 	}
