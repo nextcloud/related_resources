@@ -31,12 +31,9 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Db;
 
-
 use OCA\RelatedResources\Model\CalendarShare;
 
-
 class CalendarShareRequest extends CalendarShareRequestBuilder {
-
 	/**
 	 * @param int $itemId
 	 *
@@ -151,5 +148,4 @@ class CalendarShareRequest extends CalendarShareRequestBuilder {
 			$andXSummary
 		);
 	}
-
 }

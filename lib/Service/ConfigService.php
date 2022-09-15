@@ -31,11 +31,9 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Service;
 
-
 use OCA\RelatedResources\AppInfo\Application;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 use OCP\IConfig;
-
 
 class ConfigService {
 	use TArrayTools;
@@ -52,7 +50,7 @@ class ConfigService {
 		$this->config = $config;
 	}
 
-	public function unsetAppConfig() {
+	public function unsetAppConfig(): void {
 		$this->config->deleteAppValues(Application::APP_ID);
 	}
 
@@ -90,4 +88,3 @@ class ConfigService {
 		return ($this->getAppValueInt($key) === 1);
 	}
 }
-

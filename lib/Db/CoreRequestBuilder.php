@@ -31,15 +31,10 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Db;
 
-
-use Doctrine\DBAL\Query\QueryBuilder;
 use OCA\RelatedResources\Tools\Db\ExtendedQueryBuilder;
 
 class CoreRequestBuilder extends ExtendedQueryBuilder {
-
 	public function __construct() {
 		parent::__construct();
 	}
-
 }
-

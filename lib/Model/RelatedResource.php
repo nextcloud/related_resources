@@ -31,12 +31,10 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Model;
 
-
 use JsonSerializable;
 use OCA\RelatedResources\IRelatedResource;
 use OCA\RelatedResources\Tools\IDeserializable;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
-
 
 /**
  * Class RelatedResource

@@ -37,7 +37,6 @@ namespace OCA\RelatedResources\Tools\Db;
  * @package OCA\RelatedResources\Tools\Db
  */
 interface IQueryRow {
-
 	/**
 	 * import data to feed the model.
 	 *

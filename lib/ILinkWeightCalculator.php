@@ -31,14 +31,10 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources;
 
-
 interface ILinkWeightCalculator {
-
 	/**
 	 * @param IRelatedResource[] $paths
 	 * @param IRelatedResource[] $result
 	 */
 	public function weight(array $paths, array &$result): void;
-
 }
-

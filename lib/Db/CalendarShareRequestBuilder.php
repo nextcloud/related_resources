@@ -31,17 +31,12 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Db;
 
-
 use OCA\RelatedResources\Exceptions\FilesShareNotFoundException;
 use OCA\RelatedResources\Model\CalendarShare;
-use OCA\RelatedResources\Model\FilesShare;
 use OCA\RelatedResources\Tools\Exceptions\InvalidItemException;
 use OCA\RelatedResources\Tools\Exceptions\RowNotFoundException;
 
-
 class CalendarShareRequestBuilder extends CoreQueryBuilder {
-
-
 	/**
 	 * @return CoreRequestBuilder
 	 */
@@ -78,6 +73,4 @@ class CalendarShareRequestBuilder extends CoreQueryBuilder {
 	public function getItemsFromRequest(CoreRequestBuilder $qb): array {
 		return $qb->asItems(CalendarShare::class);
 	}
-
 }
-

@@ -31,16 +31,12 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Db;
 
-
 use OCA\RelatedResources\Exceptions\DeckShareNotFoundException;
 use OCA\RelatedResources\Model\DeckShare;
 use OCA\RelatedResources\Tools\Exceptions\InvalidItemException;
 use OCA\RelatedResources\Tools\Exceptions\RowNotFoundException;
 
-
 class DeckShareRequestBuilder extends CoreQueryBuilder {
-
-
 	/**
 	 * @return CoreRequestBuilder
 	 */
@@ -78,6 +74,4 @@ class DeckShareRequestBuilder extends CoreQueryBuilder {
 	public function getItemsFromRequest(CoreRequestBuilder $qb): array {
 		return $qb->asItems(DeckShare::class);
 	}
-
 }
-

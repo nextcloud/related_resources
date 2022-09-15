@@ -31,13 +31,10 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Db;
 
-
 use OCA\RelatedResources\Model\DeckShare;
 use OCP\Share\IShare;
 
-
 class DeckShareRequest extends DeckShareRequestBuilder {
-
 	/**
 	 * @param int $itemId
 	 *

@@ -1,6 +1,6 @@
 {
 	"name": "related_resources",
-	"version": "0.9.0",
+	"version": "0.9.1",
 	"description": "Related Resources",
 	"main": "main.js",
 	"private": true,
@@ -47,7 +47,7 @@
 	},
 	"homepage": "https://github.com/nextcloud/related_resources#readme",
 	"engines": {
-		"node": "^14.0.0",
-		"npm": "^7.0.0"
+		"node": "^16.0.0",
+		"npm": "^7.0.0 || ^8.0.0"
 	}
 }

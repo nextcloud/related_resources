@@ -31,13 +31,10 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Db;
 
-
 use OCA\RelatedResources\Model\FilesShare;
 use OCP\Share\IShare;
 
-
 class FilesShareRequest extends FilesShareRequestBuilder {
-
 	/**
 	 * @param int $itemId
 	 *
@@ -103,7 +100,4 @@ class FilesShareRequest extends FilesShareRequestBuilder {
 
 		return $this->getItemsFromRequest($qb);
 	}
-
-
 }
-

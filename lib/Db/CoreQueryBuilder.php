@@ -31,19 +31,15 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Db;
 
-
 use OC\DB\Connection;
 use OC\DB\SchemaWrapper;
 use OCA\RelatedResources\AppInfo\Application;
 use OCA\RelatedResources\Service\ConfigService;
 
-
 /**
  *
  */
 class CoreQueryBuilder {
-
-
 	public const TABLE_FILES_SHARE = 'share';
 
 	public const TABLE_DECK_SHARE = 'deck_board_acl';
@@ -148,7 +144,7 @@ class CoreQueryBuilder {
 	/**
 	 * this just empty all tables from the app.
 	 */
-	public function uninstallAppTables() {
+	public function uninstallAppTables(): void {
 		$dbConn = \OC::$server->get(Connection::class);
 		$schema = new SchemaWrapper($dbConn);
 
@@ -162,16 +158,11 @@ class CoreQueryBuilder {
 	}
 
 
-	/**
-	 *
-	 */
-	public function uninstallFromMigrations() {
+	public function uninstallFromMigrations(): void {
 		$qb = $this->getQueryBuilder();
 		$qb->delete('migrations');
 		$qb->limit('app', Application::APP_ID);
 
 		$qb->execute();
 	}
-
 }
-

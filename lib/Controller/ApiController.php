@@ -31,14 +31,12 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Controller;
 
-
 use Exception;
 use OCA\Circles\CirclesManager;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Service\ConfigService;
 use OCA\RelatedResources\Service\RelatedService;
 use OCA\RelatedResources\Tools\Traits\TDeserialize;
-use OCA\RelatedResources\Tools\Traits\TNCLogger;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCS\OCSException;
@@ -47,9 +45,7 @@ use OCP\IRequest;
 use OCP\IUserSession;
 use Psr\Log\LoggerInterface;
 
-
 class ApiController extends OcsController {
-	use TNCLogger;
 	use TDeserialize;
 
 

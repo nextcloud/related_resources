@@ -31,12 +31,10 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Model;
 
-
 use JsonSerializable;
 use OCA\Circles\Model\FederatedUser;
 use OCA\RelatedResources\Tools\Db\IQueryRow;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
-
 
 class TalkRoom implements IQueryRow, JsonSerializable {
 	use TArrayTools;
@@ -46,6 +44,7 @@ class TalkRoom implements IQueryRow, JsonSerializable {
 	private string $actorType = '';
 	private string $actorId = '';
 	private string $token = '';
+	private FederatedUser $entity;
 
 
 	public function __construct() {

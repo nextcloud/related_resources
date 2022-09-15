@@ -32,7 +32,6 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\Tools;
 
 interface IDeserializable {
-
 	/**
 	 * @param array $data
 	 *

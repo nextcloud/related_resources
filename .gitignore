@@ -6,4 +6,4 @@ build/
 .settings/
 vendor/
 node_modules/
-js/
+/.php-cs-fixer.cache

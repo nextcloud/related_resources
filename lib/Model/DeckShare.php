@@ -31,12 +31,10 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Model;
 
-
 use JsonSerializable;
 use OCA\Circles\Model\FederatedUser;
 use OCA\RelatedResources\Tools\Db\IQueryRow;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
-
 
 class DeckShare implements IQueryRow, JsonSerializable {
 	use TArrayTools;
@@ -44,6 +42,7 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	private int $boardId = 0;
 	private string $boardName = '';
 	private int $type = 0;
+	private FederatedUser $entity;
 	private string $participant = '';
 	private int $lastModified = 0;
 
@@ -192,5 +191,4 @@ class DeckShare implements IQueryRow, JsonSerializable {
 			'entity' => $this->getEntity()
 		];
 	}
-
 }

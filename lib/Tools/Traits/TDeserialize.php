@@ -38,7 +38,6 @@ use OCA\RelatedResources\Tools\IDeserializable;
 use ReflectionClass;
 
 trait TDeserialize {
-
 	/**
 	 * @param JsonSerializable $model
 	 *
@@ -157,5 +156,4 @@ trait TDeserialize {
 
 		return $this->deserialize($data, $class);
 	}
-
 }

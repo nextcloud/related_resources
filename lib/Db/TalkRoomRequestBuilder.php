@@ -31,16 +31,12 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Db;
 
-
 use OCA\RelatedResources\Exceptions\TalkRoomNotFoundException;
 use OCA\RelatedResources\Model\TalkRoom;
 use OCA\RelatedResources\Tools\Exceptions\InvalidItemException;
 use OCA\RelatedResources\Tools\Exceptions\RowNotFoundException;
 
-
 class TalkRoomRequestBuilder extends CoreQueryBuilder {
-
-
 	/**
 	 * @return CoreRequestBuilder
 	 */
@@ -78,6 +74,4 @@ class TalkRoomRequestBuilder extends CoreQueryBuilder {
 	public function getItemsFromRequest(CoreRequestBuilder $qb): array {
 		return $qb->asItems(TalkRoom::class);
 	}
-
 }
-

@@ -31,7 +31,6 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\AppInfo;
 
-
 use OCA\Files\Event\LoadSidebar;
 use OCA\RelatedResources\Listener\LoadSidebarScript;
 use OCP\AppFramework\App;
@@ -40,16 +39,13 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use Throwable;
 
-
 /**
  * Class Application
  *
  * @package OCA\RelatedResources\AppInfo
  */
 class Application extends App implements IBootstrap {
-
-
-	const APP_ID = 'related_resources';
+	public const APP_ID = 'related_resources';
 
 
 	/**
@@ -65,7 +61,6 @@ class Application extends App implements IBootstrap {
 	 */
 	public function register(IRegistrationContext $context): void {
 		$context->registerEventListener(LoadSidebar::class, LoadSidebarScript::class);
-
 	}
 
 
@@ -76,6 +71,4 @@ class Application extends App implements IBootstrap {
 	 */
 	public function boot(IBootContext $context): void {
 	}
-
 }
-

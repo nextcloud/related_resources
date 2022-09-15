@@ -27,13 +27,11 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Listener;
 
-
 use OCA\RelatedResources\AppInfo\Application;
 use OCA\Files\Event\LoadSidebar;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Util;
-
 
 class LoadSidebarScript implements IEventListener {
 	public function handle(Event $event): void {
