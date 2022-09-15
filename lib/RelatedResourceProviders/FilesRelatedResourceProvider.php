@@ -158,7 +158,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 			)
 		);
 
-		$related->setUrl('/index.php/f/' . $share->getFileId());
+		$related->setUrl($this->urlGenerator->linkToRouteAbsolute('files.View.showFile', ['fileid' => $share->getFileId()]));
 		$related->setMetas(
 			[
 				RelatedResource::ITEM_LAST_UPDATE => $share->getFileLastUpdate(),
