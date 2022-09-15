@@ -84,13 +84,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	 * @return FederatedUser[]
 	 */
 	public function getSharesRecipients(string $itemId): array {
-		$itemId = (int)$itemId;
-
-		if ($itemId < 1) {
-			return [];
-		}
-
-		$shares = $this->talkRoomRequest->getSharesByItemId($itemId);
+		$shares = $this->talkRoomRequest->getSharesByToken($itemId);
 		$this->assignEntities($shares);
 
 		return array_filter(
@@ -146,7 +140,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 		} catch (Exception $e) {
 		}
 
-		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getRoomId());
+		$related = new RelatedResource(self::PROVIDER_ID, $share->getToken());
 		$related->setTitle($share->getRoomName())
 				->setSubtitle($this->l10n->t('Talk'))
 				->setTooltip($this->l10n->t('Talk conversation "%s"', $share->getRoomName()))
