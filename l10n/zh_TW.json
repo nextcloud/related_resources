@@ -2,6 +2,9 @@
     "Calendar" : "日曆",
     "Deck" : "Deck",
     "Files" : "檔案",
-    "Talk" : "交談"
+    "Talk" : "交談",
+    "Related Resources" : "相關資源",
+    "Displays resources related to current item in right panel" : "在右側面板中顯示與目前項目相關的資源",
+    "Displays resources related to current item in right panel." : "在右側面板中顯示與目前項目相關的資源。"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

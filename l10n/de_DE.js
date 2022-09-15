@@ -4,6 +4,9 @@ OC.L10N.register(
     "Calendar" : "Kalender",
     "Deck" : "Deck",
     "Files" : "Dateien",
-    "Talk" : "Talk"
+    "Talk" : "Talk",
+    "Related Resources" : "Verwandte Ressourcen",
+    "Displays resources related to current item in right panel" : "Zeigt verwandte Ressourcen für das aktuelle Element im rechten Bereich an",
+    "Displays resources related to current item in right panel." : "Zeigt verwandte Ressourcen für das aktuelle Element im rechten Bereich an."
 },
 "nplurals=2; plural=(n != 1);");
