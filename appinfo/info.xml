@@ -7,7 +7,7 @@
 	<description>
 		Displays resources related to current item in right panel.
 	</description>
-	<version>0.9.1</version>
+	<version>0.9.2</version>
 	<licence>agpl</licence>
 	<author>Maxence Lange</author>
 	<namespace>RelatedResources</namespace>

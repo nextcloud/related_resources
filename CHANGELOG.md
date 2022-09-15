@@ -1,5 +1,11 @@
 # Changelog
 
+### 0.9.2
+
+- fix issue with icon lost in cache
+- fix files url generation
+- using Talk conversation token instead of its id
+
 ### 0.9.1
 
 - add icon to RelatedResource model
