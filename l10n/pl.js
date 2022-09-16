@@ -2,9 +2,13 @@ OC.L10N.register(
     "related_resources",
     {
     "Calendar" : "Kalendarz",
+    "Calendar \"%s\"" : "Kalendarz \"%s\"",
     "Deck" : "Tablica",
+    "Deck board \"%s\"" : "Tablica \"%s\"",
     "Files" : "Pliki",
+    "File \"%s\"" : "Plik \"%s\"",
     "Talk" : "Talk",
+    "Talk conversation \"%s\"" : "Rozmowa Talk \"%s\"",
     "Related Resources" : "Powiązane zasoby",
     "Displays resources related to current item in right panel" : "Wyświetla zasoby związane z bieżącą pozycją w prawym panelu",
     "Displays resources related to current item in right panel." : "Wyświetla zasoby związane z bieżącą pozycją w prawym panelu."
