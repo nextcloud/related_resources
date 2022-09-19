@@ -94,10 +94,6 @@ class RelatedService {
 			$this->circlesManager = \OC::$server->get(CirclesManager::class);
 		} catch (Exception $e) {
 		}
-
-		// TODO: if we keep using ICache, we might need to clean the cache on some actions:
-//				$this->cache->clear();
-//				$this->cache->remove();
 	}
 
 
@@ -234,6 +230,8 @@ class RelatedService {
 			throw new CacheNotFoundException();
 		}
 
+		$this->logger->debug('existing cache on shares from ' . $providerId . '/' . $itemId);
+
 		/** @var FederatedUser[] $result */
 		return $this->forceDeserializeArrayFromJson($cachedData, FederatedUser::class);
 	}
@@ -245,6 +243,7 @@ class RelatedService {
 	 */
 	private function cacheSharesRecipients(string $providerId, string $itemId, array $recipients): void {
 		$key = $this->generateSharesCacheKey($providerId, $itemId);
+		$this->logger->debug('set cache on shares from ' . $providerId . '/' . $itemId);
 		$this->cache->set($key, json_encode($recipients), self::CACHE_RECIPIENT_TTL);
 	}
 
@@ -285,12 +284,17 @@ class RelatedService {
 		IRelatedResourceProvider $provider,
 		FederatedUser $entity
 	): array {
-		$key = $this->generateRelatedToEntityCacheKey($provider, $entity);
+		$key = $this->generateRelatedToEntityCacheKey($provider->getProviderId(), $entity);
 		$cachedData = $this->cache->get($key);
 
 		if (!is_string($cachedData) || empty($cachedData)) {
 			throw new CacheNotFoundException();
 		}
+
+		$this->logger->debug(
+			'existing cache on related from '
+			. $provider->getProviderId() . ' to ' . $entity->getSingleId()
+		);
 
 		/** @var RelatedResource[] $result */
 		return $this->deserializeArrayFromJson($cachedData, RelatedResource::class);
@@ -306,15 +310,20 @@ class RelatedService {
 		FederatedUser $entity,
 		array $related
 	): void {
-		$key = $this->generateRelatedToEntityCacheKey($provider, $entity);
+		$key = $this->generateRelatedToEntityCacheKey($provider->getProviderId(), $entity);
+		$this->logger->debug(
+			'set cache on related from '
+			. $provider->getProviderId() . ' to ' . $entity->getSingleId()
+		);
+
 		$this->cache->set($key, json_encode($related), self::CACHE_RELATED_TTL);
 	}
 
 	private function generateRelatedToEntityCacheKey(
-		IRelatedResourceProvider $provider,
+		string $providerId,
 		FederatedUser $entity
 	): string {
-		return 'relatedToEntity/' . $provider->getProviderId() . '::' . $entity->getSingleId();
+		return 'relatedToEntity/' . $entity->getSingleId() . '::' . $providerId;
 	}
 
 
@@ -461,5 +470,37 @@ class RelatedService {
 		}
 
 		throw new RelatedResourceProviderNotFound();
+	}
+
+
+	/**
+	 * when a share is created/deleted:
+	 *
+	 * - the list of shares to that item is emptied, so a new list can be generated
+	 *   next time it is required
+	 * - cleaning related items for all providers, based on the previous cached list
+	 *   of recipients+the one affected by the edit
+	 */
+	public function flushCacheAboutItem(
+		string $providerId,
+		string $itemId,
+		FederatedUser $entity
+	) {
+		$key = $this->generateSharesCacheKey($providerId, $itemId);
+
+		$recipients = [$entity];
+		try {
+			$recipients = $this->getCachedSharesRecipients($providerId, $itemId);
+		} catch (CacheNotFoundException $e) {
+		}
+
+		$this->logger->debug('removing cache about shares to ' . $providerId . '/' . $itemId . ' (' . count($recipients) . ')');
+		$this->cache->remove($key);
+
+		foreach ($recipients as $recipient) {
+			$prefix = $this->generateRelatedToEntityCacheKey('', $recipient);
+			$this->logger->debug('removing cache about related to entity ' . $recipient->getSingleId());
+			$this->cache->clear($prefix);
+		}
 	}
 }

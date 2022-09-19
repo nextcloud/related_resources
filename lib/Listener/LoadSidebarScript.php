@@ -40,6 +40,5 @@ class LoadSidebarScript implements IEventListener {
 		}
 
 		Util::addScript(Application::APP_ID, 'related_resources');
-		Util::addStyle(Application::APP_ID, 'icons');
 	}
 }

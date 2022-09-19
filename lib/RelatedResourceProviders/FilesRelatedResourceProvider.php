@@ -41,6 +41,7 @@ use OCA\RelatedResources\IRelatedResource;
 use OCA\RelatedResources\IRelatedResourceProvider;
 use OCA\RelatedResources\Model\FilesShare;
 use OCA\RelatedResources\Model\RelatedResource;
+use OCA\RelatedResources\Service\MiscService;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
@@ -48,7 +49,6 @@ use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\IL10N;
 use OCP\IURLGenerator;
-use OCP\Share\IShare;
 
 class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	use TArrayTools;
@@ -61,21 +61,23 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	private IL10N $l10n;
 	private FilesShareRequest $filesShareRequest;
 	private CirclesManager $circlesManager;
+	private MiscService $miscService;
 
 
 	public function __construct(
 		IRootFolder $rootFolder,
 		IURLGenerator $urlGenerator,
 		IL10N $l10n,
-		FilesShareRequest $filesShareRequest
+		FilesShareRequest $filesShareRequest,
+		MiscService $miscService
 	) {
 		$this->rootFolder = $rootFolder;
 		$this->urlGenerator = $urlGenerator;
 		$this->l10n = $l10n;
 		$this->filesShareRequest = $filesShareRequest;
+		$this->miscService = $miscService;
 		$this->circlesManager = \OC::$server->get(CirclesManager::class);
 	}
-
 
 	public function getProviderId(): string {
 		return self::PROVIDER_ID;
@@ -158,7 +160,9 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 			)
 		);
 
-		$related->setUrl($this->urlGenerator->linkToRouteAbsolute('files.View.showFile', ['fileid' => $share->getFileId()]));
+		$related->setUrl(
+			$this->urlGenerator->linkToRouteAbsolute('files.View.showFile', ['fileid' => $share->getFileId()])
+		);
 		$related->setMetas(
 			[
 				RelatedResource::ITEM_LAST_UPDATE => $share->getFileLastUpdate(),
@@ -191,24 +195,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	 */
 	private function generateSingleId(FilesShare $share): void {
 		try {
-			switch ($share->getShareType()) {
-				case IShare::TYPE_USER:
-					$type = Member::TYPE_USER;
-					break;
-
-				case IShare::TYPE_GROUP:
-					$type = Member::TYPE_GROUP;
-					break;
-
-				case IShare::TYPE_CIRCLE:
-					$type = Member::TYPE_SINGLE;
-					break;
-
-				default:
-					throw new Exception();
-			}
-
-			$entity = $this->circlesManager->getFederatedUser($share->getSharedWith(), $type);
+			$entity = $this->miscService->convertShareRecipient($share->getShareType(), $share->getSharedWith());
 
 			$share->setEntity($entity);
 		} catch (Exception $e) {
