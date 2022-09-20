@@ -1,6 +1,6 @@
 {
 	"name": "related_resources",
-	"version": "0.9.3",
+	"version": "1.0.0",
 	"description": "Related Resources",
 	"main": "main.js",
 	"private": true,
