@@ -3,7 +3,7 @@ app_name=Related_Resources
 build_dir=$(CURDIR)/build/artifacts
 sign_dir=$(build_dir)/sign
 package_name=$(shell echo $(app_name) | tr '[:upper:]' '[:lower:]')
-version=0.9.3
+version=1.1.0-alpha1
 
 all: release
 
@@ -50,7 +50,9 @@ composer-dev:
 	composer install --prefer-dist --dev
 	composer upgrade --prefer-dist --dev
 
-release: clean clean-js composer npm-init build-js-production
+js: clean-js npm-init build-js-production
+
+release: clean composer js
 	mkdir -p $(sign_dir)
 	rsync -a \
 	--exclude=/build \
