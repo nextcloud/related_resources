@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.9.3
+
+- clear cache on share creation/deletion
+
 ### 0.9.2
 
 - fix issue with icon lost in cache
