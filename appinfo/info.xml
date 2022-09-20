@@ -11,7 +11,6 @@
 	<licence>agpl</licence>
 	<author>Maxence Lange</author>
 	<namespace>RelatedResources</namespace>
-	<default_enable/>
 	<documentation>
 		<admin>https://github.com/nextcloud/related_resources/</admin>
 	</documentation>
