@@ -4,6 +4,7 @@ OC.L10N.register(
     "Calendar" : "Egutegia",
     "Deck" : "Deck",
     "Files" : "Fitxategiak",
-    "Talk" : "Hizketaldia"
+    "Talk" : "Hizketaldia",
+    "Related Resources" : "Erlazionatutako baliabideak"
 },
 "nplurals=2; plural=(n != 1);");
