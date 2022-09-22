@@ -63,6 +63,11 @@ class FileShareUpdate implements IEventListener {
 			return;
 		}
 
+		// ignore on public share
+		if ($share->getSharedWith() === null) {
+			return;
+		}
+
 		try {
 			$entity = $this->miscService->convertShareRecipient(
 				$share->getShareType(),
