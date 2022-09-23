@@ -2,9 +2,13 @@ OC.L10N.register(
     "related_resources",
     {
     "Calendar" : "Календар",
+    "Calendar \"%s\"" : "Календар \"%s\"",
     "Deck" : "Колода",
+    "Deck board \"%s\"" : "Палубна дошка \"%s\"",
     "Files" : "Файли",
+    "File \"%s\"" : "Файл \"%s\"",
     "Talk" : "Розмови",
+    "Talk conversation \"%s\"" : "Talk conversation \"%s\"",
     "Related Resources" : "Пов'язані ресурси",
     "Displays resources related to current item in right panel" : "Відображає ресурси, пов’язані з поточним елементом, на правій панелі",
     "Displays resources related to current item in right panel." : "Відображає ресурси, пов’язані з поточним елементом, на правій панелі."
