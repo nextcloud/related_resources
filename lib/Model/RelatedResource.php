@@ -44,7 +44,7 @@ use OCA\RelatedResources\Tools\Traits\TArrayTools;
 class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializable {
 	use TArrayTools;
 
-
+	public static float $MIN_SCORE = 0.75;
 	public static float $IMPROVE_LOW_LINK = 1.1;
 	public static float $IMPROVE_MEDIUM_LINK = 1.3;
 	public static float $IMPROVE_HIGH_LINK = 1.8;

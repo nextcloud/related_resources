@@ -187,7 +187,7 @@ class RelatedService {
 			$this->weightResult($itemPaths, $result);
 		}
 
-		return $result;
+		return $this->filterLowScoreResults($result);
 	}
 
 
@@ -365,6 +365,23 @@ class RelatedService {
 		}
 
 		return $filtered;
+	}
+
+
+
+	/**
+	 * @param IRelatedResource[] $result
+	 *
+	 * @return  IRelatedResource[]
+	 */
+	public function filterLowScoreResults(array $result): array {
+		return array_filter(array_map(function (IRelatedResource $resource): ?IRelatedResource {
+			if ($resource->getScore() > RelatedResource::$MIN_SCORE) {
+				return $resource;
+			}
+
+			return null;
+		}, $result));
 	}
 
 
