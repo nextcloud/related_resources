@@ -205,6 +205,12 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 	}
 
 
+	/**
+	 * @param string $principalUri
+	 *
+	 * @return FederatedUser
+	 * @throws Exception
+	 */
 	private function extractEntity(string $principalUri): FederatedUser {
 		[$shareType, $recipient] = explode('/', substr($principalUri, 11), 2);
 
