@@ -9,6 +9,8 @@ OC.L10N.register(
     "File \"%s\"" : "\"%s\" fitxategia",
     "Talk" : "Hizketaldia",
     "Talk conversation \"%s\"" : "\"%s\" Talk elkarrizketa",
-    "Related Resources" : "Erlazionatutako baliabideak"
+    "Related Resources" : "Erlazionatutako baliabideak",
+    "Displays resources related to current item in right panel" : "Uneko elementuarekin lotutako baliabideak erakusten ditu eskuineko panelean",
+    "Displays resources related to current item in right panel." : "Uneko elementuarekin lotutako baliabideak erakusten ditu eskuineko panelean."
 },
 "nplurals=2; plural=(n != 1);");
