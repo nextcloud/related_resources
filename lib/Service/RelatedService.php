@@ -209,9 +209,31 @@ class RelatedService {
 		$result = $this->getRelatedResourceProvider($providerId)
 					   ->getSharesRecipients($itemId);
 
+		$this->filterSharesRecipients($result);
 		$this->cacheSharesRecipients($providerId, $itemId, $result);
 
 		return $result;
+	}
+
+
+	/**
+	 * removing shares if recipient is current user
+	 *
+	 * @param array $recipients
+	 *
+	 * @return array
+	 */
+	private function filterSharesRecipients(array $recipients): array {
+		return array_filter(
+			array_map(function (FederatedUser $federatedUser): ?FederatedUser {
+				if ($federatedUser->getSingleId() === $this->circlesManager->getCurrentFederatedUser()
+																		   ->getSingleId()) {
+					return null;
+				}
+
+				return $federatedUser;
+			}, $recipients)
+		);
 	}
 
 
@@ -494,7 +516,9 @@ class RelatedService {
 		} catch (CacheNotFoundException $e) {
 		}
 
-		$this->logger->debug('removing cache about shares to ' . $providerId . '/' . $itemId . ' (' . count($recipients) . ')');
+		$this->logger->debug(
+			'removing cache about shares to ' . $providerId . '/' . $itemId . ' (' . count($recipients) . ')'
+		);
 		$this->cache->remove($key);
 
 		foreach ($recipients as $recipient) {
