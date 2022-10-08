@@ -121,9 +121,9 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	 */
 	public function getRelatedToEntity(FederatedUser $entity): array {
 		switch ($entity->getBasedOn()->getSource()) {
-			case Member::TYPE_USER:
-				$shares = $this->filesShareRequest->getSharesToUser($entity->getUserId());
-				break;
+//			case Member::TYPE_USER:
+//				$shares = $this->filesShareRequest->getSharesToUser($entity->getUserId());
+//				break;
 
 			case Member::TYPE_GROUP:
 				$shares = $this->filesShareRequest->getSharesToGroup($entity->getUserId());
