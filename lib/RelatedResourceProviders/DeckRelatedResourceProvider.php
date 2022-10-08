@@ -173,7 +173,10 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	 */
 	private function assignEntities(array $shares): void {
 		foreach ($shares as $share) {
-			$this->assignEntity($share);
+			try {
+				$this->assignEntity($share);
+			} catch (Exception $e) {
+			}
 		}
 	}
 
