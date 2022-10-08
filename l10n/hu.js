@@ -4,6 +4,6 @@ OC.L10N.register(
     "Calendar" : "Naptár",
     "Deck" : "Kártyák",
     "Files" : "Fájlok",
-    "Talk" : "Előadás"
+    "Talk" : "Beszélgetés"
 },
 "nplurals=2; plural=(n != 1);");
