@@ -1,14 +1,14 @@
 { "translations": {
     "Calendar" : "Calendari",
-    "Calendar \"%s\"" : "Calendari %s",
-    "Deck" : "Tauler",
-    "Deck board \"%s\"" : "Tauler \"%s\"",
+    "Calendar \"%s\"" : "Calendari «%s»",
+    "Deck" : "Targetes",
+    "Deck board \"%s\"" : "Tauler de targetes «%s»",
     "Files" : "Fitxers",
-    "File \"%s\"" : "Fitxer \"%s\"",
-    "Talk" : "Parla",
-    "Talk conversation \"%s\"" : "Parla conversació \"%s\"",
+    "File \"%s\"" : "Fitxer «%s»",
+    "Talk" : "Converses",
+    "Talk conversation \"%s\"" : "Conversa «%s»",
     "Related Resources" : "Recursos relacionats",
-    "Displays resources related to current item in right panel" : "Mostra recursos relacionats amb l'element actual al panell dret",
-    "Displays resources related to current item in right panel." : "Mostra recursos relacionats amb l'element actual al panell dret."
+    "Displays resources related to current item in right panel" : "Mostra recursos relacionats amb l'element actual en el tauler dret",
+    "Displays resources related to current item in right panel." : "Mostra recursos relacionats amb l'element actual en el tauler dret."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
