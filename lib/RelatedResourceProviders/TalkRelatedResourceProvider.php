@@ -102,9 +102,9 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	 */
 	public function getRelatedToEntity(FederatedUser $entity): array {
 		switch ($entity->getBasedOn()->getSource()) {
-			case Member::TYPE_USER:
-				$shares = $this->talkRoomRequest->getSharesToUser($entity->getUserId());
-				break;
+//			case Member::TYPE_USER:
+//				$shares = $this->talkRoomRequest->getSharesToUser($entity->getUserId());
+//				break;
 
 			case Member::TYPE_GROUP:
 				$shares = $this->talkRoomRequest->getSharesToGroup($entity->getUserId());
@@ -180,9 +180,9 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	private function assignEntity(TalkRoom $share): void {
 		try {
 			switch ($share->getActorType()) {
-				case 'users':
-					$type = Member::TYPE_USER;
-					break;
+//				case 'users':
+//					$type = Member::TYPE_USER;
+//					break;
 
 				case 'groups':
 					$type = Member::TYPE_GROUP;
