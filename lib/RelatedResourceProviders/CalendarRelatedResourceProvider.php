@@ -107,10 +107,9 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 	 */
 	public function getRelatedToEntity(FederatedUser $entity): array {
 		switch ($entity->getBasedOn()->getSource()) {
-			case Member::TYPE_USER:
-				$shares = $this->calendarShareRequest->getSharesToUser($entity->getUserId());
-
-				return [];
+//			case Member::TYPE_USER:
+//				$shares = $this->calendarShareRequest->getSharesToUser($entity->getUserId());
+//				break;
 
 			case Member::TYPE_GROUP:
 				$shares = $this->calendarShareRequest->getSharesToGroup($entity->getUserId());
@@ -215,9 +214,9 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 		[$shareType, $recipient] = explode('/', substr($principalUri, 11), 2);
 
 		switch ($shareType) {
-			case 'users':
-				$type = Member::TYPE_USER;
-				break;
+//			case 'users':
+//				$type = Member::TYPE_USER;
+//				break;
 
 			case 'groups':
 				$type = Member::TYPE_GROUP;

@@ -44,7 +44,7 @@ class TalkRoom implements IQueryRow, JsonSerializable {
 	private string $actorType = '';
 	private string $actorId = '';
 	private string $token = '';
-	private FederatedUser $entity;
+	private ?FederatedUser $entity = null;
 
 
 	public function __construct() {
