@@ -147,13 +147,21 @@ class RelatedService {
 					// also we do not want to filter duplicate
 					if ($provider->getProviderId() === $providerId && $related->getItemId() === $itemId) {
 						$itemPaths[] = $related;
-					}
-
-					// improve score on over-shared items
-					$spread = $this->getSharesRecipients($related->getProviderId(), $related->getItemId());
-					foreach ($spread as $shareRecipient) {
-						if (!in_array($shareRecipient->getSingleId(), $validRecipientIds)) {
-							$related->improve(RelatedResource::$UNRELATED, 'unrelated', false);
+					} else {
+						$relatedValidRecipients = [];
+						// improve score on over-shared items
+						$spread =
+							$this->getSharesRecipients($related->getProviderId(), $related->getItemId());
+						foreach ($spread as $shareRecipient) {
+							if (!in_array($shareRecipient->getSingleId(), $validRecipientIds)) {
+								$related->improve(RelatedResource::$UNRELATED, 'unrelated', false);
+							}
+							$relatedValidRecipients[] = $shareRecipient->getSingleId();
+						}
+						foreach ($validRecipientIds as $validRecipientId) {
+							if (!in_array($validRecipientId, $relatedValidRecipients)) {
+								$related->improve(RelatedResource::$UNRELATED, 'unrelated', false);
+							}
 						}
 					}
 
@@ -187,7 +195,7 @@ class RelatedService {
 			$this->weightResult($itemPaths, $result);
 		}
 
-		return $result;
+		return $this->filterLowScoreResults($result);
 	}
 
 
@@ -365,6 +373,19 @@ class RelatedService {
 		}
 
 		return $filtered;
+	}
+
+
+
+	/**
+	 * @param IRelatedResource[] $result
+	 *
+	 * @return  IRelatedResource[]
+	 */
+	public function filterLowScoreResults(array $result): array {
+		return array_filter($result, function (IRelatedResource $resource): bool {
+			return ($resource->getScore() > RelatedResource::$MIN_SCORE);
+		});
 	}
 
 

@@ -44,13 +44,13 @@ use OCA\RelatedResources\Tools\Traits\TArrayTools;
 class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializable {
 	use TArrayTools;
 
-
+	public static float $MIN_SCORE = 0.9;
 	public static float $IMPROVE_LOW_LINK = 1.1;
 	public static float $IMPROVE_MEDIUM_LINK = 1.3;
 	public static float $IMPROVE_HIGH_LINK = 1.8;
-	public static float $IMPROVE_OCCURRENCE = 1.3;
-	public static float $UNRELATED = 0.85;
-	private static float $DIMINISHING_RETURN = 0.7;
+	public static float $IMPROVE_OCCURRENCE = 1.4;
+	public static float $UNRELATED = 0;
+	private static float $DIMINISHING_RETURN = 0.6;
 
 	public const ITEM_OWNER = 'itemOwner';
 	public const ITEM_CREATION = 'itemCreation';
