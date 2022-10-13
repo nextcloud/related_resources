@@ -60,9 +60,9 @@ class MiscService {
 		}
 
 		switch ($shareType) {
-			case IShare::TYPE_USER:
-				$type = Member::TYPE_USER;
-				break;
+//			case IShare::TYPE_USER:
+//				$type = Member::TYPE_USER;
+//				break;
 
 			case IShare::TYPE_GROUP:
 				$type = Member::TYPE_GROUP;

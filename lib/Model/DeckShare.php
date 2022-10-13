@@ -42,7 +42,7 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	private int $boardId = 0;
 	private string $boardName = '';
 	private int $type = 0;
-	private FederatedUser $entity;
+	private ?FederatedUser $entity = null;
 	private string $participant = '';
 	private int $lastModified = 0;
 

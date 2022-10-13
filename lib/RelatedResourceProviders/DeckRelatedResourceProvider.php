@@ -110,9 +110,9 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	 */
 	public function getRelatedToEntity(FederatedUser $entity): array {
 		switch ($entity->getBasedOn()->getSource()) {
-			case Member::TYPE_USER:
-				$shares = $this->deckSharesRequest->getSharesToUser($entity->getUserId());
-				break;
+//			case Member::TYPE_USER:
+//				$shares = $this->deckSharesRequest->getSharesToUser($entity->getUserId());
+//				break;
 
 			case Member::TYPE_GROUP:
 				$shares = $this->deckSharesRequest->getSharesToGroup($entity->getUserId());
@@ -186,9 +186,9 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	private function assignEntity(DeckShare $share): void {
 		try {
 			switch ($share->getType()) {
-				case IShare::TYPE_USER:
-					$type = Member::TYPE_USER;
-					break;
+//				case IShare::TYPE_USER:
+//					$type = Member::TYPE_USER;
+//					break;
 
 				case IShare::TYPE_GROUP:
 					$type = Member::TYPE_GROUP;
