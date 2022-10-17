@@ -33,85 +33,61 @@ namespace OCA\RelatedResources\Model;
 
 use JsonSerializable;
 use OCA\RelatedResources\Tools\Db\IQueryRow;
-use OCA\RelatedResources\Tools\IDeserializable;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 
-/**
- * Class RelatedResource
- *
- * @package OCA\RelatedResources\Model
- */
-class ResourceRecipient implements IQueryRow, JsonSerializable, IDeserializable {
+class Calendar implements IQueryRow, JsonSerializable {
 	use TArrayTools;
 
-
-	private string $singleId;
-	private int $range = 0;
+	private int $calendarId = 0;
+	private string $calendarName = '';
+	private string $calendarPrincipalUri = '';
 
 	public function __construct() {
 	}
 
-
-	/**
-	 * @param string $singleId
-	 *
-	 * @return ResourceRecipient
-	 */
-	public function setSingleId(string $singleId): self {
-		$this->singleId = $singleId;
+	public function setCalendarId(int $calendarId): self {
+		$this->calendarId = $calendarId;
 
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getSingleId(): string {
-		return $this->singleId;
+	public function getCalendarId(): int {
+		return $this->calendarId;
 	}
 
-
-	/**
-	 * @param int $range
-	 *
-	 * @return ResourceRecipient
-	 */
-	public function setRange(int $range): self {
-		$this->range = $range;
+	public function setCalendarName(string $calendarName): self {
+		$this->calendarName = $calendarName;
 
 		return $this;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getRange(): int {
-		return $this->range;
+	public function getCalendarName(): string {
+		return $this->calendarName;
 	}
 
+	public function setCalendarPrincipalUri(string $calendarPrincipalUri): self {
+		$this->calendarPrincipalUri = $calendarPrincipalUri;
 
-	/**
-	 * @param array $data
-	 *
-	 * @return IDeserializable
-	 */
-	public function import(array $data): IDeserializable {
 		return $this;
+	}
+
+	public function getCalendarPrincipalUri(): string {
+		return $this->calendarPrincipalUri;
 	}
 
 	public function importFromDatabase(array $data): IQueryRow {
-//		$this->setSingleId($this->get('single_id'));
-		// TODO: Implement importFromDatabase() method.
+		$this->setCalendarId($this->getInt('id', $data))
+			 ->setCalendarName($this->get('displayname', $data))
+			 ->setCalendarPrincipalUri($this->get('principaluri', $data));
 
 		return $this;
 	}
 
-	/**
-	 * @return array
-	 */
 	public function jsonSerialize(): array {
 		return [
-			'singleId' => $this->getSingleId()
+			'id' => $this->getCalendarId(),
+			'calendarName' => $this->getCalendarName(),
+			'calendarPrincipalUri' => $this->getCalendarPrincipalUri()
 		];
 	}
 }

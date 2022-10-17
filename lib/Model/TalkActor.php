@@ -35,63 +35,22 @@ use JsonSerializable;
 use OCA\RelatedResources\Tools\Db\IQueryRow;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 
-class DeckShare implements IQueryRow, JsonSerializable {
+class TalkActor implements IQueryRow, JsonSerializable {
 	use TArrayTools;
 
-	private int $boardId = 0;
-	private int $recipientType = 0;
-	private string $recipientId = '';
-
+	private string $actorType = '';
+	private string $actorId = '';
 
 	public function __construct() {
 	}
 
-
 	/**
-	 * @param int $boardId
+	 * @param string $actorType
 	 *
-	 * @return DeckShare
+	 * @return TalkActor
 	 */
-	public function setBoardId(int $boardId): self {
-		$this->boardId = $boardId;
-
-		return $this;
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getBoardId(): int {
-		return $this->boardId;
-	}
-
-
-	/**
-	 * @param int $recipientType
-	 *
-	 * @return DeckShare
-	 */
-	public function setRecipientType(int $recipientType): self {
-		$this->recipientType = $recipientType;
-
-		return $this;
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getRecipientType(): int {
-		return $this->recipientType;
-	}
-
-
-	/**
-	 * @param string $recipientId
-	 *
-	 * @return DeckShare
-	 */
-	public function setRecipientId(string $recipientId): self {
-		$this->recipientId = $recipientId;
+	public function setActorType(string $actorType): self {
+		$this->actorType = $actorType;
 
 		return $this;
 	}
@@ -99,8 +58,26 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	/**
 	 * @return string
 	 */
-	public function getRecipientId(): string {
-		return $this->recipientId;
+	public function getActorType(): string {
+		return $this->actorType;
+	}
+
+	/**
+	 * @param string $actorId
+	 *
+	 * @return TalkActor
+	 */
+	public function setActorId(string $actorId): self {
+		$this->actorId = $actorId;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getActorId(): string {
+		return $this->actorId;
 	}
 
 
@@ -110,9 +87,8 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	 * @return IQueryRow
 	 */
 	public function importFromDatabase(array $data): IQueryRow {
-		$this->setBoardId($this->getInt('board_id', $data))
-			 ->setRecipientType($this->getInt('type', $data))
-			 ->setRecipientId($this->get('participant', $data));
+		$this->setActorType($this->get('actor_type', $data))
+			 ->setActorId($this->get('actor_id', $data));
 
 		return $this;
 	}
@@ -122,9 +98,8 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	 */
 	public function jsonSerialize(): array {
 		return [
-			'boardId' => $this->getBoardId(),
-			'recipientType' => $this->getRecipientType(),
-			'recipientId' => $this->getRecipientId()
+			'actorType' => $this->getActorType(),
+			'actorId' => $this->getActorId()
 		];
 	}
 }
