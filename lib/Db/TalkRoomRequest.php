@@ -31,16 +31,32 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Db;
 
+use OCA\RelatedResources\Exceptions\TalkDataNotFoundException;
+use OCA\RelatedResources\Model\TalkActor;
 use OCA\RelatedResources\Model\TalkRoom;
 
 class TalkRoomRequest extends TalkRoomRequestBuilder {
 	/**
 	 * @param string $token
 	 *
-	 * @return TalkRoom[]
+	 * @return TalkRoom
+	 * @throws TalkDataNotFoundException
 	 */
-	public function getSharesByToken(string $token): array {
+	public function getRoomByToken(string $token): TalkRoom {
 		$qb = $this->getTalkRoomSelectSql();
+		$qb->limit('token', $token);
+
+		return $this->getRoomFromRequest($qb);
+	}
+
+
+	/**
+	 * @param string $token
+	 *
+	 * @return TalkActor[]
+	 */
+	public function getActorsByToken(string $token): array {
+		$qb = $this->getActorSelectSql();
 		$qb->innerJoin(
 			$qb->getDefaultSelectAlias(), self::TABLE_TALK_ROOM, 'tr',
 			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.room_id', 'tr.id')
@@ -48,7 +64,7 @@ class TalkRoomRequest extends TalkRoomRequestBuilder {
 
 		$qb->limit('token', $token, 'tr');
 
-		return $this->getItemsFromRequest($qb);
+		return $this->getActorsFromRequest($qb);
 	}
 
 
@@ -57,18 +73,17 @@ class TalkRoomRequest extends TalkRoomRequestBuilder {
 	 *
 	 * @return TalkRoom[]
 	 */
-	public function getSharesToCircle(string $singleId): array {
+	public function getRoomsAvailableToCircle(string $singleId): array {
 		$qb = $this->getTalkRoomSelectSql();
-		$qb->limit('actor_type', 'circles');
-		$qb->limit('actor_id', $singleId);
-
-		$qb->generateSelectAlias(self::$externalTables[self::TABLE_TALK_ROOM], 'tr', 'tr');
 		$qb->innerJoin(
-			$qb->getDefaultSelectAlias(), self::TABLE_TALK_ROOM, 'tr',
-			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.room_id', 'tr.id')
+			$qb->getDefaultSelectAlias(), self::TABLE_TALK_ATTENDEE, 'ta',
+			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.id', 'ta.room_id')
 		);
 
-		return $this->getItemsFromRequest($qb);
+		$qb->limit('actor_type', 'circles', 'ta');
+		$qb->limit('actor_id', $singleId, 'ta');
+
+		return $this->getRoomsFromRequest($qb);
 	}
 
 
@@ -77,18 +92,17 @@ class TalkRoomRequest extends TalkRoomRequestBuilder {
 	 *
 	 * @return TalkRoom[]
 	 */
-	public function getSharesToGroup(string $groupName): array {
+	public function getRoomsAvailableToGroup(string $groupName): array {
 		$qb = $this->getTalkRoomSelectSql();
-		$qb->limit('actor_type', 'groups');
-		$qb->limit('actor_id', $groupName);
-
-		$qb->generateSelectAlias(self::$externalTables[self::TABLE_TALK_ROOM], 'tr', 'tr');
 		$qb->innerJoin(
-			$qb->getDefaultSelectAlias(), self::TABLE_TALK_ROOM, 'tr',
-			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.room_id', 'tr.id')
+			$qb->getDefaultSelectAlias(), self::TABLE_TALK_ATTENDEE, 'ta',
+			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.id', 'ta.room_id')
 		);
 
-		return $this->getItemsFromRequest($qb);
+		$qb->limit('actor_type', 'groups', 'ta');
+		$qb->limit('actor_id', $groupName, 'ta');
+
+		return $this->getRoomsFromRequest($qb);
 	}
 
 	/**
@@ -96,17 +110,16 @@ class TalkRoomRequest extends TalkRoomRequestBuilder {
 	 *
 	 * @return TalkRoom[]
 	 */
-	public function getSharesToUser(string $userName): array {
+	public function getRoomsAvailableToUser(string $userName): array {
 		$qb = $this->getTalkRoomSelectSql();
-		$qb->limit('actor_type', 'users');
-		$qb->limit('actor_id', $userName);
-
-		$qb->generateSelectAlias(self::$externalTables[self::TABLE_TALK_ROOM], 'tr', 'tr');
 		$qb->innerJoin(
-			$qb->getDefaultSelectAlias(), self::TABLE_TALK_ROOM, 'tr',
-			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.room_id', 'tr.id')
+			$qb->getDefaultSelectAlias(), self::TABLE_TALK_ATTENDEE, 'ta',
+			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.id', 'ta.room_id')
 		);
 
-		return $this->getItemsFromRequest($qb);
+		$qb->limit('actor_type', 'users', 'ta');
+		$qb->limit('actor_id', $userName, 'ta');
+
+		return $this->getRoomsFromRequest($qb);
 	}
 }

@@ -35,13 +35,13 @@ use JsonSerializable;
 use OCA\RelatedResources\Tools\Db\IQueryRow;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 
-class DeckShare implements IQueryRow, JsonSerializable {
+class DeckBoard implements IQueryRow, JsonSerializable {
 	use TArrayTools;
 
 	private int $boardId = 0;
-	private int $recipientType = 0;
-	private string $recipientId = '';
-
+	private string $boardName = '';
+	private string $owner = '';
+	private int $lastModified = 0;
 
 	public function __construct() {
 	}
@@ -50,7 +50,7 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	/**
 	 * @param int $boardId
 	 *
-	 * @return DeckShare
+	 * @return DeckBoard
 	 */
 	public function setBoardId(int $boardId): self {
 		$this->boardId = $boardId;
@@ -67,31 +67,12 @@ class DeckShare implements IQueryRow, JsonSerializable {
 
 
 	/**
-	 * @param int $recipientType
+	 * @param string $boardName
 	 *
-	 * @return DeckShare
+	 * @return DeckBoard
 	 */
-	public function setRecipientType(int $recipientType): self {
-		$this->recipientType = $recipientType;
-
-		return $this;
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getRecipientType(): int {
-		return $this->recipientType;
-	}
-
-
-	/**
-	 * @param string $recipientId
-	 *
-	 * @return DeckShare
-	 */
-	public function setRecipientId(string $recipientId): self {
-		$this->recipientId = $recipientId;
+	public function setBoardName(string $boardName): self {
+		$this->boardName = $boardName;
 
 		return $this;
 	}
@@ -99,10 +80,46 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	/**
 	 * @return string
 	 */
-	public function getRecipientId(): string {
-		return $this->recipientId;
+	public function getBoardName(): string {
+		return $this->boardName;
 	}
 
+	/**
+	 * @param string $owner
+	 *
+	 * @return DeckBoard
+	 */
+	public function setOwner(string $owner): self {
+		$this->owner = $owner;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getOwner(): string {
+		return $this->owner;
+	}
+
+
+	/**
+	 * @param int $lastModified
+	 *
+	 * @return DeckShare
+	 */
+	public function setLastModified(int $lastModified): self {
+		$this->lastModified = $lastModified;
+
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getLastModified(): int {
+		return $this->lastModified;
+	}
 
 	/**
 	 * @param array $data
@@ -110,9 +127,10 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	 * @return IQueryRow
 	 */
 	public function importFromDatabase(array $data): IQueryRow {
-		$this->setBoardId($this->getInt('board_id', $data))
-			 ->setRecipientType($this->getInt('type', $data))
-			 ->setRecipientId($this->get('participant', $data));
+		$this->setBoardId($this->getInt('id', $data))
+			 ->setBoardName($this->get('title', $data))
+			 ->setOwner($this->get('owner', $data))
+			 ->setLastModified($this->getInt('last_modified', $data));
 
 		return $this;
 	}
@@ -123,8 +141,9 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	public function jsonSerialize(): array {
 		return [
 			'boardId' => $this->getBoardId(),
-			'recipientType' => $this->getRecipientType(),
-			'recipientId' => $this->getRecipientId()
+			'boardName' => $this->getBoardName(),
+			'owner' => $this->getOwner(),
+			'last_modified' => $this->getLastModified()
 		];
 	}
 }

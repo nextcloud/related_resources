@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 /**
  * Nextcloud - Related Resources
  *
@@ -28,42 +27,56 @@ declare(strict_types=1);
  *
  */
 
-
 namespace OCA\RelatedResources\Db;
 
-use OCA\RelatedResources\Exceptions\DeckShareNotFoundException;
+use OCA\RelatedResources\Exceptions\DeckDataNotFoundException;
+use OCA\RelatedResources\Model\DeckBoard;
 use OCA\RelatedResources\Model\DeckShare;
 use OCA\RelatedResources\Tools\Exceptions\InvalidItemException;
 use OCA\RelatedResources\Tools\Exceptions\RowNotFoundException;
 
-class DeckShareRequestBuilder extends CoreQueryBuilder {
+class DeckRequestBuilder extends CoreQueryBuilder {
 	/**
 	 * @return CoreRequestBuilder
 	 */
-	protected function getDeckShareSelectSql(): CoreRequestBuilder {
+	protected function getDeckBoardSelectSql(): CoreRequestBuilder {
 		$qb = $this->getQueryBuilder();
-		$qb->generateSelect(self::TABLE_DECK_SHARE, self::$externalTables[self::TABLE_DECK_SHARE], 'ds')
-			->setDefaultSelectAlias('ds');
+		$qb->generateSelect(self::TABLE_DECK_BOARD, self::$externalTables[self::TABLE_DECK_BOARD]);
 
 		return $qb;
 	}
 
+	protected function getDeckShareSelectSql(): CoreRequestBuilder {
+		$qb = $this->getQueryBuilder();
+		$qb->generateSelect(self::TABLE_DECK_SHARE, self::$externalTables[self::TABLE_DECK_SHARE]);
+
+		return $qb;
+	}
 
 	/**
 	 * @param CoreRequestBuilder $qb
 	 *
-	 * @return DeckShare
-	 * @throws DeckShareNotFoundException
+	 * @return DeckBoard
+	 * @throws DeckDataNotFoundException
 	 */
-	public function getItemFromRequest(CoreRequestBuilder $qb): DeckShare {
-		/** @var DeckShare $share */
+	public function getDeckFromRequest(CoreRequestBuilder $qb): DeckBoard {
+		/** @var DeckBoard $deck */
 		try {
-			$share = $qb->asItem(DeckShare::class);
+			$deck = $qb->asItem(DeckBoard::class);
 		} catch (InvalidItemException | RowNotFoundException $e) {
-			throw new DeckShareNotFoundException();
+			throw new DeckDataNotFoundException();
 		}
 
-		return $share;
+		return $deck;
+	}
+
+	/**
+	 * @param CoreRequestBuilder $qb
+	 *
+	 * @return DeckBoard[]
+	 */
+	public function getDecksFromRequest(CoreRequestBuilder $qb): array {
+		return $qb->asItems(DeckBoard::class);
 	}
 
 	/**
@@ -71,7 +84,7 @@ class DeckShareRequestBuilder extends CoreQueryBuilder {
 	 *
 	 * @return DeckShare[]
 	 */
-	public function getItemsFromRequest(CoreRequestBuilder $qb): array {
+	public function getSharesFromRequest(CoreRequestBuilder $qb): array {
 		return $qb->asItems(DeckShare::class);
 	}
 }

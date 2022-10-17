@@ -31,11 +31,14 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\Service;
 
 use Exception;
+use OC;
 use OCA\Circles\CirclesManager;
 use OCA\Circles\Exceptions\MembershipNotFoundException;
+use OCA\Circles\Exceptions\RequestBuilderException;
 use OCA\Circles\Model\FederatedUser;
 use OCA\Circles\Model\Member;
 use OCA\RelatedResources\Exceptions\CacheNotFoundException;
+use OCA\RelatedResources\Exceptions\RelatedResourceNotFound;
 use OCA\RelatedResources\Exceptions\RelatedResourceProviderNotFound;
 use OCA\RelatedResources\ILinkWeightCalculator;
 use OCA\RelatedResources\IRelatedResource;
@@ -48,11 +51,13 @@ use OCA\RelatedResources\RelatedResourceProviders\CalendarRelatedResourceProvide
 use OCA\RelatedResources\RelatedResourceProviders\DeckRelatedResourceProvider;
 use OCA\RelatedResources\RelatedResourceProviders\FilesRelatedResourceProvider;
 use OCA\RelatedResources\RelatedResourceProviders\TalkRelatedResourceProvider;
-use OCA\RelatedResources\Tools\Exceptions\ItemNotFoundException;
+use OCA\RelatedResources\Tools\Exceptions\InvalidItemException;
 use OCA\RelatedResources\Tools\Traits\TDeserialize;
 use OCP\App\IAppManager;
 use OCP\ICache;
 use OCP\ICacheFactory;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
@@ -61,8 +66,8 @@ class RelatedService {
 	use TDeserialize;
 
 	public const CACHE_RELATED = 'related/related';
-	public const CACHE_RECIPIENT_TTL = 600;
 	public const CACHE_RELATED_TTL = 600;
+	public const CACHE_ITEMS_TTL = 600;
 
 	private IAppManager $appManager;
 	private ICache $cache;
@@ -90,9 +95,11 @@ class RelatedService {
 		$this->cache = $cacheFactory->createDistributed(self::CACHE_RELATED);
 		$this->logger = $logger;
 		$this->configService = $configService;
+
 		try {
-			$this->circlesManager = \OC::$server->get(CirclesManager::class);
-		} catch (Exception $e) {
+			$this->circlesManager = OC::$server->get(CirclesManager::class);
+		} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
+			$this->logger->notice($e->getMessage());
 		}
 	}
 
@@ -120,6 +127,8 @@ class RelatedService {
 
 
 	/**
+	 * Main method that will return resource related an item (identified by providerId and itemId)
+	 *
 	 * @param string $providerId
 	 * @param string $itemId
 	 *
@@ -127,97 +136,101 @@ class RelatedService {
 	 * @throws RelatedResourceProviderNotFound
 	 */
 	private function retrieveRelatedToItem(string $providerId, string $itemId): array {
-		$recipients = $this->getSharesRecipients($providerId, $itemId);
+		$this->logger->debug('retrieving related to item ' . $providerId . '.' . $itemId);
 
-		$validRecipientIds = array_map(function (FederatedUser $federatedUser): string {
-			return $federatedUser->getSingleId();
-		}, $recipients);
+		try {
+			// we generate a related resource for current item, including a full
+			// list of recipients and virtual group
+			$current = $this->getRelatedFromItem($providerId, $itemId);
+		} catch (Exception $e) {
+			return [];
+		}
 
-		$this->logger->debug('recipients returned by ' . $providerId . ': ' . json_encode($recipients));
+		if ($current->isGroupShared()) {
+			$recipients = $current->getRecipients();
+		} else {
+			$recipients = $current->getVirtualGroup();
+		}
 
-		$result = $itemPaths = [];
+		$result = [];
 		foreach ($this->getRelatedResourceProviders() as $provider) {
 			$known = [];
+			if ($provider->getProviderId() === $providerId) {
+				$known[] = $current->getItemId();
+			}
 
-			foreach ($recipients as $entity) {
-				foreach ($this->getRelatedToEntity($provider, $entity) as $related) {
-					$related->setMeta(RelatedResource::LINK_RECIPIENT, $entity->getSingleId());
+			foreach ($recipients as $recipient) {
+				// foreach provider, we get a list of items available to each recipient of the 'current' item
+				// we only needs itemIds because, at this point, the full list of recipient each
+				// item is shared to is not important
+				// However, if 'current' item contains a group share, we do not need to waste resource to get
+				// details about items available to single users as they are ignored in current scope of the app.
+				try {
+					$entity = $this->circlesManager->getFederatedUser($recipient);
+				} catch (Exception $e) {
+					continue;
+				}
 
-					// if RelatedResource is based on current item, store it for weightResult() later in the process
-					// also we do not want to filter duplicate
-					if ($provider->getProviderId() === $providerId && $related->getItemId() === $itemId) {
-						$itemPaths[] = $related;
-					} else {
-						$relatedValidRecipients = [];
-						// improve score on over-shared items
-						$spread =
-							$this->getSharesRecipients($related->getProviderId(), $related->getItemId());
-						foreach ($spread as $shareRecipient) {
-							if (!in_array($shareRecipient->getSingleId(), $validRecipientIds)) {
-								$related->improve(RelatedResource::$UNRELATED, 'unrelated', false);
-							}
-							$relatedValidRecipients[] = $shareRecipient->getSingleId();
-						}
-						foreach ($validRecipientIds as $validRecipientId) {
-							if (!in_array($validRecipientId, $relatedValidRecipients)) {
-								$related->improve(RelatedResource::$UNRELATED, 'unrelated', false);
-							}
-						}
+				if ($current->isGroupShared() && $entity->getBasedOn()->getSource() === Member::TYPE_USER) {
+					continue;
+				}
+
+				foreach ($this->getItemsAvailableToEntity($provider, $entity) as $itemId) {
+					if (in_array($itemId, $known)) {
+						continue; // we don't want duplicate details
 					}
+					$known[] = $itemId;
 
-					// improve score on duplicate result
-					if (in_array($related->getItemId(), $known)) {
-						try {
-							$knownRecipient = $this->extractRecipientFromResult(
-								$related->getProviderId(),
-								$related->getItemId(),
-								$result
-							);
-
-							$knownRecipient->improve(RelatedResource::$IMPROVE_OCCURRENCE, 'occurrence');
-						} catch (ItemNotFoundException $e) {
-						}
-
+					// foreach itemId, we get full details about it
+					try {
+						// cast to string is mandatory in here !
+						$related = $this->getRelatedFromItem($provider->getProviderId(), (string)$itemId);
+					} catch (RelatedResourceNotFound $e) {
 						continue;
 					}
 
-					if ($provider->getProviderId() !== $providerId || $related->getItemId() !== $itemId) {
-						$result[] = $related;
-					}
-
-					$known[] = $related->getItemId();
+					$result[] = $related;
 				}
 			}
 		}
 
+		$result = $this->strictMatching($current, $result);
 		$result = $this->filterUnavailableResults($result);
+
 		if (!empty($itemPaths)) {
 			$this->weightResult($itemPaths, $result);
 		}
 
-		return $this->filterLowScoreResults($result);
+		return $result;
 	}
 
 
 	/**
+	 * get the RelatedResource from an item. including all recipient/virtual groups
+	 *
 	 * @param string $providerId
 	 * @param string $itemId
 	 *
-	 * @return FederatedUser[]
+	 * @return RelatedResource
+	 * @throws RelatedResourceNotFound
 	 * @throws RelatedResourceProviderNotFound
 	 */
-	public function getSharesRecipients(string $providerId, string $itemId): array {
+	public function getRelatedFromItem(string $providerId, string $itemId): RelatedResource {
 		try {
-			$shares = $this->getCachedSharesRecipients($providerId, $itemId);
-
-			return $shares;
+			return $this->getCachedRelatedFromItem($providerId, $itemId);
 		} catch (CacheNotFoundException $e) {
 		}
 
 		$result = $this->getRelatedResourceProvider($providerId)
-					   ->getSharesRecipients($itemId);
+					   ->getRelatedFromItem($itemId);
 
-		$this->cacheSharesRecipients($providerId, $itemId, $result);
+		$this->logger->debug('get related to ' . $providerId . '.' . $itemId . ' - ' . json_encode($result));
+
+		if ($result === null) {
+			throw new RelatedResourceNotFound();
+		}
+
+		$this->cacheRelatedFromItem($providerId, $itemId, $result);
 
 		return $result;
 	}
@@ -227,167 +240,215 @@ class RelatedService {
 	 * @param string $providerId
 	 * @param string $itemId
 	 *
-	 * @return FederatedUser[]
+	 * @return RelatedResource
 	 * @throws CacheNotFoundException
 	 */
-	private function getCachedSharesRecipients(string $providerId, string $itemId): array {
-		$key = $this->generateSharesCacheKey($providerId, $itemId);
+	private function getCachedRelatedFromItem(
+		string $providerId,
+		string $itemId
+	): RelatedResource {
+		$key = $this->generateRelatedFromItemCacheKey($providerId, $itemId);
 		$cachedData = $this->cache->get($key);
 
 		if (!is_string($cachedData) || empty($cachedData)) {
 			throw new CacheNotFoundException();
 		}
 
-		$this->logger->debug('existing cache on shares from ' . $providerId . '/' . $itemId);
-
-		/** @var FederatedUser[] $result */
-		return $this->forceDeserializeArrayFromJson($cachedData, FederatedUser::class);
-	}
-
-	/**
-	 * @param string $providerId
-	 * @param string $itemId
-	 * @param FederatedUser[] $recipients
-	 */
-	private function cacheSharesRecipients(string $providerId, string $itemId, array $recipients): void {
-		$key = $this->generateSharesCacheKey($providerId, $itemId);
-		$this->logger->debug('set cache on shares from ' . $providerId . '/' . $itemId);
-		$this->cache->set($key, json_encode($recipients), self::CACHE_RECIPIENT_TTL);
-	}
-
-	private function generateSharesCacheKey(string $providerId, string $itemId): string {
-		return 'shares/' . $providerId . '::' . $itemId;
-	}
-
-
-	/**
-	 * @param IRelatedResourceProvider $provider
-	 * @param FederatedUser $entity
-	 *
-	 * @return IRelatedResource[]
-	 */
-	private function getRelatedToEntity(IRelatedResourceProvider $provider, FederatedUser $entity): array {
+		/** @var RelatedResource $result */
 		try {
-			$related = $this->getCachedRelatedToEntity($provider, $entity);
-
-			return $related;
-		} catch (CacheNotFoundException $e) {
-		}
-
-		$result = $provider->getRelatedToEntity($entity);
-		$this->cacheRelatedToEntity($provider, $entity, $result);
-
-		return $result;
-	}
-
-
-	/**
-	 * @param string $providerId
-	 * @param string $itemId
-	 *
-	 * @return RelatedResource[]
-	 * @throws CacheNotFoundException
-	 */
-	private function getCachedRelatedToEntity(
-		IRelatedResourceProvider $provider,
-		FederatedUser $entity
-	): array {
-		$key = $this->generateRelatedToEntityCacheKey($provider->getProviderId(), $entity);
-		$cachedData = $this->cache->get($key);
-
-		if (!is_string($cachedData) || empty($cachedData)) {
+			$result = $this->deserializeJson($cachedData, RelatedResource::class);
+		} catch (InvalidItemException $e) {
 			throw new CacheNotFoundException();
 		}
 
 		$this->logger->debug(
-			'existing cache on related from '
-			. $provider->getProviderId() . ' to ' . $entity->getSingleId()
+			'existing cache on related from ' . $providerId . '.' . $itemId . ' - ' . json_encode($result)
 		);
 
-		/** @var RelatedResource[] $result */
-		return $this->deserializeArrayFromJson($cachedData, RelatedResource::class);
+		return $result;
 	}
 
 	/**
-	 * @param IRelatedResourceProvider $provider
-	 * @param FederatedUser $entity
-	 * @param IRelatedResource[] $related
+	 * @param string $providerId
+	 * @param string $itemId
+	 * @param RelatedResource $related
 	 */
-	private function cacheRelatedToEntity(
-		IRelatedResourceProvider $provider,
-		FederatedUser $entity,
-		array $related
+	private function cacheRelatedFromItem(
+		string $providerId,
+		string $itemId,
+		RelatedResource $related
 	): void {
-		$key = $this->generateRelatedToEntityCacheKey($provider->getProviderId(), $entity);
 		$this->logger->debug(
-			'set cache on related from '
-			. $provider->getProviderId() . ' to ' . $entity->getSingleId()
+			'caching related from ' . $providerId . '.' . $itemId . ' - ' . json_encode($related)
 		);
+		$key = $this->generateRelatedFromItemCacheKey($providerId, $itemId);
 
 		$this->cache->set($key, json_encode($related), self::CACHE_RELATED_TTL);
 	}
 
-	private function generateRelatedToEntityCacheKey(
+	/**
+	 * @param string $providerId
+	 * @param string $itemId
+	 *
+	 * @return string
+	 */
+	private function generateRelatedFromItemCacheKey(
 		string $providerId,
-		FederatedUser $entity
+		string $itemId
 	): string {
-		return 'relatedToEntity/' . $entity->getSingleId() . '::' . $providerId;
+		return 'relatedFromItem/' . $providerId . '::' . $itemId;
 	}
 
 
 	/**
-	 * @param IRelatedResource[] $result
+	 * @param IRelatedResourceProvider $provider
+	 * @param FederatedUser $entity
 	 *
-	 * @return  IRelatedResource[]
+	 * @return string[]
 	 */
-	private function filterUnavailableResults(array $result): array {
-		$filtered = [];
-		$singleId = $this->circlesManager->getCurrentFederatedUser()->getSingleId();
-
-		foreach ($result as $entry) {
-			// check item owner, to not filter away item owner by current user.
-			if (!$entry->hasMeta(RelatedResource::LINK_RECIPIENT)) {
-				continue;
-			}
-
-			try {
-				$this->circlesManager->getLink($entry->getMeta(RelatedResource::LINK_RECIPIENT), $singleId);
-				$filtered[] = $entry;
-			} catch (MembershipNotFoundException $e) {
-				$curr = $this->circlesManager->getCurrentFederatedUser();
-				if ($curr->getUserType() === Member::TYPE_USER
-					&& $entry->hasMeta(RelatedResource::ITEM_OWNER)
-					&& $entry->getMeta(RelatedResource::ITEM_OWNER) === $curr->getUserId()) {
-					$filtered[] = $entry;
-				} else {
-					// might be heavy, but fastest way to implement a fix to verify the access on shares to users
-					$recipients = $this->getSharesRecipients($entry->getProviderId(), $entry->getItemId());
-					foreach ($recipients as $recipient) {
-						if ($recipient->getSingleId() === $curr->getSingleId()) {
-							$filtered[] = $entry;
-							break;
-						}
-					}
-				}
-			}
+	private function getItemsAvailableToEntity(
+		IRelatedResourceProvider $provider,
+		FederatedUser $entity
+	): array {
+		try {
+			return $this->getCachedItemsAvailableToEntity($provider->getProviderId(), $entity->getSingleId());
+		} catch (CacheNotFoundException $e) {
 		}
 
-		return $filtered;
+		$result = $provider->getItemsAvailableToEntity($entity);
+		$this->logger->debug(
+			'get available items to ' . $entity->getSingleId() . ' from ' . $provider->getProviderId() . ' - '
+			. json_encode($result)
+		);
+
+		$this->cacheItemsAvailableToEntity($provider->getProviderId(), $entity->getSingleId(), $result);
+
+		return $result;
+	}
+
+	/**
+	 * @param string $providerId
+	 * @param string $singleId
+	 *
+	 * @return string[]
+	 * @throws CacheNotFoundException
+	 */
+	private function getCachedItemsAvailableToEntity(
+		string $providerId,
+		string $singleId
+	): array {
+		$key = $this->generateItemsAvailableToEntityCacheKey($providerId, $singleId);
+		$cachedData = $this->cache->get($key);
+
+		if (!is_string($cachedData) || empty($cachedData)) {
+			throw new CacheNotFoundException();
+		}
+
+		$result = json_decode($cachedData, true);
+		if (!is_array($result)) {
+			throw new CacheNotFoundException();
+		}
+
+		$this->logger->debug(
+			'existing cache on available items to ' . $singleId . ' from ' . $providerId . ' - '
+			. json_encode($result)
+		);
+
+		return $result;
+	}
+
+	/**
+	 * @param string $providerId
+	 * @param string $singleId
+	 * @param array $result
+	 */
+	private function cacheItemsAvailableToEntity(
+		string $providerId,
+		string $singleId,
+		array $result
+	): void {
+		$this->logger->debug(
+			'caching available items to ' . $singleId . ' from ' . $providerId . ' - ' . json_encode($result)
+		);
+		$key = $this->generateItemsAvailableToEntityCacheKey($providerId, $singleId);
+
+		$this->cache->set($key, json_encode($result), self::CACHE_ITEMS_TTL);
+	}
+
+	/**
+	 * @param string $providerId
+	 * @param string $singleId
+	 *
+	 * @return string
+	 */
+	private function generateItemsAvailableToEntityCacheKey(
+		string $providerId,
+		string $singleId
+	): string {
+		return 'availableItem/' . $providerId . '::' . $singleId;
 	}
 
 
-
 	/**
-	 * @param IRelatedResource[] $result
+	 * @param RelatedResource $current
+	 * @param RelatedResource[] $result
 	 *
-	 * @return  IRelatedResource[]
+	 * @return RelatedResource[]
 	 */
-	public function filterLowScoreResults(array $result): array {
-		return array_filter($result, function (IRelatedResource $resource): bool {
-			return ($resource->getScore() > RelatedResource::$MIN_SCORE);
+	private function strictMatching(RelatedResource $current, array $result): array {
+		return array_filter($result, function (IRelatedResource $res) use ($current): bool {
+			if ($current->isGroupShared()) {
+				if (!$res->isGroupShared()) {
+					return false;
+				}
+
+				if ($this->isStrict($current->getRecipients(), $res->getRecipients())) {
+					return true;
+				}
+			} else {
+				if ($res->isGroupShared()) {
+					return false;
+				}
+
+				if ($this->isStrict($current->getVirtualGroup(), $res->getVirtualGroup())) {
+					return true;
+				}
+			}
+
+			return false;
 		});
 	}
 
+
+	/**
+	 * @param IRelatedResource[] $result
+	 *
+	 * @return IRelatedResource[]
+	 */
+	private function filterUnavailableResults(array $result): array {
+		$current = $this->circlesManager->getCurrentFederatedUser();
+
+		return array_filter($result, function (IRelatedResource $res) use ($current): bool {
+			$all = array_values(array_unique(array_merge($res->getVirtualGroup(), $res->getRecipients())));
+
+			// is current user in the list already ?
+			if (in_array($current->getSingleId(), $all)) {
+				return true;
+			}
+
+			// or a member of an entity from the list ?
+			foreach ($res->getRecipients() as $circleId) {
+				try {
+					$this->circlesManager->getLink($circleId, $current->getSingleId());
+
+					return true;
+				} catch (MembershipNotFoundException | RequestBuilderException $e) {
+				}
+			}
+
+			return false;
+		});
+	}
 
 	/**
 	 * @param IRelatedResource[] $paths
@@ -422,8 +483,8 @@ class RelatedService {
 						);
 					}
 
-					$this->weightCalculators[] = \OC::$server->get($class);
-				} catch (ReflectionException $e) {
+					$this->weightCalculators[] = OC::$server->get($class);
+				} catch (NotFoundExceptionInterface | ContainerExceptionInterface | ReflectionException $e) {
 					$this->logger->notice($e->getMessage());
 				}
 			}
@@ -432,46 +493,42 @@ class RelatedService {
 		return $this->weightCalculators;
 	}
 
-	/**
-	 * @param string $providerId
-	 * @param string $itemId
-	 * @param IRelatedResource[] $resources
-	 *
-	 * @return RelatedResource
-	 * @throws ItemNotFoundException
-	 */
-	private function extractRecipientFromResult(
-		string $providerId,
-		string $itemId,
-		array $resources
-	): IRelatedResource {
-		foreach ($resources as $resource) {
-			if ($providerId === $resource->getProviderId()
-				&& $itemId === $resource->getItemId()) {
-				return $resource;
-			}
-		}
-
-		throw new ItemNotFoundException();
-	}
-
 
 	/**
 	 * @return IRelatedResourceProvider[]
 	 */
 	private function getRelatedResourceProviders(): array {
-		$providers = [\OC::$server->get(FilesRelatedResourceProvider::class)];
+		$providers = [];
+
+		try {
+			$providers[] = OC::$server->get(FilesRelatedResourceProvider::class);
+		} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
+			$this->logger->notice($e->getMessage());
+		}
+
 
 		if ($this->appManager->isInstalled('deck')) {
-			$providers[] = \OC::$server->get(DeckRelatedResourceProvider::class);
+			try {
+				$providers[] = OC::$server->get(DeckRelatedResourceProvider::class);
+			} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
+				$this->logger->notice($e->getMessage());
+			}
 		}
 
 		if ($this->appManager->isInstalled('calendar')) {
-			$providers[] = \OC::$server->get(CalendarRelatedResourceProvider::class);
+			try {
+				$providers[] = OC::$server->get(CalendarRelatedResourceProvider::class);
+			} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
+				$this->logger->notice($e->getMessage());
+			}
 		}
 
 		if ($this->appManager->isInstalled('spreed')) {
-			$providers[] = \OC::$server->get(TalkRelatedResourceProvider::class);
+			try {
+				$providers[] = OC::$server->get(TalkRelatedResourceProvider::class);
+			} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
+				$this->logger->notice($e->getMessage());
+			}
 		}
 
 		return $providers;
@@ -493,35 +550,21 @@ class RelatedService {
 		throw new RelatedResourceProviderNotFound();
 	}
 
+	/**
+	 * @param array $arr1
+	 * @param array $arr2
+	 *
+	 * @return bool
+	 */
+	private function isStrict(array $arr1, array $arr2): bool {
+		return empty(array_merge(array_diff($arr1, $arr2), array_diff($arr2, $arr1)));
+	}
 
 	/**
-	 * when a share is created/deleted:
-	 *
-	 * - the list of shares to that item is emptied, so a new list can be generated
-	 *   next time it is required
-	 * - cleaning related items for all providers, based on the previous cached list
-	 *   of recipients+the one affected by the edit
+	 * when a share is created/deleted, flush all
 	 */
-	public function flushCacheAboutItem(
-		string $providerId,
-		string $itemId,
-		FederatedUser $entity
-	) {
-		$key = $this->generateSharesCacheKey($providerId, $itemId);
-
-		$recipients = [$entity];
-		try {
-			$recipients = $this->getCachedSharesRecipients($providerId, $itemId);
-		} catch (CacheNotFoundException $e) {
-		}
-
-		$this->logger->debug('removing cache about shares to ' . $providerId . '/' . $itemId . ' (' . count($recipients) . ')');
-		$this->cache->remove($key);
-
-		foreach ($recipients as $recipient) {
-			$prefix = $this->generateRelatedToEntityCacheKey('', $recipient);
-			$this->logger->debug('removing cache about related to entity ' . $recipient->getSingleId());
-			$this->cache->clear($prefix);
-		}
+	public function flushCache(): void {
+		$this->logger->debug('flush cache');
+		$this->cache->clear();
 	}
 }
