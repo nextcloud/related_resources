@@ -31,9 +31,25 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Db;
 
+use OCA\RelatedResources\Exceptions\CalendarDataNotFoundException;
+use OCA\RelatedResources\Model\Calendar;
 use OCA\RelatedResources\Model\CalendarShare;
 
 class CalendarShareRequest extends CalendarShareRequestBuilder {
+	/**
+	 * @param int $itemId
+	 *
+	 * @return Calendar
+	 * @throws CalendarDataNotFoundException
+	 */
+	public function getCalendarById(int $itemId): Calendar {
+		$qb = $this->getCalendarSelectSql();
+		$qb->limitInt('id', $itemId);
+
+		return $this->getCalendarFromRequest($qb);
+	}
+
+
 	/**
 	 * @param int $itemId
 	 *
@@ -44,108 +60,63 @@ class CalendarShareRequest extends CalendarShareRequestBuilder {
 		$qb->limit('type', 'calendar');
 		$qb->limitInt('resourceid', $itemId);
 
-		return $this->getItemsFromRequest($qb);
+		return $this->getSharesFromRequest($qb);
+	}
+
+
+	/**
+	 * @param string $singleId
+	 *
+	 * @return Calendar[]
+	 */
+	public function getCalendarAvailableToCircle(string $singleId): array {
+		$qb = $this->getCalendarSelectSql();
+		$qb->innerJoin(
+			$qb->getDefaultSelectAlias(), self::TABLE_DAV_SHARE, 'ds',
+			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.id', 'ds.resourceid')
+		);
+
+		$qb->limit('type', 'calendar', 'ds');
+		$qb->limit('principaluri', 'principals/circles/' . $singleId, 'ds');
+
+		return $this->getCalendarsFromRequest($qb);
 	}
 
 
 	/**
 	 * @param string $groupName
 	 *
-	 * @return CalendarShare[]
+	 * @return Calendar[]
 	 */
-	public function getSharesToCircle(string $singleId): array {
-		$qb = $this->getCalendarShareSelectSql();
-		$qb->limit('type', 'calendar');
-		$qb->limit('principaluri', 'principals/circles/' . $singleId);
-
-		$qb->generateSelectAlias(self::$externalTables[self::TABLE_CALENDARS], 'cl', 'cl');
+	public function getCalendarAvailableToGroup(string $groupName): array {
+		$qb = $this->getCalendarSelectSql();
 		$qb->innerJoin(
-			$qb->getDefaultSelectAlias(), self::TABLE_CALENDARS, 'cl',
-			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.resourceid', 'cl.id')
+			$qb->getDefaultSelectAlias(), self::TABLE_DAV_SHARE, 'ds',
+			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.id', 'ds.resourceid')
 		);
 
-		$this->linkToCalendarEvents($qb);
+		$qb->limit('type', 'calendar', 'ds');
+		$qb->limit('principaluri', 'principals/groups/' . $groupName, 'ds');
 
-		return $this->getItemsFromRequest($qb);
-	}
-
-
-	/**
-	 * @param string $groupName
-	 *
-	 * @return CalendarShare[]
-	 */
-	public function getSharesToGroup(string $groupName): array {
-		$qb = $this->getCalendarShareSelectSql();
-		$qb->limit('type', 'calendar');
-		$qb->limit('principaluri', 'principals/groups/' . $groupName);
-
-		$qb->generateSelectAlias(self::$externalTables[self::TABLE_CALENDARS], 'cl', 'cl');
-		$qb->innerJoin(
-			$qb->getDefaultSelectAlias(), self::TABLE_CALENDARS, 'cl',
-			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.resourceid', 'cl.id')
-		);
-
-		$this->linkToCalendarEvents($qb);
-
-		return $this->getItemsFromRequest($qb);
+		return $this->getCalendarsFromRequest($qb);
 	}
 
 
 	/**
 	 * @param string $userName
 	 *
-	 * @return CalendarShare[]
+	 * @return Calendar[]
 	 */
-	public function getSharesToUser(string $userName): array {
-		$qb = $this->getCalendarShareSelectSql();
-		$qb->limit('type', 'calendar');
-		$qb->limit('principaluri', 'principals/users/' . $userName);
-
-		$qb->generateSelectAlias(self::$externalTables[self::TABLE_CALENDARS], 'cl', 'cl');
+	public function getCalendarAvailableToUser(string $userName): array {
+		$qb = $this->getCalendarSelectSql();
 		$qb->innerJoin(
-			$qb->getDefaultSelectAlias(), self::TABLE_CALENDARS, 'cl',
-			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.resourceid', 'cl.id')
+			$qb->getDefaultSelectAlias(), self::TABLE_DAV_SHARE, 'ds',
+			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.id', 'ds.resourceid')
 		);
 
-		$this->linkToCalendarEvents($qb);
+		$qb->limit('type', 'calendar', 'ds');
+		$qb->limit('principaluri', 'principals/users/' . $userName, 'ds');
 
-		return $this->getItemsFromRequest($qb);
-	}
-
-
-	/**
-	 * @param CoreRequestBuilder $qb
-	 */
-	private function linkToCalendarEvents(CoreRequestBuilder $qb): void {
-		// check a range of time around right now for some events
-		$qb->generateSelectAlias(self::$externalTables[self::TABLE_CAL_OBJECTS], 'co', 'co');
-
-		$andXEvent = $qb->expr()->andX();
-		$andXEvent->add($qb->expr()->eq($qb->getDefaultSelectAlias() . '.resourceid', 'co.calendarid'));
-		$andXEvent->add($qb->exprGt('lastoccurence', time() - 7200, false, 'co'));
-		$andXEvent->add($qb->exprLt('firstoccurence', time() + (7 * 86400), false, 'co'));
-
-		$qb->innerJoin(
-			$qb->getDefaultSelectAlias(),
-			self::TABLE_CAL_OBJECTS,
-			'co',
-			$andXEvent
-		);
-
-		// get event's name
-		$qb->generateSelectAlias(self::$externalTables[self::TABLE_CAL_OBJ_PROPS], 'cp', 'cp');
-
-		$andXSummary = $qb->expr()->andX();
-		$andXSummary->add($qb->expr()->eq('co.calendarid', 'cp.calendarid'));
-		$andXSummary->add($qb->expr()->eq('co.id', 'cp.objectid'));
-		$andXSummary->add($qb->exprLimit('name', 'SUMMARY', 'cp'));
-
-		$qb->innerJoin(
-			'co',
-			self::TABLE_CAL_OBJ_PROPS,
-			'cp',
-			$andXSummary
-		);
+		return $this->getCalendarsFromRequest($qb);
 	}
 }
