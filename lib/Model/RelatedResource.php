@@ -44,9 +44,12 @@ use OCA\RelatedResources\Tools\Traits\TArrayTools;
 class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializable {
 	use TArrayTools;
 
+	public static float $MIN_SCORE = 0.9;
 	public static float $IMPROVE_LOW_LINK = 1.1;
 	public static float $IMPROVE_MEDIUM_LINK = 1.3;
 	public static float $IMPROVE_HIGH_LINK = 1.8;
+	public static float $IMPROVE_OCCURRENCE = 1.4;
+	public static float $UNRELATED = 0;
 	private static float $DIMINISHING_RETURN = 0.6;
 
 	public const ITEM_OWNER = 'itemOwner';
@@ -65,9 +68,6 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 	private string $icon = '';
 	private string $url = '';
 	private int $range = 0;
-	private array $virtualGroup = [];
-	private array $recipients = [];
-	private bool $groupShared = false;
 	private float $score = 1;
 	private array $improvements = [];
 	private array $currentQuality = [];
@@ -152,6 +152,16 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		return $this->url;
 	}
 
+	public function setRange(int $range): IRelatedResource {
+		$this->range = $range;
+
+		return $this;
+	}
+
+	public function getRange(): int {
+		return $this->range;
+	}
+
 	public function improve(
 		float $quality,
 		string $type,
@@ -183,65 +193,6 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		return $this;
 	}
 
-	public function setVirtualGroup(array $virtualGroup): self {
-		$this->virtualGroup = $virtualGroup;
-
-		return $this;
-	}
-
-	public function getVirtualGroup(): array {
-		return $this->virtualGroup;
-	}
-
-	public function addToVirtualGroup(string $singleId): self {
-		if (!in_array($singleId, $this->virtualGroup)) {
-			$this->virtualGroup[] = $singleId;
-		}
-
-		return $this;
-	}
-
-	public function mergeVirtualGroup(array $virtualGroup): self {
-		$this->virtualGroup = array_values(array_unique(array_merge($this->virtualGroup, $virtualGroup)));
-
-		return $this;
-	}
-
-	public function setRecipients(array $recipients): self {
-		$this->recipients = $recipients;
-
-		return $this;
-	}
-
-	public function getRecipients(): array {
-		return $this->recipients;
-	}
-
-	public function addRecipient(string $singleId): self {
-		if (!in_array($singleId, $this->recipients)) {
-			$this->recipients[] = $singleId;
-		}
-
-		return $this;
-	}
-
-	public function mergeRecipients(array $recipients): self {
-		$this->recipients = array_values(array_unique(array_merge($this->recipients, $recipients)));
-
-		return $this;
-	}
-
-	public function setAsGroupShared(bool $groupShared = true): self {
-		$this->groupShared = $groupShared;
-
-		return $this;
-	}
-
-	public function isGroupShared(): bool {
-		return $this->groupShared;
-	}
-
-
 	public function getImprovements(): array {
 		return $this->improvements;
 	}
@@ -271,10 +222,8 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		$this->setTooltip($this->get('tooltip', $data));
 		$this->setIcon($this->get('icon', $data));
 		$this->setUrl($this->get('url', $data));
+		$this->setRange($this->getInt('range', $data));
 		$this->setScore($this->getInt('score', $data));
-		$this->setAsGroupShared($this->getBool('groupShared', $data));
-		$this->setRecipients($this->getArray('recipients', $data));
-		$this->setVirtualGroup($this->getArray('virtualGroup', $data));
 		$this->setImprovements($this->getArray('improvements', $data));
 		$this->setCurrentQuality($this->getArray('currentQuality', $data));
 		$this->setMetas($this->getArray('meta', $data));
@@ -291,10 +240,8 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 			'tooltip' => $this->getTooltip(),
 			'icon' => $this->getIcon(),
 			'url' => $this->getUrl(),
+			'range' => $this->getRange(),
 			'score' => $this->getScore(),
-			'groupShared' => $this->isGroupShared(),
-			'virtualGroup' => $this->getVirtualGroup(),
-			'recipients' => $this->getRecipients(),
 			'improvements' => $this->getImprovements(),
 			'currentQuality' => $this->getCurrentQuality(),
 			'meta' => $this->getMetas()

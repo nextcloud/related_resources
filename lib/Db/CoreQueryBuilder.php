@@ -75,9 +75,7 @@ class CoreQueryBuilder {
 			'participant'
 		],
 		self::TABLE_DECK_BOARD => [
-			'id',
 			'title',
-			'owner',
 			'last_modified'
 		],
 		self::TABLE_TALK_ATTENDEE => [
@@ -94,7 +92,6 @@ class CoreQueryBuilder {
 			'resourceid'
 		],
 		self::TABLE_CALENDARS => [
-			'id',
 			'principaluri',
 			'displayname'
 		],

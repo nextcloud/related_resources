@@ -36,11 +36,9 @@ use OCA\Circles\CirclesManager;
 use OCA\Circles\Model\FederatedUser;
 use OCA\Circles\Model\Member;
 use OCA\RelatedResources\Db\TalkRoomRequest;
-use OCA\RelatedResources\Exceptions\TalkDataNotFoundException;
 use OCA\RelatedResources\IRelatedResource;
 use OCA\RelatedResources\IRelatedResourceProvider;
 use OCA\RelatedResources\Model\RelatedResource;
-use OCA\RelatedResources\Model\TalkActor;
 use OCA\RelatedResources\Model\TalkRoom;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 use OCP\IL10N;
@@ -83,50 +81,49 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	/**
 	 * @param string $itemId
 	 *
-	 * @return IRelatedResource|null
+	 * @return FederatedUser[]
 	 */
-	public function getRelatedFromItem(string $itemId): ?IRelatedResource {
-		/** @var TalkRoom $room */
-		try {
-			$room = $this->talkRoomRequest->getRoomByToken($itemId);
-		} catch (TalkDataNotFoundException $e) {
-			return null;
-		}
+	public function getSharesRecipients(string $itemId): array {
+		$shares = $this->talkRoomRequest->getSharesByToken($itemId);
+		$this->assignEntities($shares);
 
-		$related = $this->convertToRelatedResource($room);
-		foreach ($this->talkRoomRequest->getActorsByToken($room->getToken()) as $actor) {
-			$this->processRoomParticipant($related, $actor);
-		}
-
-		if (!$related->isGroupShared() && count($related->getVirtualGroup()) === 2) {
-			$related->setTitle($this->l10n->t('1:1 Conversation'));
-		}
-
-		return $related;
+		return array_filter(
+			array_map(function (TalkRoom $share): ?FederatedUser {
+				return $share->getEntity();
+			}, $shares)
+		);
 	}
 
 
-	public function getItemsAvailableToEntity(FederatedUser $entity): array {
+	/**
+	 * @param FederatedUser $entity
+	 *
+	 * @return IRelatedResource[]
+	 */
+	public function getRelatedToEntity(FederatedUser $entity): array {
 		switch ($entity->getBasedOn()->getSource()) {
-			case Member::TYPE_USER:
-				$shares = $this->talkRoomRequest->getRoomsAvailableToUser($entity->getUserId());
-				break;
+//			case Member::TYPE_USER:
+//				$shares = $this->talkRoomRequest->getSharesToUser($entity->getUserId());
+//				break;
 
 			case Member::TYPE_GROUP:
-				$shares = $this->talkRoomRequest->getRoomsAvailableToGroup($entity->getUserId());
+				$shares = $this->talkRoomRequest->getSharesToGroup($entity->getUserId());
 				break;
 
 			case Member::TYPE_CIRCLE:
-				$shares = $this->talkRoomRequest->getRoomsAvailableToCircle($entity->getSingleId());
+				$shares = $this->talkRoomRequest->getSharesToCircle($entity->getSingleId());
 				break;
 
 			default:
 				return [];
 		}
 
-		return array_map(function (TalkRoom $room) {
-			return $room->getToken();
-		}, $shares);
+		$related = [];
+		foreach ($shares as $share) {
+			$related[] = $this->convertToRelatedResource($share);
+		}
+
+		return $related;
 	}
 
 
@@ -141,6 +138,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 			);
 		} catch (Exception $e) {
 		}
+
 		$related = new RelatedResource(self::PROVIDER_ID, $share->getToken());
 		$related->setTitle($share->getRoomName())
 				->setSubtitle($this->l10n->t('Talk'))
@@ -152,12 +150,12 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 							'app.svg'
 						)
 					)
-				)
-				->setUrl($url);
+				)->setUrl($url)
+				->improve(0.85, 'talk_result');
 
-		$keywords = preg_split('/[\/_\-. ]/', ltrim(strtolower($share->getRoomName()), '/'));
-		if (is_array($keywords)) {
-			$related->setMetaArray(RelatedResource::ITEM_KEYWORDS, $keywords);
+		$kws = preg_split('/[\/_\-. ]/', ltrim(strtolower($share->getRoomName()), '/'));
+		if (is_array($kws)) {
+			$related->setMetaArray(RelatedResource::ITEM_KEYWORDS, $kws);
 		}
 
 		return $related;
@@ -165,51 +163,43 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 
 
 	/**
-	 * @param RelatedResource $related
-	 * @param TalkActor $actor
+	 * @param TalkRoom[] $shares
 	 */
-	private function processRoomParticipant(RelatedResource $related, TalkActor $actor) {
-		try {
-			$participant = $this->convertRoomParticipant($actor);
-			if ($actor->getActorType() === 'users') {
-				$related->addToVirtualGroup($participant->getSingleId());
-			} else {
-				$related->addRecipient($participant->getSingleId())
-						->setAsGroupShared();
+	private function assignEntities(array $shares): void {
+		foreach ($shares as $share) {
+			try {
+				$this->assignEntity($share);
+			} catch (Exception $e) {
 			}
-		} catch (Exception $e) {
 		}
 	}
 
-
 	/**
-	 * @param TalkRoom $actor
-	 *
-	 * @return FederatedUser
-	 * @throws Exception
+	 * @param TalkRoom $share
 	 */
-	public function convertRoomParticipant(TalkActor $actor): FederatedUser {
-		if (is_null($this->circlesManager)) {
-			throw new Exception('Circles needs to be enabled');
+	private function assignEntity(TalkRoom $share): void {
+		try {
+			switch ($share->getActorType()) {
+//				case 'users':
+//					$type = Member::TYPE_USER;
+//					break;
+
+				case 'groups':
+					$type = Member::TYPE_GROUP;
+					break;
+
+				case 'circles':
+					$type = Member::TYPE_SINGLE;
+					break;
+
+				default:
+					throw new Exception();
+			}
+
+			$entity = $this->circlesManager->getFederatedUser($share->getActorId(), $type);
+
+			$share->setEntity($entity);
+		} catch (Exception $e) {
 		}
-
-		switch ($actor->getActorType()) {
-			case 'users':
-				$type = Member::TYPE_USER;
-				break;
-
-			case 'groups':
-				$type = Member::TYPE_GROUP;
-				break;
-
-			case 'circles':
-				$type = Member::TYPE_SINGLE;
-				break;
-
-			default:
-				throw new Exception('unknown actor type (' . $actor->getActorType() . ')');
-		}
-
-		return $this->circlesManager->getFederatedUser($actor->getActorId(), $type);
 	}
 }

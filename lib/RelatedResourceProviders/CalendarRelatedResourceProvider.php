@@ -36,13 +36,12 @@ use OCA\Circles\CirclesManager;
 use OCA\Circles\Model\FederatedUser;
 use OCA\Circles\Model\Member;
 use OCA\RelatedResources\Db\CalendarShareRequest;
-use OCA\RelatedResources\Exceptions\CalendarDataNotFoundException;
 use OCA\RelatedResources\IRelatedResource;
 use OCA\RelatedResources\IRelatedResourceProvider;
-use OCA\RelatedResources\Model\Calendar;
 use OCA\RelatedResources\Model\CalendarShare;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
+use OCP\Files\IRootFolder;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 
@@ -51,16 +50,19 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 
 	private const PROVIDER_ID = 'calendar';
 
+	private IRootFolder $rootFolder;
 	private IURLGenerator $urlGenerator;
 	private IL10N $l10n;
 	private CalendarShareRequest $calendarShareRequest;
 	private CirclesManager $circlesManager;
 
 	public function __construct(
+		IRootFolder $rootFolder,
 		IURLGenerator $urlGenerator,
 		IL10N $l10n,
 		CalendarShareRequest $calendarShareRequest
 	) {
+		$this->rootFolder = $rootFolder;
 		$this->urlGenerator = $urlGenerator;
 		$this->l10n = $l10n;
 		$this->calendarShareRequest = $calendarShareRequest;
@@ -75,67 +77,63 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 		return [];
 	}
 
+
 	/**
 	 * @param string $itemId
 	 *
-	 * @return IRelatedResource|null
+	 * @return FederatedUser[]
 	 */
-	public function getRelatedFromItem(string $itemId): ?IRelatedResource {
+	public function getSharesRecipients(string $itemId): array {
 		$itemId = (int)$itemId;
-
-		/** @var Calendar $calendar */
-		try {
-			$calendar = $this->calendarShareRequest->getCalendarById($itemId);
-		} catch (CalendarDataNotFoundException $e) {
-			return null;
+		if ($itemId < 1) {
+			return [];
 		}
 
-		$related = $this->convertToRelatedResource($calendar);
-		if (strtolower(substr($calendar->getCalendarPrincipalUri(), 0, 17)) === 'principals/users/') {
-			$calendarOwner = substr($calendar->getCalendarPrincipalUri(), 17);
-			$owner = $this->circlesManager->getFederatedUser($calendarOwner, Member::TYPE_USER);
-			$related->addToVirtualGroup($owner->getSingleId());
-		}
+		$shares = $this->calendarShareRequest->getSharesByItemId($itemId);
+		$this->generateSingleIds($shares);
 
-		foreach ($this->calendarShareRequest->getSharesByItemId($itemId) as $share) {
-			try {
-				$this->completeShareDetails($share);
-			} catch (Exception $e) {
-				continue;
-			}
-			$this->processCalendarShare($related, $share);
-		}
-
-		return $related;
+		return array_filter(
+			array_map(function (CalendarShare $share): ?FederatedUser {
+				return $share->getEntity();
+			}, $shares)
+		);
 	}
 
 
-	public function getItemsAvailableToEntity(FederatedUser $entity): array {
+	/**
+	 * @param FederatedUser $entity
+	 *
+	 * @return IRelatedResource[]
+	 */
+	public function getRelatedToEntity(FederatedUser $entity): array {
 		switch ($entity->getBasedOn()->getSource()) {
-			case Member::TYPE_USER:
-				$shares = $this->calendarShareRequest->getCalendarAvailableToUser($entity->getUserId());
-				break;
+//			case Member::TYPE_USER:
+//				$shares = $this->calendarShareRequest->getSharesToUser($entity->getUserId());
+//				break;
 
 			case Member::TYPE_GROUP:
-				$shares = $this->calendarShareRequest->getCalendarAvailableToGroup($entity->getUserId());
+				$shares = $this->calendarShareRequest->getSharesToGroup($entity->getUserId());
 				break;
 
 			case Member::TYPE_CIRCLE:
-				$shares = $this->calendarShareRequest->getCalendarAvailableToCircle($entity->getSingleId());
+				$shares = $this->calendarShareRequest->getSharesToCircle($entity->getSingleId());
 				break;
 
 			default:
 				return [];
 		}
 
-		return array_map(function (Calendar $calendar) {
-			return $calendar->getCalendarId();
-		}, $shares);
+		$related = [];
+		foreach ($shares as $share) {
+			$related[] = $this->convertToRelatedResource($share);
+		}
+
+		return $related;
 	}
 
 
-	private function convertToRelatedResource(Calendar $calendar): IRelatedResource {
-		$related = new RelatedResource(self::PROVIDER_ID, (string)$calendar->getCalendarId());
+	private function convertToRelatedResource(CalendarShare $share): IRelatedResource {
+		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getCalendarId());
 
 		$url = '';
 		try {
@@ -149,9 +147,9 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 		} catch (Exception $e) {
 		}
 
-		$related->setTitle($calendar->getCalendarName())
+		$related->setTitle($share->getCalendarName())
 				->setSubtitle($this->l10n->t('Calendar'))
-				->setTooltip($this->l10n->t('Calendar "%s"', $calendar->getCalendarName()))
+				->setTooltip($this->l10n->t('Calendar "%s"', $share->getCalendarName()))
 				->setIcon(
 					$this->urlGenerator->getAbsoluteURL(
 						$this->urlGenerator->imagePath(
@@ -160,53 +158,65 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 						)
 					)
 				)
-				->setUrl($url);
+				->setUrl($url)
+				->improve(0.6, 'calendar_result');
 
-		$keywords = preg_split(
+		$kws = preg_split(
 			'/[\/_\-. ]/',
-			ltrim(strtolower($calendar->getCalendarName()), '/')
+			ltrim(
+				strtolower($share->getCalendarName() . ' ' . $share->getEventSummary()),
+				'/'
+			)
 		);
-		if (is_array($keywords)) {
-			$related->setMetaArray(RelatedResource::ITEM_KEYWORDS, $keywords);
+		if (is_array($kws)) {
+			$related->setMetaArray(RelatedResource::ITEM_KEYWORDS, $kws);
 		}
 
-//		try {
-//			$related->setMeta(
-//				RelatedResource::LINK_CREATOR,
-//				$this->extractEntity($share->getCalendarPrincipalUri())->getSingleId()
-//			);
-//		} catch (Exception $e) {
-//		}
+		try {
+			$related->setMeta(
+				RelatedResource::LINK_CREATOR,
+				$this->extractEntity($share->getCalendarPrincipalUri())->getSingleId()
+			);
+		} catch (Exception $e) {
+		}
 
 		return $related;
 	}
 
 
 	/**
-	 * @param RelatedResource $related
+	 * @param CalendarShare[] $shares
+	 */
+	private function generateSingleIds(array $shares): void {
+		foreach ($shares as $share) {
+			$this->generateSingleId($share);
+		}
+	}
+
+	/**
 	 * @param CalendarShare $share
 	 */
-	private function processCalendarShare(RelatedResource $related, CalendarShare $share) {
+	private function generateSingleId(CalendarShare $share): void {
 		try {
-			$participant = $this->circlesManager->getFederatedUser($share->getUser(), $share->getType());
-
-			if ($share->getType() === Member::TYPE_USER) {
-				$related->addToVirtualGroup($participant->getSingleId());
-			} else {
-				$related->addRecipient($participant->getSingleId())
-						->setAsGroupShared();
-			}
+			$share->setEntity($this->extractEntity($share->getSharePrincipalUri()));
 		} catch (Exception $e) {
 		}
 	}
 
 
-	private function completeShareDetails(CalendarShare $share): void {
-		[$type, $user] = explode('/', substr($share->getSharePrincipalUri(), 11), 2);
-		switch ($type) {
-			case 'users':
-				$type = Member::TYPE_USER;
-				break;
+	/**
+	 * @param string $principalUri
+	 *
+	 * @return FederatedUser
+	 * @throws Exception
+	 */
+	private function extractEntity(string $principalUri): FederatedUser {
+		[$shareType, $recipient] = explode('/', substr($principalUri, 11), 2);
+
+		switch ($shareType) {
+//			case 'users':
+//				$type = Member::TYPE_USER;
+//				break;
 
 			case 'groups':
 				$type = Member::TYPE_GROUP;
@@ -220,7 +230,6 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 				throw new Exception();
 		}
 
-		$share->setType($type)
-			  ->setUser($user);
+		return $this->circlesManager->getFederatedUser($recipient, $type);
 	}
 }

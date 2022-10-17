@@ -31,22 +31,18 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Db;
 
-use OCA\RelatedResources\Model\TalkRoom;
+use OCA\RelatedResources\Model\DeckShare;
+use OCP\Share\IShare;
 
-class TalkRoomRequest extends TalkRoomRequestBuilder {
+class DeckShareRequest extends DeckShareRequestBuilder {
 	/**
-	 * @param string $token
+	 * @param int $itemId
 	 *
-	 * @return TalkRoom[]
+	 * @return DeckShare[]
 	 */
-	public function getSharesByToken(string $token): array {
-		$qb = $this->getTalkRoomSelectSql();
-		$qb->innerJoin(
-			$qb->getDefaultSelectAlias(), self::TABLE_TALK_ROOM, 'tr',
-			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.room_id', 'tr.id')
-		);
-
-		$qb->limit('token', $token, 'tr');
+	public function getSharesByItemId(int $itemId): array {
+		$qb = $this->getDeckShareSelectSql();
+		$qb->limitInt('board_id', $itemId);
 
 		return $this->getItemsFromRequest($qb);
 	}
@@ -55,17 +51,17 @@ class TalkRoomRequest extends TalkRoomRequestBuilder {
 	/**
 	 * @param string $singleId
 	 *
-	 * @return TalkRoom[]
+	 * @return DeckShare[]
 	 */
 	public function getSharesToCircle(string $singleId): array {
-		$qb = $this->getTalkRoomSelectSql();
-		$qb->limit('actor_type', 'circles');
-		$qb->limit('actor_id', $singleId);
+		$qb = $this->getDeckShareSelectSql();
+		$qb->limitInt('type', IShare::TYPE_CIRCLE);
+		$qb->limit('participant', $singleId);
 
-		$qb->generateSelectAlias(self::$externalTables[self::TABLE_TALK_ROOM], 'tr', 'tr');
+		$qb->generateSelectAlias(self::$externalTables[self::TABLE_DECK_BOARD], 'db', 'db');
 		$qb->innerJoin(
-			$qb->getDefaultSelectAlias(), self::TABLE_TALK_ROOM, 'tr',
-			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.room_id', 'tr.id')
+			$qb->getDefaultSelectAlias(), self::TABLE_DECK_BOARD, 'db',
+			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.board_id', 'db.id')
 		);
 
 		return $this->getItemsFromRequest($qb);
@@ -75,36 +71,37 @@ class TalkRoomRequest extends TalkRoomRequestBuilder {
 	/**
 	 * @param string $groupName
 	 *
-	 * @return TalkRoom[]
+	 * @return DeckShare[]
 	 */
 	public function getSharesToGroup(string $groupName): array {
-		$qb = $this->getTalkRoomSelectSql();
-		$qb->limit('actor_type', 'groups');
-		$qb->limit('actor_id', $groupName);
+		$qb = $this->getDeckShareSelectSql();
+		$qb->limitInt('type', IShare::TYPE_GROUP);
+		$qb->limit('participant', $groupName);
 
-		$qb->generateSelectAlias(self::$externalTables[self::TABLE_TALK_ROOM], 'tr', 'tr');
+		$qb->generateSelectAlias(self::$externalTables[self::TABLE_DECK_BOARD], 'db', 'db');
 		$qb->innerJoin(
-			$qb->getDefaultSelectAlias(), self::TABLE_TALK_ROOM, 'tr',
-			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.room_id', 'tr.id')
+			$qb->getDefaultSelectAlias(), self::TABLE_DECK_BOARD, 'db',
+			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.board_id', 'db.id')
 		);
 
 		return $this->getItemsFromRequest($qb);
 	}
 
+
 	/**
 	 * @param string $userName
 	 *
-	 * @return TalkRoom[]
+	 * @return DeckShare[]
 	 */
 	public function getSharesToUser(string $userName): array {
-		$qb = $this->getTalkRoomSelectSql();
-		$qb->limit('actor_type', 'users');
-		$qb->limit('actor_id', $userName);
+		$qb = $this->getDeckShareSelectSql();
+		$qb->limitInt('type', IShare::TYPE_USER);
+		$qb->limit('participant', $userName);
 
-		$qb->generateSelectAlias(self::$externalTables[self::TABLE_TALK_ROOM], 'tr', 'tr');
+		$qb->generateSelectAlias(self::$externalTables[self::TABLE_DECK_BOARD], 'db', 'db');
 		$qb->innerJoin(
-			$qb->getDefaultSelectAlias(), self::TABLE_TALK_ROOM, 'tr',
-			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.room_id', 'tr.id')
+			$qb->getDefaultSelectAlias(), self::TABLE_DECK_BOARD, 'db',
+			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.board_id', 'db.id')
 		);
 
 		return $this->getItemsFromRequest($qb);

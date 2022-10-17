@@ -32,6 +32,7 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\Model;
 
 use JsonSerializable;
+use OCA\Circles\Model\FederatedUser;
 use OCA\RelatedResources\Tools\Db\IQueryRow;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 
@@ -40,7 +41,11 @@ class TalkRoom implements IQueryRow, JsonSerializable {
 
 	private int $roomId = 0;
 	private string $roomName = '';
+	private string $actorType = '';
+	private string $actorId = '';
 	private string $token = '';
+	private ?FederatedUser $entity = null;
+
 
 	public function __construct() {
 	}
@@ -85,6 +90,42 @@ class TalkRoom implements IQueryRow, JsonSerializable {
 
 
 	/**
+	 * @param string $actorType
+	 */
+	public function setActorType(string $actorType): self {
+		$this->actorType = $actorType;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getActorType(): string {
+		return $this->actorType;
+	}
+
+
+	/**
+	 * @param string $actorId
+	 *
+	 * @return TalkRoom
+	 */
+	public function setActorId(string $actorId): self {
+		$this->actorId = $actorId;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getActorId(): string {
+		return $this->actorId;
+	}
+
+
+	/**
 	 * @param string $token
 	 */
 	public function setToken(string $token): self {
@@ -102,14 +143,34 @@ class TalkRoom implements IQueryRow, JsonSerializable {
 
 
 	/**
+	 * @param FederatedUser $entity
+	 *
+	 * @return TalkRoom
+	 */
+	public function setEntity(FederatedUser $entity): self {
+		$this->entity = $entity;
+
+		return $this;
+	}
+
+	/**
+	 * @return FederatedUser
+	 */
+	public function getEntity(): ?FederatedUser {
+		return $this->entity;
+	}
+
+	/**
 	 * @param array $data
 	 *
 	 * @return IQueryRow
 	 */
 	public function importFromDatabase(array $data): IQueryRow {
-		$this->setRoomId($this->getInt('id', $data))
-			 ->setRoomName($this->get('name', $data))
-			 ->setToken($this->get('token', $data));
+		$this->setRoomId($this->getInt('room_id', $data))
+			 ->setRoomName($this->get('tr_name', $data))
+			 ->setActorType($this->get('actor_type', $data))
+			 ->setActorId($this->get('actor_id', $data))
+			 ->setToken($this->get('tr_token', $data));
 
 		return $this;
 	}
@@ -121,7 +182,10 @@ class TalkRoom implements IQueryRow, JsonSerializable {
 		return [
 			'roomId' => $this->getRoomId(),
 			'roomName' => $this->getRoomName(),
-			'token' => $this->getToken()
+			'actorType' => $this->getActorType(),
+			'actorId' => $this->getActorId(),
+			'token' => $this->getToken(),
+			'entity' => $this->getEntity()
 		];
 	}
 }
