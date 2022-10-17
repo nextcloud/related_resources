@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+
 /**
  * Nextcloud - Related Resources
  *
@@ -27,33 +28,10 @@ declare(strict_types=1);
  *
  */
 
-namespace OCA\RelatedResources\Listener;
+
+namespace OCA\RelatedResources\Exceptions;
 
 use Exception;
-use OCA\RelatedResources\Service\RelatedService;
-use OCP\EventDispatcher\Event;
-use OCP\EventDispatcher\IEventListener;
-use OCP\Share\Events\ShareCreatedEvent;
-use OCP\Share\Events\ShareDeletedEvent;
 
-class FileShareUpdate implements IEventListener {
-	private RelatedService $relatedService;
-
-	public function __construct(
-		RelatedService $relatedService
-	) {
-		$this->relatedService = $relatedService;
-	}
-
-	public function handle(Event $event): void {
-		if (!($event instanceof ShareCreatedEvent)
-			&& !($event instanceof ShareDeletedEvent)) {
-			return;
-		}
-
-		try {
-			$this->relatedService->flushCache();
-		} catch (Exception $e) {
-		}
-	}
+class DeckDataNotFoundException extends Exception {
 }

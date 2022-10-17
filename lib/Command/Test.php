@@ -109,7 +109,6 @@ class Test extends Base {
 			$this->cache->clear();
 		}
 
-
 		$user = $this->userManager->get($userId);
 		if (is_null($user)) {
 			throw new InvalidArgumentException('must specify a valid local user');
@@ -126,49 +125,21 @@ class Test extends Base {
 
 		$circleManager->startSession($circleManager->getLocalFederatedUser($userId));
 
-
-		if ($input->getOption('output') !== 'json') {
-			$this->displayRecipients($providerId, $itemId, ($input->getOption('output') === 'json'));
-		}
+		$this->displayRecipients($providerId, $itemId);
 		$this->displayRelated($providerId, $itemId, ($input->getOption('output') === 'json'));
 
 		return 0;
 	}
 
 
-	private function displayRecipients(string $providerId, string $itemId, bool $json): void {
-		$result = $this->relatedService->getSharesRecipients($providerId, $itemId);
+	private function displayRecipients(string $providerId, string $itemId): void {
+		$result = $this->relatedService->getRelatedFromItem($providerId, $itemId);
 
 		$output = new ConsoleOutput();
-		if ($json) {
-			$output->writeln(json_encode($result, JSON_PRETTY_PRINT));
-
-			return;
-		}
-
-		$output = $output->section();
-		$table = new Table($output);
-		$table->setHeaders(
-			[
-				'Single Id',
-				'User Type',
-				'User Id',
-				'Source'
-			]
-		);
-
-		$table->render();
-		foreach ($result as $entry) {
-			$table->appendRow(
-				[
-					$entry->getSingleId(),
-					$entry->getUserType(),
-					$entry->getUserId(),
-					$entry->getBasedOn()->getSource()
-				]
-			);
-		}
-
+		$output->writeln('<info>Title</info>: ' . $result->getTitle());
+		$output->writeln('<info>Group Shared</info>: ' . ($result->isGroupShared() ? 'true' : 'false'));
+		$output->writeln('<info>Virtual Group</info>: ' . json_encode($result->getVirtualGroup()));
+		$output->writeln('<info>Recipients</info>: ' . json_encode($result->getRecipients()));
 		$output->writeln('');
 	}
 

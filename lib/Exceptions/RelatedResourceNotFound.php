@@ -33,5 +33,5 @@ namespace OCA\RelatedResources\Exceptions;
 
 use Exception;
 
-class TalkRoomNotFoundException extends Exception {
+class RelatedResourceNotFound extends Exception {
 }
