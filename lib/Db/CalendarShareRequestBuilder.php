@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+
 /**
  * Nextcloud - Related Resources
  *
@@ -27,10 +28,10 @@ declare(strict_types=1);
  *
  */
 
+
 namespace OCA\RelatedResources\Db;
 
-use OCA\RelatedResources\Exceptions\CalendarDataNotFoundException;
-use OCA\RelatedResources\Model\Calendar;
+use OCA\RelatedResources\Exceptions\FilesShareNotFoundException;
 use OCA\RelatedResources\Model\CalendarShare;
 use OCA\RelatedResources\Tools\Exceptions\InvalidItemException;
 use OCA\RelatedResources\Tools\Exceptions\RowNotFoundException;
@@ -39,47 +40,29 @@ class CalendarShareRequestBuilder extends CoreQueryBuilder {
 	/**
 	 * @return CoreRequestBuilder
 	 */
-	protected function getCalendarSelectSql(): CoreRequestBuilder {
-		$qb = $this->getQueryBuilder();
-		$qb->generateSelect(self::TABLE_CALENDARS, self::$externalTables[self::TABLE_CALENDARS]);
-
-		return $qb;
-	}
-
-	/**
-	 * @return CoreRequestBuilder
-	 */
 	protected function getCalendarShareSelectSql(): CoreRequestBuilder {
 		$qb = $this->getQueryBuilder();
-		$qb->generateSelect(self::TABLE_DAV_SHARE, self::$externalTables[self::TABLE_DAV_SHARE]);
+		$qb->generateSelect(self::TABLE_DAV_SHARE, self::$externalTables[self::TABLE_DAV_SHARE], 'ds');
 
 		return $qb;
 	}
 
+
 	/**
 	 * @param CoreRequestBuilder $qb
 	 *
-	 * @return Calendar
-	 * @throws CalendarDataNotFoundException
+	 * @return CalendarShare
+	 * @throws FilesShareNotFoundException
 	 */
-	public function getCalendarFromRequest(CoreRequestBuilder $qb): Calendar {
-		/** @var Calendar $calendar */
+	public function getItemFromRequest(CoreRequestBuilder $qb): CalendarShare {
+		/** @var CalendarShare $share */
 		try {
-			$calendar = $qb->asItem(Calendar::class);
+			$share = $qb->asItem(CalendarShare::class);
 		} catch (InvalidItemException | RowNotFoundException $e) {
-			throw new CalendarDataNotFoundException();
+			throw new FilesShareNotFoundException();
 		}
 
-		return $calendar;
-	}
-
-	/**
-	 * @param CoreRequestBuilder $qb
-	 *
-	 * @return Calendar[]
-	 */
-	public function getCalendarsFromRequest(CoreRequestBuilder $qb): array {
-		return $qb->asItems(Calendar::class);
+		return $share;
 	}
 
 	/**
@@ -87,7 +70,7 @@ class CalendarShareRequestBuilder extends CoreQueryBuilder {
 	 *
 	 * @return CalendarShare[]
 	 */
-	public function getSharesFromRequest(CoreRequestBuilder $qb): array {
+	public function getItemsFromRequest(CoreRequestBuilder $qb): array {
 		return $qb->asItems(CalendarShare::class);
 	}
 }

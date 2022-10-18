@@ -32,6 +32,7 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\Model;
 
 use JsonSerializable;
+use OCA\Circles\Model\FederatedUser;
 use OCA\RelatedResources\Tools\Db\IQueryRow;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 
@@ -39,9 +40,11 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	use TArrayTools;
 
 	private int $boardId = 0;
-	private int $recipientType = 0;
-	private string $recipientId = '';
-
+	private string $boardName = '';
+	private int $type = 0;
+	private ?FederatedUser $entity = null;
+	private string $participant = '';
+	private int $lastModified = 0;
 
 	public function __construct() {
 	}
@@ -67,31 +70,12 @@ class DeckShare implements IQueryRow, JsonSerializable {
 
 
 	/**
-	 * @param int $recipientType
+	 * @param string $boardName
 	 *
 	 * @return DeckShare
 	 */
-	public function setRecipientType(int $recipientType): self {
-		$this->recipientType = $recipientType;
-
-		return $this;
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getRecipientType(): int {
-		return $this->recipientType;
-	}
-
-
-	/**
-	 * @param string $recipientId
-	 *
-	 * @return DeckShare
-	 */
-	public function setRecipientId(string $recipientId): self {
-		$this->recipientId = $recipientId;
+	public function setBoardName(string $boardName): self {
+		$this->boardName = $boardName;
 
 		return $this;
 	}
@@ -99,10 +83,85 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	/**
 	 * @return string
 	 */
-	public function getRecipientId(): string {
-		return $this->recipientId;
+	public function getBoardName(): string {
+		return $this->boardName;
 	}
 
+
+	/**
+	 * @param int $type
+	 *
+	 * @return DeckShare
+	 */
+	public function setType(int $type): self {
+		$this->type = $type;
+
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getType(): int {
+		return $this->type;
+	}
+
+
+	/**
+	 * @param string $participant
+	 *
+	 * @return DeckShare
+	 */
+	public function setParticipant(string $participant): self {
+		$this->participant = $participant;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getParticipant(): string {
+		return $this->participant;
+	}
+
+
+	/**
+	 * @param int $lastModified
+	 *
+	 * @return DeckShare
+	 */
+	public function setLastModified(int $lastModified): self {
+		$this->lastModified = $lastModified;
+
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getLastModified(): int {
+		return $this->lastModified;
+	}
+
+
+	/**
+	 * @param FederatedUser $entity
+	 *
+	 * @return DeckShare
+	 */
+	public function setEntity(FederatedUser $entity): self {
+		$this->entity = $entity;
+
+		return $this;
+	}
+
+	/**
+	 * @return FederatedUser
+	 */
+	public function getEntity(): ?FederatedUser {
+		return $this->entity;
+	}
 
 	/**
 	 * @param array $data
@@ -111,8 +170,10 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	 */
 	public function importFromDatabase(array $data): IQueryRow {
 		$this->setBoardId($this->getInt('board_id', $data))
-			 ->setRecipientType($this->getInt('type', $data))
-			 ->setRecipientId($this->get('participant', $data));
+			 ->setBoardName($this->get('db_title', $data))
+			 ->setType($this->getInt('type', $data))
+			 ->setParticipant($this->get('participant', $data))
+			 ->setLastModified($this->getInt('last_modified', $data));
 
 		return $this;
 	}
@@ -123,8 +184,11 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	public function jsonSerialize(): array {
 		return [
 			'boardId' => $this->getBoardId(),
-			'recipientType' => $this->getRecipientType(),
-			'recipientId' => $this->getRecipientId()
+			'boardName' => $this->getBoardName(),
+			'type' => $this->getType(),
+			'participant' => $this->getParticipant(),
+			'last_modified' => $this->getLastModified(),
+			'entity' => $this->getEntity()
 		];
 	}
 }

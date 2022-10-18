@@ -31,8 +31,7 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Db;
 
-use OCA\RelatedResources\Exceptions\TalkDataNotFoundException;
-use OCA\RelatedResources\Model\TalkActor;
+use OCA\RelatedResources\Exceptions\TalkRoomNotFoundException;
 use OCA\RelatedResources\Model\TalkRoom;
 use OCA\RelatedResources\Tools\Exceptions\InvalidItemException;
 use OCA\RelatedResources\Tools\Exceptions\RowNotFoundException;
@@ -43,15 +42,8 @@ class TalkRoomRequestBuilder extends CoreQueryBuilder {
 	 */
 	protected function getTalkRoomSelectSql(): CoreRequestBuilder {
 		$qb = $this->getQueryBuilder();
-		$qb->generateSelect(self::TABLE_TALK_ROOM, self::$externalTables[self::TABLE_TALK_ROOM]);
-
-		return $qb;
-	}
-
-
-	protected function getActorSelectSql(): CoreRequestBuilder {
-		$qb = $this->getQueryBuilder();
-		$qb->generateSelect(self::TABLE_TALK_ATTENDEE, self::$externalTables[self::TABLE_TALK_ATTENDEE]);
+		$qb->generateSelect(self::TABLE_TALK_ATTENDEE, self::$externalTables[self::TABLE_TALK_ATTENDEE], 'ta')
+			->setDefaultSelectAlias('ta');
 
 		return $qb;
 	}
@@ -61,14 +53,14 @@ class TalkRoomRequestBuilder extends CoreQueryBuilder {
 	 * @param CoreRequestBuilder $qb
 	 *
 	 * @return TalkRoom
-	 * @throws TalkDataNotFoundException
+	 * @throws TalkRoomNotFoundException
 	 */
-	public function getRoomFromRequest(CoreRequestBuilder $qb): TalkRoom {
+	public function getItemFromRequest(CoreRequestBuilder $qb): TalkRoom {
 		/** @var TalkRoom $room */
 		try {
 			$room = $qb->asItem(TalkRoom::class);
 		} catch (InvalidItemException | RowNotFoundException $e) {
-			throw new TalkDataNotFoundException();
+			throw new TalkRoomNotFoundException();
 		}
 
 		return $room;
@@ -79,16 +71,7 @@ class TalkRoomRequestBuilder extends CoreQueryBuilder {
 	 *
 	 * @return TalkRoom[]
 	 */
-	public function getRoomsFromRequest(CoreRequestBuilder $qb): array {
+	public function getItemsFromRequest(CoreRequestBuilder $qb): array {
 		return $qb->asItems(TalkRoom::class);
-	}
-
-	/**
-	 * @param CoreRequestBuilder $qb
-	 *
-	 * @return TalkActor[]
-	 */
-	public function getActorsFromRequest(CoreRequestBuilder $qb): array {
-		return $qb->asItems(TalkActor::class);
 	}
 }

@@ -30,19 +30,24 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\Listener;
 
 use Exception;
+use OCA\RelatedResources\Service\MiscService;
 use OCA\RelatedResources\Service\RelatedService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
+use OCP\Files\NotFoundException;
 use OCP\Share\Events\ShareCreatedEvent;
 use OCP\Share\Events\ShareDeletedEvent;
 
 class FileShareUpdate implements IEventListener {
 	private RelatedService $relatedService;
+	private MiscService $miscService;
 
 	public function __construct(
-		RelatedService $relatedService
+		RelatedService $relatedService,
+		MiscService $miscService
 	) {
 		$this->relatedService = $relatedService;
+		$this->miscService = $miscService;
 	}
 
 	public function handle(Event $event): void {
@@ -51,8 +56,24 @@ class FileShareUpdate implements IEventListener {
 			return;
 		}
 
+		$share = $event->getShare();
 		try {
-			$this->relatedService->flushCache();
+			$node = $share->getNode();
+		} catch (NotFoundException $e) {
+			return;
+		}
+
+		// ignore on public share
+		if ($share->getSharedWith() === null) {
+			return;
+		}
+
+		try {
+			$entity = $this->miscService->convertShareRecipient(
+				$share->getShareType(),
+				$share->getSharedWith()
+			);
+			$this->relatedService->flushCacheAboutItem('files', (string)$node->getId(), $entity);
 		} catch (Exception $e) {
 		}
 	}
