@@ -62,9 +62,25 @@ interface IRelatedResource {
 
 	public function getScore(): float;
 
-	public function setRange(int $range): self;
+	public function setVirtualGroup(array $virtualGroup): self;
 
-	public function getRange(): int;
+	public function getVirtualGroup(): array;
+
+	public function addToVirtualGroup(string $singleId): self;
+
+	public function mergeVirtualGroup(array $virtualGroup): self;
+
+	public function setRecipients(array $recipients): self;
+
+	public function getRecipients(): array;
+
+	public function addRecipient(string $singleId): self;
+
+	public function mergeRecipients(array $recipients): self;
+
+	public function setAsGroupShared(bool $groupShared = true): self;
+
+	public function isGroupShared(): bool;
 
 	public function setMeta(string $k, string $v): self;
 
