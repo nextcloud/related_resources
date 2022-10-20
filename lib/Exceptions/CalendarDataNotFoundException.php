@@ -33,5 +33,5 @@ namespace OCA\RelatedResources\Exceptions;
 
 use Exception;
 
-class DeckShareNotFoundException extends Exception {
+class CalendarDataNotFoundException extends Exception {
 }

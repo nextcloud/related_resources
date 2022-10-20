@@ -44,20 +44,20 @@ interface IRelatedResourceProvider {
 	public function loadWeightCalculator(): array;
 
 	/**
-	 * returns all circles singleId an item is shared to.
+	 * convert item to IRelatedResource, based on available shares
 	 *
 	 * @param string $itemId
 	 *
-	 * @return FederatedUser[]
+	 * @return IRelatedResource|null
 	 */
-	public function getSharesRecipients(string $itemId): array;
+	public function getRelatedFromItem(string $itemId): ?IRelatedResource;
 
 	/**
-	 * returns all shares done to multiple entities
+	 * returns itemIds (as string) the entity have access to
 	 *
 	 * @param FederatedUser $entity
 	 *
-	 * @return IRelatedResource[]
+	 * @return string[]
 	 */
-	public function getRelatedToEntity(FederatedUser $entity): array;
+	public function getItemsAvailableToEntity(FederatedUser $entity): array;
 }
