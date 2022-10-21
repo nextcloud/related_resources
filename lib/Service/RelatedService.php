@@ -31,7 +31,6 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\Service;
 
 use Exception;
-use OC;
 use OCA\Circles\CirclesManager;
 use OCA\Circles\Model\FederatedUser;
 use OCA\Circles\Model\Member;
@@ -54,6 +53,7 @@ use OCA\RelatedResources\Tools\Traits\TDeserialize;
 use OCP\App\IAppManager;
 use OCP\ICache;
 use OCP\ICacheFactory;
+use OCP\Server;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
@@ -95,7 +95,7 @@ class RelatedService {
 		$this->configService = $configService;
 
 		try {
-			$this->circlesManager = OC::$server->get(CirclesManager::class);
+			$this->circlesManager = Server::get(CirclesManager::class);
 		} catch (ContainerExceptionInterface $e) {
 			$this->logger->notice($e->getMessage());
 		}
@@ -483,7 +483,7 @@ class RelatedService {
 						);
 					}
 
-					$this->weightCalculators[] = OC::$server->get($class);
+					$this->weightCalculators[] = Server::get($class);
 				} catch (NotFoundExceptionInterface | ContainerExceptionInterface | ReflectionException $e) {
 					$this->logger->notice($e->getMessage());
 				}
@@ -501,7 +501,7 @@ class RelatedService {
 		$providers = [];
 
 		try {
-			$providers[] = OC::$server->get(FilesRelatedResourceProvider::class);
+			$providers[] = Server::get(FilesRelatedResourceProvider::class);
 		} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
 			$this->logger->notice($e->getMessage());
 		}
@@ -509,7 +509,7 @@ class RelatedService {
 
 		if ($this->appManager->isInstalled('deck')) {
 			try {
-				$providers[] = OC::$server->get(DeckRelatedResourceProvider::class);
+				$providers[] = Server::get(DeckRelatedResourceProvider::class);
 			} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
 				$this->logger->notice($e->getMessage());
 			}
@@ -517,7 +517,7 @@ class RelatedService {
 
 		if ($this->appManager->isInstalled('calendar')) {
 			try {
-				$providers[] = OC::$server->get(CalendarRelatedResourceProvider::class);
+				$providers[] = Server::get(CalendarRelatedResourceProvider::class);
 			} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
 				$this->logger->notice($e->getMessage());
 			}
@@ -525,7 +525,7 @@ class RelatedService {
 
 		if ($this->appManager->isInstalled('spreed')) {
 			try {
-				$providers[] = OC::$server->get(TalkRelatedResourceProvider::class);
+				$providers[] = Server::get(TalkRelatedResourceProvider::class);
 			} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
 				$this->logger->notice($e->getMessage());
 			}

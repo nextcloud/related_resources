@@ -485,6 +485,8 @@ namespace Doctrine\DBAL\Query {
 }
 
 namespace OC\DB\QueryBuilder {
+	use OC\DB\ConnectionAdapter;
+	use OC\SystemConfig;
     use OCP\DB\IResult;
     use OCP\DB\QueryBuilder\ICompositeExpression;
     use OCP\DB\QueryBuilder\ILiteral;

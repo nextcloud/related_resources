@@ -32,7 +32,6 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\RelatedResourceProviders;
 
 use Exception;
-use OC;
 use OC\User\NoUserException;
 use OCA\Circles\CirclesManager;
 use OCA\Circles\Model\FederatedUser;
@@ -49,6 +48,7 @@ use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\IL10N;
 use OCP\IURLGenerator;
+use OCP\Server;
 use OCP\Share\IShare;
 use Psr\Container\ContainerExceptionInterface;
 
@@ -76,7 +76,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 		$this->l10n = $l10n;
 		$this->filesShareRequest = $filesShareRequest;
 		try {
-			$this->circlesManager = OC::$server->get(CirclesManager::class);
+			$this->circlesManager = Server::get(CirclesManager::class);
 		} catch (ContainerExceptionInterface $e) {
 		}
 	}

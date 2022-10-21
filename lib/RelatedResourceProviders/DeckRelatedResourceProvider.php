@@ -32,7 +32,6 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\RelatedResourceProviders;
 
 use Exception;
-use OC;
 use OCA\Circles\CirclesManager;
 use OCA\Circles\Model\FederatedUser;
 use OCA\Circles\Model\Member;
@@ -46,6 +45,7 @@ use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 use OCP\IL10N;
 use OCP\IURLGenerator;
+use OCP\Server;
 use OCP\Share\IShare;
 use Psr\Container\ContainerExceptionInterface;
 
@@ -70,7 +70,7 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		$this->l10n = $l10n;
 		$this->deckSharesRequest = $deckSharesRequest;
 		try {
-			$this->circlesManager = OC::$server->get(CirclesManager::class);
+			$this->circlesManager = Server::get(CirclesManager::class);
 		} catch (ContainerExceptionInterface $e) {
 		}
 	}
