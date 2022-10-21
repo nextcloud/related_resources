@@ -41,6 +41,7 @@ use OCP\ICache;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\IUserManager;
+use OCP\Server;
 use Psr\Container\ContainerExceptionInterface;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\Table;
@@ -120,7 +121,7 @@ class Test extends Base {
 
 		try {
 			/** @var CirclesManager $circleManager */
-			$circleManager = \OC::$server->get(CirclesManager::class);
+			$circleManager = Server::get(CirclesManager::class);
 		} catch (ContainerExceptionInterface $e) {
 			throw new Exception('Circles needs to be enabled');
 		}
