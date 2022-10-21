@@ -106,7 +106,7 @@ class DeckBoard implements IQueryRow, JsonSerializable {
 	/**
 	 * @param int $lastModified
 	 *
-	 * @return DeckShare
+	 * @return DeckBoard
 	 */
 	public function setLastModified(int $lastModified): self {
 		$this->lastModified = $lastModified;

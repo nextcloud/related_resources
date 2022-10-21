@@ -33,8 +33,6 @@ namespace OCA\RelatedResources\Service;
 use Exception;
 use OC;
 use OCA\Circles\CirclesManager;
-use OCA\Circles\Exceptions\MembershipNotFoundException;
-use OCA\Circles\Exceptions\RequestBuilderException;
 use OCA\Circles\Model\FederatedUser;
 use OCA\Circles\Model\Member;
 use OCA\RelatedResources\Exceptions\CacheNotFoundException;
@@ -72,7 +70,7 @@ class RelatedService {
 	private IAppManager $appManager;
 	private ICache $cache;
 	private LoggerInterface $logger;
-	private CirclesManager $circlesManager;
+	private ?CirclesManager $circlesManager = null;
 	private ConfigService $configService;
 
 	/** @var ILinkWeightCalculator[] */
@@ -98,7 +96,7 @@ class RelatedService {
 
 		try {
 			$this->circlesManager = OC::$server->get(CirclesManager::class);
-		} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
+		} catch (ContainerExceptionInterface $e) {
 			$this->logger->notice($e->getMessage());
 		}
 	}
@@ -113,6 +111,10 @@ class RelatedService {
 	 * @throws RelatedResourceProviderNotFound
 	 */
 	public function getRelatedToItem(string $providerId, string $itemId, int $chunk = -1): array {
+		if ($this->circlesManager === null) {
+			return [];
+		}
+
 		$result = $this->retrieveRelatedToItem($providerId, $itemId);
 
 		usort($result, function (IRelatedResource $r1, IRelatedResource $r2): int {
@@ -197,9 +199,7 @@ class RelatedService {
 		$result = $this->strictMatching($current, $result);
 		$result = $this->filterUnavailableResults($result);
 
-		if (!empty($itemPaths)) {
-			$this->weightResult($itemPaths, $result);
-		}
+		$this->weightResult($current, $result);
 
 		return $result;
 	}
@@ -442,7 +442,7 @@ class RelatedService {
 					$this->circlesManager->getLink($circleId, $current->getSingleId());
 
 					return true;
-				} catch (MembershipNotFoundException | RequestBuilderException $e) {
+				} catch (Exception $e) {
 				}
 			}
 
@@ -451,14 +451,14 @@ class RelatedService {
 	}
 
 	/**
-	 * @param IRelatedResource[] $paths
+	 * @param IRelatedResource $current
 	 * @param IRelatedResource[] $result
 	 *
 	 * @return void
 	 */
-	private function weightResult(array $paths, array &$result): void {
+	private function weightResult(IRelatedResource $current, array &$result): void {
 		foreach ($this->getWeightCalculators() as $weightCalculator) {
-			$weightCalculator->weight($paths, $result);
+			$weightCalculator->weight($current, $result);
 		}
 	}
 

@@ -32,6 +32,7 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\RelatedResourceProviders;
 
 use Exception;
+use OC;
 use OC\User\NoUserException;
 use OCA\Circles\CirclesManager;
 use OCA\Circles\Model\FederatedUser;
@@ -49,6 +50,7 @@ use OCP\Files\NotPermittedException;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Share\IShare;
+use Psr\Container\ContainerExceptionInterface;
 
 class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	use TArrayTools;
@@ -60,7 +62,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	private IURLGenerator $urlGenerator;
 	private IL10N $l10n;
 	private FilesShareRequest $filesShareRequest;
-	private CirclesManager $circlesManager;
+	private ?CirclesManager $circlesManager = null;
 
 
 	public function __construct(
@@ -73,7 +75,10 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 		$this->urlGenerator = $urlGenerator;
 		$this->l10n = $l10n;
 		$this->filesShareRequest = $filesShareRequest;
-		$this->circlesManager = \OC::$server->get(CirclesManager::class);
+		try {
+			$this->circlesManager = OC::$server->get(CirclesManager::class);
+		} catch (ContainerExceptionInterface $e) {
+		}
 	}
 
 	public function getProviderId(): string {
@@ -87,14 +92,22 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 
 
 	public function getRelatedFromItem(string $itemId): ?IRelatedResource {
-		$itemId = (int)$itemId;
+		if ($this->circlesManager === null) {
+			return null;
+		}
 
+		$itemId = (int)$itemId;
 		if ($itemId <= 1) {
 			return null;
 		}
 
 		$related = null;
-		$itemIds = $this->getItemIdsFromParentPath($itemId);
+		try {
+			$itemIds = $this->getItemIdsFromParentPath($itemId);
+		} catch (Exception $e) {
+			$itemIds = [$itemId];
+		}
+
 		foreach ($this->filesShareRequest->getSharesByItemIds($itemIds) as $share) {
 			if ($related === null) {
 				$related = $this->convertToRelatedResource($share);

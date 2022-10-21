@@ -32,6 +32,7 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\Controller;
 
 use Exception;
+use OC;
 use OCA\Circles\CirclesManager;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Service\ConfigService;
@@ -43,6 +44,7 @@ use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
 use OCP\IUserSession;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Log\LoggerInterface;
 
 class ApiController extends OcsController {
@@ -70,8 +72,8 @@ class ApiController extends OcsController {
 		$this->relatedService = $relatedService;
 		$this->configService = $configService;
 		try {
-			$this->circlesManager = \OC::$server->get(CirclesManager::class);
-		} catch (Exception $e) {
+			$this->circlesManager = OC::$server->get(CirclesManager::class);
+		} catch (ContainerExceptionInterface $e) {
 		}
 	}
 

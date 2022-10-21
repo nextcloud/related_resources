@@ -33,8 +33,8 @@ namespace OCA\RelatedResources;
 
 interface ILinkWeightCalculator {
 	/**
-	 * @param IRelatedResource[] $paths
+	 * @param IRelatedResource $current
 	 * @param IRelatedResource[] $result
 	 */
-	public function weight(array $paths, array &$result): void;
+	public function weight(IRelatedResource $current, array &$result): void;
 }
