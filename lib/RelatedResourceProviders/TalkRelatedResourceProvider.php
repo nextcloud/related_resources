@@ -107,8 +107,15 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 			$this->processRoomParticipant($related, $actor);
 		}
 
-		if (!$related->isGroupShared() && count($related->getVirtualGroup()) === 2) {
-			$related->setTitle($this->l10n->t('1:1 Conversation'));
+		if (!$related->isGroupShared()) {
+			$countActor = count($related->getVirtualGroup());
+			if ($countActor === 1) { // room is still in preparation
+				return null;
+			}
+
+			if ($countActor === 2) { // 1:1 convo
+				$related->setTitle($this->l10n->t('1:1 Conversation'));
+			}
 		}
 
 		return $related;
