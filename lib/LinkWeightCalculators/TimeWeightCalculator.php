@@ -32,6 +32,7 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\LinkWeightCalculators;
 
 use OCA\RelatedResources\ILinkWeightCalculator;
+use OCA\RelatedResources\IRelatedResource;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 
@@ -45,50 +46,48 @@ class TimeWeightCalculator implements ILinkWeightCalculator {
 	/**
 	 * @inheritDoc
 	 */
-	public function weight(array $paths, array &$result): void {
-		foreach ($paths as $path) {
-			if (!$path->hasMeta(RelatedResource::LINK_CREATION)
-				|| !$path->hasMeta(RelatedResource::LINK_CREATOR)
-				|| !$path->hasMeta(RelatedResource::LINK_RECIPIENT)) {
+	public function weight(IRelatedResource $current, array &$result): void {
+		if (!$current->hasMeta(RelatedResource::LINK_CREATION)
+			|| !$current->hasMeta(RelatedResource::LINK_CREATOR)
+			|| !$current->hasMeta(RelatedResource::LINK_RECIPIENT)) {
+			return;
+		}
+
+		foreach ($result as $entry) {
+			if (!$entry->hasMeta(RelatedResource::LINK_CREATION)
+				|| !$entry->hasMeta(RelatedResource::LINK_CREATOR)
+				|| !$entry->hasMeta(RelatedResource::LINK_RECIPIENT)) {
 				continue;
 			}
 
-			foreach ($result as $entry) {
-				if (!$entry->hasMeta(RelatedResource::LINK_CREATION)
-					|| !$entry->hasMeta(RelatedResource::LINK_CREATOR)
-					|| !$entry->hasMeta(RelatedResource::LINK_RECIPIENT)) {
-					continue;
-				}
+			// check if link is initiated from same entity
+			if ($entry->getMeta(RelatedResource::LINK_CREATOR)
+				!== $current->getMeta(RelatedResource::LINK_CREATOR)) {
+				continue;
+			}
 
-				// check if link is initiated from same entity
-				if ($entry->getMeta(RelatedResource::LINK_CREATOR)
-					!== $path->getMeta(RelatedResource::LINK_CREATOR)) {
-					continue;
-				}
+			if ($entry->getMetaInt(RelatedResource::LINK_CREATION)
+				< $current->getMetaInt(RelatedResource::LINK_CREATION) + self::DELAY_1
+				&& $entry->getMetaInt(RelatedResource::LINK_CREATION)
+				   > $current->getMetaInt(RelatedResource::LINK_CREATION) - self::DELAY_1) {
+				$entry->improve(RelatedResource::$IMPROVE_HIGH_LINK, 'time_delay_1');
+				continue;
+			}
 
-				if ($entry->getMetaInt(RelatedResource::LINK_CREATION)
-					< $path->getMetaInt(RelatedResource::LINK_CREATION) + self::DELAY_1
-					&& $entry->getMetaInt(RelatedResource::LINK_CREATION)
-					   > $path->getMetaInt(RelatedResource::LINK_CREATION) - self::DELAY_1) {
-					$entry->improve(RelatedResource::$IMPROVE_HIGH_LINK, 'time_delay_1');
-					continue;
-				}
+			if ($entry->getMetaInt(RelatedResource::LINK_CREATION)
+				< $current->getMetaInt(RelatedResource::LINK_CREATION) + self::DELAY_2
+				&& $entry->getMetaInt(RelatedResource::LINK_CREATION)
+				   > $current->getMetaInt(RelatedResource::LINK_CREATION) - self::DELAY_2) {
+				$entry->improve(RelatedResource::$IMPROVE_MEDIUM_LINK, 'time_delay_2');
+				continue;
+			}
 
-				if ($entry->getMetaInt(RelatedResource::LINK_CREATION)
-					< $path->getMetaInt(RelatedResource::LINK_CREATION) + self::DELAY_2
-					&& $entry->getMetaInt(RelatedResource::LINK_CREATION)
-					   > $path->getMetaInt(RelatedResource::LINK_CREATION) - self::DELAY_2) {
-					$entry->improve(RelatedResource::$IMPROVE_MEDIUM_LINK, 'time_delay_2');
-					continue;
-				}
-
-				if ($entry->getMetaInt(RelatedResource::LINK_CREATION)
-					< $path->getMetaInt(RelatedResource::LINK_CREATION) + self::DELAY_3
-					&& $entry->getMetaInt(RelatedResource::LINK_CREATION)
-					   > $path->getMetaInt(RelatedResource::LINK_CREATION) - self::DELAY_3) {
-					$entry->improve(RelatedResource::$IMPROVE_LOW_LINK, 'time_delay_3');
-					continue;
-				}
+			if ($entry->getMetaInt(RelatedResource::LINK_CREATION)
+				< $current->getMetaInt(RelatedResource::LINK_CREATION) + self::DELAY_3
+				&& $entry->getMetaInt(RelatedResource::LINK_CREATION)
+				   > $current->getMetaInt(RelatedResource::LINK_CREATION) - self::DELAY_3) {
+				$entry->improve(RelatedResource::$IMPROVE_LOW_LINK, 'time_delay_3');
+				continue;
 			}
 		}
 	}

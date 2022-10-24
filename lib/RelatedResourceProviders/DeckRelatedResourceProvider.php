@@ -45,7 +45,9 @@ use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 use OCP\IL10N;
 use OCP\IURLGenerator;
+use OCP\Server;
 use OCP\Share\IShare;
+use Psr\Container\ContainerExceptionInterface;
 
 class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	use TArrayTools;
@@ -56,7 +58,7 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	private IUrlGenerator $urlGenerator;
 	private IL10N $l10n;
 	private DeckRequest $deckSharesRequest;
-	private CirclesManager $circlesManager;
+	private ?CirclesManager $circlesManager = null;
 
 
 	public function __construct(
@@ -67,7 +69,10 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		$this->urlGenerator = $urlGenerator;
 		$this->l10n = $l10n;
 		$this->deckSharesRequest = $deckSharesRequest;
-		$this->circlesManager = \OC::$server->get(CirclesManager::class);
+		try {
+			$this->circlesManager = Server::get(CirclesManager::class);
+		} catch (ContainerExceptionInterface $e) {
+		}
 	}
 
 	public function getProviderId(): string {
@@ -85,6 +90,10 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	 * @return IRelatedResource|null
 	 */
 	public function getRelatedFromItem(string $itemId): ?IRelatedResource {
+		if ($this->circlesManager === null) {
+			return null;
+		}
+
 		$itemId = (int)$itemId;
 
 		/** @var DeckBoard $board */
@@ -124,8 +133,8 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 				return [];
 		}
 
-		return array_map(function (DeckBoard $board) {
-			return $board->getBoardId();
+		return array_map(function (DeckBoard $board): string {
+			return (string)$board->getBoardId();
 		}, $shares);
 	}
 

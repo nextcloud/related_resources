@@ -31,6 +31,7 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\LinkWeightCalculators;
 
 use OCA\RelatedResources\ILinkWeightCalculator;
+use OCA\RelatedResources\IRelatedResource;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 
@@ -41,14 +42,8 @@ class KeywordWeightCalculator implements ILinkWeightCalculator {
 	/**
 	 * @inheritDoc
 	 */
-	public function weight(array $paths, array &$result): void {
-		if (sizeof($paths) === 0) {
-			return;
-		}
-
-		// we might only need to work on one single path, as we are only interested on item keywords, and not generated links.
-		$path = $paths[0];
-		if (!$path->hasMeta(RelatedResource::ITEM_KEYWORDS)) {
+	public function weight(IRelatedResource $current, array &$result): void {
+		if (!$current->hasMeta(RelatedResource::ITEM_KEYWORDS)) {
 			return;
 		}
 
@@ -61,7 +56,7 @@ class KeywordWeightCalculator implements ILinkWeightCalculator {
 				if (strlen($kw) <= 3) {
 					continue;
 				}
-				if (in_array($kw, $path->getMetaArray(RelatedResource::ITEM_KEYWORDS))) {
+				if (in_array($kw, $current->getMetaArray(RelatedResource::ITEM_KEYWORDS))) {
 					$entry->improve(RelatedResource::$IMPROVE_HIGH_LINK, 'keyword');
 				}
 			}
