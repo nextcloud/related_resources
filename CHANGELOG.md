@@ -1,5 +1,19 @@
 # Changelog
 
+### 1.0.2
+
+- polishing code and tests
+- fixing signature exception
+
+### 1.0.1
+
+- ignore public shares
+- ignore direct shares to user
+- catch exception on unrelated entities
+- cleaning code
+- more tests
+- strict comparison of related resources
+
 ### 1.0.0
 
 - clear cache on share creation/deletion
