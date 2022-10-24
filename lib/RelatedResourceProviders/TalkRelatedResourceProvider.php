@@ -45,6 +45,8 @@ use OCA\RelatedResources\Model\TalkRoom;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 use OCP\IL10N;
 use OCP\IURLGenerator;
+use OCP\Server;
+use Psr\Container\ContainerExceptionInterface;
 
 class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	use TArrayTools;
@@ -55,7 +57,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	private IURLGenerator $urlGenerator;
 	private IL10N $l10n;
 	private TalkRoomRequest $talkRoomRequest;
-	private CirclesManager $circlesManager;
+	private ?CirclesManager $circlesManager = null;
 
 
 	public function __construct(
@@ -66,7 +68,10 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 		$this->urlGenerator = $urlGenerator;
 		$this->l10n = $l10n;
 		$this->talkRoomRequest = $talkRoomRequest;
-		$this->circlesManager = \OC::$server->get(CirclesManager::class);
+		try {
+			$this->circlesManager = Server::get(CirclesManager::class);
+		} catch (ContainerExceptionInterface $e) {
+		}
 	}
 
 
@@ -86,6 +91,10 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	 * @return IRelatedResource|null
 	 */
 	public function getRelatedFromItem(string $itemId): ?IRelatedResource {
+		if ($this->circlesManager === null) {
+			return null;
+		}
+
 		/** @var TalkRoom $room */
 		try {
 			$room = $this->talkRoomRequest->getRoomByToken($itemId);
@@ -124,7 +133,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 				return [];
 		}
 
-		return array_map(function (TalkRoom $room) {
+		return array_map(function (TalkRoom $room): string {
 			return $room->getToken();
 		}, $shares);
 	}
@@ -183,7 +192,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 
 
 	/**
-	 * @param TalkRoom $actor
+	 * @param TalkActor $actor
 	 *
 	 * @return FederatedUser
 	 * @throws Exception

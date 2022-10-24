@@ -34,12 +34,15 @@ namespace OCA\RelatedResources\Command;
 use Exception;
 use OC\Core\Command\Base;
 use OCA\Circles\CirclesManager;
+use OCA\RelatedResources\Exceptions\RelatedResourceProviderNotFound;
 use OCA\RelatedResources\Service\RelatedService;
 use OCA\RelatedResources\Tools\Traits\TStringTools;
 use OCP\ICache;
 use OCP\ICacheFactory;
 use OCP\IConfig;
 use OCP\IUserManager;
+use OCP\Server;
+use Psr\Container\ContainerExceptionInterface;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -98,7 +101,7 @@ class Test extends Base {
 	 * @param OutputInterface $output
 	 *
 	 * @return int
-	 * @throws \OCA\RelatedResources\Exceptions\RelatedResourceProviderNotFound
+	 * @throws RelatedResourceProviderNotFound
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$userId = $input->getArgument('userId');
@@ -116,10 +119,10 @@ class Test extends Base {
 
 		$userId = $user->getUID();
 
-		/** @var CirclesManager $circleManager */
 		try {
-			$circleManager = \OC::$server->get(CirclesManager::class);
-		} catch (Exception $e) {
+			/** @var CirclesManager $circleManager */
+			$circleManager = Server::get(CirclesManager::class);
+		} catch (ContainerExceptionInterface $e) {
 			throw new Exception('Circles needs to be enabled');
 		}
 

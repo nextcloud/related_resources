@@ -31,9 +31,6 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Db;
 
-use OC\DB\Connection;
-use OC\DB\SchemaWrapper;
-use OCA\RelatedResources\AppInfo\Application;
 use OCA\RelatedResources\Service\ConfigService;
 
 /**
@@ -53,11 +50,7 @@ class CoreQueryBuilder {
 	public const TABLE_CAL_OBJECTS = 'calendarobjects';
 	public const TABLE_CAL_OBJ_PROPS = 'calendarobjects_props';
 
-
 	protected ConfigService $configService;
-	private array $tables = [
-	];
-
 
 	public static array $externalTables = [
 		self::TABLE_FILES_SHARE => [
@@ -121,51 +114,5 @@ class CoreQueryBuilder {
 	 */
 	public function getQueryBuilder(): CoreRequestBuilder {
 		return new CoreRequestBuilder();
-	}
-
-
-	/**
-	 *
-	 */
-	public function cleanDatabase(): void {
-		foreach ($this->tables as $table) {
-			$qb = $this->getQueryBuilder();
-			$qb->delete($table);
-			$qb->execute();
-		}
-	}
-
-	/**
-	 *
-	 */
-	public function uninstall(): void {
-		$this->uninstallAppTables();
-		$this->uninstallFromMigrations();
-		$this->configService->unsetAppConfig();
-	}
-
-	/**
-	 * this just empty all tables from the app.
-	 */
-	public function uninstallAppTables(): void {
-		$dbConn = \OC::$server->get(Connection::class);
-		$schema = new SchemaWrapper($dbConn);
-
-		foreach ($this->tables as $table) {
-			if ($schema->hasTable($table)) {
-				$schema->dropTable($table);
-			}
-		}
-
-		$schema->performDropTableCalls();
-	}
-
-
-	public function uninstallFromMigrations(): void {
-		$qb = $this->getQueryBuilder();
-		$qb->delete('migrations');
-		$qb->limit('app', Application::APP_ID);
-
-		$qb->execute();
 	}
 }

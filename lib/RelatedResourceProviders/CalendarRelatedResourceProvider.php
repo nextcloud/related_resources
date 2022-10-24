@@ -45,6 +45,8 @@ use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
 use OCP\IL10N;
 use OCP\IURLGenerator;
+use OCP\Server;
+use Psr\Container\ContainerExceptionInterface;
 
 class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 	use TArrayTools;
@@ -54,7 +56,7 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 	private IURLGenerator $urlGenerator;
 	private IL10N $l10n;
 	private CalendarShareRequest $calendarShareRequest;
-	private CirclesManager $circlesManager;
+	private ?CirclesManager $circlesManager = null;
 
 	public function __construct(
 		IURLGenerator $urlGenerator,
@@ -64,7 +66,10 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 		$this->urlGenerator = $urlGenerator;
 		$this->l10n = $l10n;
 		$this->calendarShareRequest = $calendarShareRequest;
-		$this->circlesManager = \OC::$server->get(CirclesManager::class);
+		try {
+			$this->circlesManager = Server::get(CirclesManager::class);
+		} catch (ContainerExceptionInterface $e) {
+		}
 	}
 
 	public function getProviderId(): string {
@@ -81,6 +86,10 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 	 * @return IRelatedResource|null
 	 */
 	public function getRelatedFromItem(string $itemId): ?IRelatedResource {
+		if ($this->circlesManager === null) {
+			return null;
+		}
+
 		$itemId = (int)$itemId;
 
 		/** @var Calendar $calendar */
@@ -128,8 +137,8 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 				return [];
 		}
 
-		return array_map(function (Calendar $calendar) {
-			return $calendar->getCalendarId();
+		return array_map(function (Calendar $calendar): string {
+			return (string)$calendar->getCalendarId();
 		}, $shares);
 	}
 

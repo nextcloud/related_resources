@@ -43,6 +43,8 @@ use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCSController;
 use OCP\IRequest;
 use OCP\IUserSession;
+use OCP\Server;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Log\LoggerInterface;
 
 class ApiController extends OcsController {
@@ -70,8 +72,8 @@ class ApiController extends OcsController {
 		$this->relatedService = $relatedService;
 		$this->configService = $configService;
 		try {
-			$this->circlesManager = \OC::$server->get(CirclesManager::class);
-		} catch (Exception $e) {
+			$this->circlesManager = Server::get(CirclesManager::class);
+		} catch (ContainerExceptionInterface $e) {
 		}
 	}
 
