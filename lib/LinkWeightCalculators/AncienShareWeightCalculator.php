@@ -59,7 +59,7 @@ class AncienShareWeightCalculator implements ILinkWeightCalculator {
 
 			$now = time();
 			$entryCreation = $entry->getMetaInt(RelatedResource::LINK_CREATION);
-			if ($entryCreation < $now - (5 * 360 * 24 * 3600)) { // 3y
+			if ($entryCreation < $now - (5 * 360 * 24 * 3600)) { // 5y
 				$entry->improve(self::$RATIO_5Y, 'ancien_5y');
 			} elseif ($entryCreation < $now - (3 * 360 * 24 * 3600)) { // 3y
 				$entry->improve(self::$RATIO_3Y, 'ancien_3y');
