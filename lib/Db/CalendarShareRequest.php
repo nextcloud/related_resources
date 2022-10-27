@@ -53,14 +53,14 @@ class CalendarShareRequest extends CalendarShareRequestBuilder {
 
 
 	/**
-	 * @param int $calendar
+	 * @param int $calendarId
 	 *
 	 * @return CalendarShare[]
 	 */
-	public function getSharesByCalendarId(int $calendar): array {
+	public function getSharesByCalendarId(int $calendarId): array {
 		$qb = $this->getCalendarShareSelectSql();
 		$qb->limit('type', 'calendar');
-		$qb->limitInt('resourceid', $calendar);
+		$qb->limitInt('resourceid', $calendarId);
 
 		return $this->getSharesFromRequest($qb);
 	}
