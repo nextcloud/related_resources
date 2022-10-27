@@ -3,7 +3,7 @@ app_name=Related_Resources
 build_dir=$(CURDIR)/build/artifacts
 sign_dir=$(build_dir)/sign
 package_name=$(shell echo $(app_name) | tr '[:upper:]' '[:lower:]')
-version=1.0.2
+version=1.0.3
 
 all: release
 
