@@ -89,6 +89,7 @@ class CoreQueryBuilder {
 		self::TABLE_CALENDARS => [
 			'id',
 			'principaluri',
+			'uri',
 			'displayname'
 		],
 		self::TABLE_CAL_OBJECTS => [
