@@ -37,28 +37,30 @@ use OCA\RelatedResources\Model\CalendarShare;
 
 class CalendarShareRequest extends CalendarShareRequestBuilder {
 	/**
-	 * @param int $itemId
+	 * @param string $principalUri
+	 * @param string $uri
 	 *
 	 * @return Calendar
 	 * @throws CalendarDataNotFoundException
 	 */
-	public function getCalendarById(int $itemId): Calendar {
+	public function getCalendarByUri(string $principalUri, string $uri): Calendar {
 		$qb = $this->getCalendarSelectSql();
-		$qb->limitInt('id', $itemId);
+		$qb->limit('principaluri', $principalUri);
+		$qb->limit('uri', $uri);
 
 		return $this->getCalendarFromRequest($qb);
 	}
 
 
 	/**
-	 * @param int $itemId
+	 * @param int $calendar
 	 *
 	 * @return CalendarShare[]
 	 */
-	public function getSharesByItemId(int $itemId): array {
+	public function getSharesByCalendarId(int $calendar): array {
 		$qb = $this->getCalendarShareSelectSql();
 		$qb->limit('type', 'calendar');
-		$qb->limitInt('resourceid', $itemId);
+		$qb->limitInt('resourceid', $calendar);
 
 		return $this->getSharesFromRequest($qb);
 	}
