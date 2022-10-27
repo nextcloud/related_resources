@@ -90,11 +90,12 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 			return null;
 		}
 
+		[$principalUri, $uri] = explode(':', $itemId, 2);
 		$itemId = (int)$itemId;
 
 		/** @var Calendar $calendar */
 		try {
-			$calendar = $this->calendarShareRequest->getCalendarById($itemId);
+			$calendar = $this->calendarShareRequest->getCalendarByUri($principalUri, $uri);
 		} catch (CalendarDataNotFoundException $e) {
 			return null;
 		}
@@ -106,7 +107,7 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 			$related->addToVirtualGroup($owner->getSingleId());
 		}
 
-		foreach ($this->calendarShareRequest->getSharesByItemId($itemId) as $share) {
+		foreach ($this->calendarShareRequest->getSharesByCalendarId($calendar->getCalendarId()) as $share) {
 			try {
 				$this->completeShareDetails($share);
 			} catch (Exception $e) {
@@ -138,13 +139,13 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 		}
 
 		return array_map(function (Calendar $calendar): string {
-			return (string)$calendar->getCalendarId();
+			return $calendar->getId();
 		}, $shares);
 	}
 
 
 	private function convertToRelatedResource(Calendar $calendar): IRelatedResource {
-		$related = new RelatedResource(self::PROVIDER_ID, (string)$calendar->getCalendarId());
+		$related = new RelatedResource(self::PROVIDER_ID, $calendar->getId());
 
 		$url = '';
 		try {
