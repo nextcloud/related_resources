@@ -41,8 +41,13 @@ class Calendar implements IQueryRow, JsonSerializable {
 	private int $calendarId = 0;
 	private string $calendarName = '';
 	private string $calendarPrincipalUri = '';
+	private string $calendarUri = '';
 
 	public function __construct() {
+	}
+
+	public function getId(): string {
+		return $this->getCalendarPrincipalUri() . ':' . $this->getCalendarUri();
 	}
 
 	public function setCalendarId(int $calendarId): self {
@@ -75,19 +80,30 @@ class Calendar implements IQueryRow, JsonSerializable {
 		return $this->calendarPrincipalUri;
 	}
 
+	public function setCalendarUri(string $calendarUri): self {
+		$this->calendarUri = $calendarUri;
+
+		return $this;
+	}
+
+	public function getCalendarUri(): string {
+		return $this->calendarUri;
+	}
+
 	public function importFromDatabase(array $data): IQueryRow {
 		$this->setCalendarId($this->getInt('id', $data))
 			 ->setCalendarName($this->get('displayname', $data))
-			 ->setCalendarPrincipalUri($this->get('principaluri', $data));
+			 ->setCalendarPrincipalUri($this->get('principaluri', $data))
+			 ->setCalendarUri($this->get('uri', $data));
 
 		return $this;
 	}
 
 	public function jsonSerialize(): array {
 		return [
-			'id' => $this->getCalendarId(),
 			'calendarName' => $this->getCalendarName(),
-			'calendarPrincipalUri' => $this->getCalendarPrincipalUri()
+			'calendarPrincipalUri' => $this->getCalendarPrincipalUri(),
+			'calendarUri' => $this->getCalendarUri()
 		];
 	}
 }
