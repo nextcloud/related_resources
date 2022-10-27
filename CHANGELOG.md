@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.0.3
+
+- identify calendar by uri
+
 ### 1.0.2
 
 - polishing code and tests
