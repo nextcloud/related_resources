@@ -117,17 +117,4 @@ class ApiController extends OcsController {
 			);
 		}
 	}
-
-	/**
-	 * @NoAdminRequired
-	 *
-	 * @param string $providerId
-	 * @param string $itemId
-	 *
-	 * @return DataResponse
-	 * @throws OCSException
-	 */
-	public function getRelatedAlternate(string $providerId, string $itemId): DataResponse {
-		return $this->getRelatedResources($providerId, $itemId);
-	}
 }
