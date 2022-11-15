@@ -11,6 +11,7 @@ OC.L10N.register(
     "Talk conversation \"%s\"" : "„%s” beszélgetés",
     "Related Resources" : "Kapcsolódó erőforrások",
     "Displays resources related to current item in right panel" : "Megjeleníti a jelenlegi elemhez kapcsolódó erőforrásokat a jobb oldali panelen",
-    "Displays resources related to current item in right panel." : "Megjeleníti a jelenlegi elemhez kapcsolódó erőforrásokat a jobb oldali panelen."
+    "Displays resources related to current item in right panel." : "Megjeleníti a jelenlegi elemhez kapcsolódó erőforrásokat a jobb oldali panelen.",
+    "1:1 Conversation" : "Beszélgetés négyszemközt"
 },
 "nplurals=2; plural=(n != 1);");
