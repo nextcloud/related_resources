@@ -143,6 +143,21 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	}
 
 
+	public function improveRelatedResource(IRelatedResource $entry): void {
+		$current = $this->circlesManager->getCurrentFederatedUser();
+		if (!$current->isLocal() || $current->getUserType() !== Member::TYPE_USER) {
+			return;
+		}
+
+		$paths = $this->rootFolder->getUserFolder($current->getUserId())
+								  ->getById((int) $entry->getItemId());
+
+		if (sizeof($paths) > 0) {
+			$entry->setTitle($paths[0]->getName());
+		}
+	}
+
+
 	private function convertToRelatedResource(FilesShare $share): IRelatedResource {
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$share->getFileId());
 		$related->setTitle(trim($share->getFileTarget(), '/'));
