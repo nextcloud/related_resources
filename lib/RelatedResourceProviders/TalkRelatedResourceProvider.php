@@ -113,12 +113,9 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 				return null;
 			}
 
-			if ($countActor === 2) {
-				$list = json_decode($room->getRoomName());
-				if (is_array($list)) { // 1:1 convo
-					$related->setTitle($this->l10n->t('Talk conversation'))
-							->setMetaArray('1on1', $list);
-				}
+			if ($countActor === 2 && $room->getRoomType() === \OCA\Talk\Room::TYPE_ONE_TO_ONE) {
+				$related->setTitle($this->l10n->t('Talk conversation'))
+						->setMetaArray('1on1', json_decode($room->getRoomName()));
 			}
 		}
 

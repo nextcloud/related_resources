@@ -40,6 +40,7 @@ class TalkRoom implements IQueryRow, JsonSerializable {
 
 	private int $roomId = 0;
 	private string $roomName = '';
+	private int $roomType = 0;
 	private string $token = '';
 
 	public function __construct() {
@@ -83,6 +84,24 @@ class TalkRoom implements IQueryRow, JsonSerializable {
 		return $this->roomName;
 	}
 
+	/**
+	 * @param int $roomType
+	 *
+	 * @return TalkRoom
+	 */
+	public function setRoomType(int $roomType): self {
+		$this->roomType = $roomType;
+
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getRoomType(): int {
+		return $this->roomType;
+	}
+
 
 	/**
 	 * @param string $token
@@ -109,6 +128,7 @@ class TalkRoom implements IQueryRow, JsonSerializable {
 	public function importFromDatabase(array $data): IQueryRow {
 		$this->setRoomId($this->getInt('id', $data))
 			 ->setRoomName($this->get('name', $data))
+			 ->setRoomType($this->getInt('type', $data))
 			 ->setToken($this->get('token', $data));
 
 		return $this;
@@ -121,6 +141,7 @@ class TalkRoom implements IQueryRow, JsonSerializable {
 		return [
 			'roomId' => $this->getRoomId(),
 			'roomName' => $this->getRoomName(),
+			'roomType' => $this->getRoomType(),
 			'token' => $this->getToken()
 		];
 	}
