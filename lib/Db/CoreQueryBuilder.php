@@ -80,6 +80,7 @@ class CoreQueryBuilder {
 		],
 		self::TABLE_TALK_ROOM => [
 			'name',
+			'type',
 			'token'
 		],
 		self::TABLE_DAV_SHARE => [
