@@ -139,6 +139,9 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	}
 
 
+	public function improveRelatedResource(IRelatedResource $entry): void {
+	}
+
 	private function convertToRelatedResource(DeckBoard $board): IRelatedResource {
 		$url = '';
 		try {
