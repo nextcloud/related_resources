@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Calendar" : "Calendièr",
     "Files" : "Fichièrs",
-    "Talk" : "Talk"
+    "Talk" : "Talk",
+    "Talk conversation" : "Conversacion Talk"
 },
 "nplurals=2; plural=(n > 1);");

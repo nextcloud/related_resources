@@ -4,6 +4,7 @@ OC.L10N.register(
     "Calendar" : "Agenda",
     "Deck" : "Deck",
     "Files" : "Bestanden",
-    "Talk" : "Talk"
+    "Talk" : "Talk",
+    "Talk conversation" : "Talk gesprek"
 },
 "nplurals=2; plural=(n != 1);");

@@ -5,6 +5,7 @@
     "Files" : "Tiedostot",
     "File \"%s\"" : "Tiedosto \"%s\"",
     "Talk" : "Talk",
-    "Talk conversation \"%s\"" : "Keskustelu \"%s\""
+    "Talk conversation \"%s\"" : "Keskustelu \"%s\"",
+    "Talk conversation" : "Talk-keskustelu"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
