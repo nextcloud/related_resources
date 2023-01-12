@@ -2,6 +2,7 @@
     "Calendar" : "Ημερολόγιο",
     "Deck" : "Deck",
     "Files" : "Αρχεία",
-    "Talk" : "Ομιλία"
+    "Talk" : "Ομιλία",
+    "Talk conversation" : "Συνομιλία στο Talk"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
