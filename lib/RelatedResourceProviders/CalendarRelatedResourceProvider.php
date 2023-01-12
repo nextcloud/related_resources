@@ -144,6 +144,11 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 	}
 
 
+	public function improveRelatedResource(IRelatedResource $entry): void {
+	}
+
+
+
 	private function convertToRelatedResource(Calendar $calendar): IRelatedResource {
 		$related = new RelatedResource(self::PROVIDER_ID, $calendar->getId());
 

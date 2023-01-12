@@ -113,14 +113,34 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 				return null;
 			}
 
-			if ($countActor === 2) { // 1:1 convo
-				$related->setTitle($this->l10n->t('1:1 Conversation'));
+			if ($countActor === 2 && $room->getRoomType() === \OCA\Talk\Room::TYPE_ONE_TO_ONE) {
+				$related->setTitle($this->l10n->t('Talk conversation'))
+						->setMetaArray('1on1', json_decode($room->getRoomName()));
 			}
 		}
 
 		return $related;
 	}
 
+
+	public function improveRelatedResource(IRelatedResource $entry): void {
+		if (!$entry->hasMeta('1on1')) {
+			return;
+		}
+
+		$current = $this->circlesManager->getCurrentFederatedUser();
+		if (!$current->isLocal() || $current->getUserType() !== Member::TYPE_USER) {
+			return;
+		}
+
+		foreach ($entry->getMetaArray('1on1') as $actor) {
+			if ($actor !== $current->getUserId()) {
+				$entry->setTitle($this->l10n->t('Conversation with %s', $actor));
+
+				return;
+			}
+		}
+	}
 
 	public function getItemsAvailableToEntity(FederatedUser $entity): array {
 		switch ($entity->getBasedOn()->getSource()) {
