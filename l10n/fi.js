@@ -7,6 +7,7 @@ OC.L10N.register(
     "Files" : "Tiedostot",
     "File \"%s\"" : "Tiedosto \"%s\"",
     "Talk" : "Talk",
-    "Talk conversation \"%s\"" : "Keskustelu \"%s\""
+    "Talk conversation \"%s\"" : "Keskustelu \"%s\"",
+    "Talk conversation" : "Talk-keskustelu"
 },
 "nplurals=2; plural=(n != 1);");

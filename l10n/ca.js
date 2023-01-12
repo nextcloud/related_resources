@@ -11,6 +11,7 @@ OC.L10N.register(
     "Talk conversation \"%s\"" : "Conversa «%s»",
     "Related Resources" : "Recursos relacionats",
     "Displays resources related to current item in right panel" : "Mostra recursos relacionats amb l'element actual en el tauler dret",
-    "Displays resources related to current item in right panel." : "Mostra recursos relacionats amb l'element actual en el tauler dret."
+    "Displays resources related to current item in right panel." : "Mostra recursos relacionats amb l'element actual en el tauler dret.",
+    "Talk conversation" : "Conversa de Talk"
 },
 "nplurals=2; plural=(n != 1);");
