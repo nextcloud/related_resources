@@ -12,6 +12,8 @@ OC.L10N.register(
     "Related Resources" : "Relaterade resurser",
     "Displays resources related to current item in right panel" : "Visar resurser relaterade till aktuellt objekt i den högra panelen",
     "Displays resources related to current item in right panel." : "Visar resurser relaterade till aktuellt objekt i den högra panelen.",
+    "Talk conversation" : "Talk-konversation",
+    "Conversation with %s" : "Konversation med %s",
     "1:1 Conversation" : "1:1 Konversation"
 },
 "nplurals=2; plural=(n != 1);");
