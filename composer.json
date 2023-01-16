@@ -8,7 +8,7 @@
 		"classmap-authoritative": true,
 		"autoloader-suffix": "RelatedResources",
 		"platform": {
-			"php": "7.4"
+			"php": "8.0"
 		}
 	},
 	"authors": [
@@ -30,7 +30,8 @@
 		"psalm:update-baseline": "psalm --threads=1 --update-baseline",
 		"psalm:clear": "psalm --clear-cache && psalm --clear-global-cache",
 		"psalm:fix": "psalm --alter --issues=InvalidReturnType,MissingReturnType,InvalidNullableReturnType,MissingParamType,InvalidFalsableReturnType",
-		"lint": "find . -name \\*.php -not -path './vendor/*' -print0 | xargs -0 -n1 php -l"
+		"lint": "find . -name \\*.php -not -path './vendor/*' -print0 | xargs -0 -n1 php -l",
+		"test:unit": "echo 'Only testing installation of the app'"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^9.5",
