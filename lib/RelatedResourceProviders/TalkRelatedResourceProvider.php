@@ -43,6 +43,7 @@ use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Model\TalkActor;
 use OCA\RelatedResources\Model\TalkRoom;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
+use OCP\AutoloadNotAllowedException;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Server;
@@ -70,7 +71,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 		$this->talkRoomRequest = $talkRoomRequest;
 		try {
 			$this->circlesManager = Server::get(CirclesManager::class);
-		} catch (ContainerExceptionInterface $e) {
+		} catch (ContainerExceptionInterface | AutoloadNotAllowedException $e) {
 		}
 	}
 
