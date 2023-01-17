@@ -60,4 +60,13 @@ interface IRelatedResourceProvider {
 	 * @return string[]
 	 */
 	public function getItemsAvailableToEntity(FederatedUser $entity): array;
+
+	/**
+	 * improve a related resource before sending result to front-end.
+	 *
+	 * @param IRelatedResource $entry
+	 *
+	 * @return void
+	 */
+	public function improveRelatedResource(IRelatedResource $entry): void;
 }

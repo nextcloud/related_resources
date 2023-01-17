@@ -198,6 +198,7 @@ class RelatedService {
 
 		$result = $this->strictMatching($current, $result);
 		$result = $this->filterUnavailableResults($result);
+		$result = $this->improveResult($result);
 
 		$this->weightResult($current, $result);
 
@@ -448,6 +449,22 @@ class RelatedService {
 
 			return false;
 		});
+	}
+
+
+	/**
+	 * @param IRelatedResource[] $result
+	 *
+	 * @return array
+	 * @throws RelatedResourceProviderNotFound
+	 */
+	private function improveResult(array $result): array {
+		foreach ($result as $entry) {
+			$this->getRelatedResourceProvider($entry->getProviderId())
+				 ->improveRelatedResource($entry);
+		}
+
+		return $result;
 	}
 
 	/**
