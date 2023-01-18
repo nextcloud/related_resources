@@ -12,6 +12,7 @@ OC.L10N.register(
     "Related Resources" : "Свързани ресурси",
     "Displays resources related to current item in right panel" : "Показва ресурси, свързани с текущия елемент в десния панел",
     "Displays resources related to current item in right panel." : "Показва ресурси, свързани с текущия елемент в десния панел.",
-    "1:1 Conversation" : "Разговор 1:1"
+    "Talk conversation" : "Talk разговор",
+    "Conversation with %s" : "Разговор с %s"
 },
 "nplurals=2; plural=(n != 1);");

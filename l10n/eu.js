@@ -12,7 +12,6 @@ OC.L10N.register(
     "Related Resources" : "Erlazionatutako baliabideak",
     "Displays resources related to current item in right panel" : "Uneko elementuarekin lotutako baliabideak erakusten ditu eskuineko panelean",
     "Displays resources related to current item in right panel." : "Uneko elementuarekin lotutako baliabideak erakusten ditu eskuineko panelean.",
-    "Talk conversation" : "Talk elkarrizketa",
-    "1:1 Conversation" : "1:1 elkarrizketa"
+    "Talk conversation" : "Talk elkarrizketa"
 },
 "nplurals=2; plural=(n != 1);");
