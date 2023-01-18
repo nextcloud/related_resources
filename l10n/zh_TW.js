@@ -13,7 +13,6 @@ OC.L10N.register(
     "Displays resources related to current item in right panel" : "在右側面板中顯示與目前項目相關的資源",
     "Displays resources related to current item in right panel." : "在右側面板中顯示與目前項目相關的資源。",
     "Talk conversation" : "Talk 對話",
-    "Conversation with %s" : "與 %s 的對話",
-    "1:1 Conversation" : "一對一對話"
+    "Conversation with %s" : "與 %s 的對話"
 },
 "nplurals=1; plural=0;");
