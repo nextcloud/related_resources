@@ -13,7 +13,6 @@ OC.L10N.register(
     "Displays resources related to current item in right panel" : "Muestra los recursos relacionados a el ítem actual en el panel derecho",
     "Displays resources related to current item in right panel." : "Muestra los recursos relacionados a el ítem actual en el panel derecho.",
     "Talk conversation" : "Conversación de Talk",
-    "Conversation with %s" : "Conversación con %s",
-    "1:1 Conversation" : "Conversación 1:1"
+    "Conversation with %s" : "Conversación con %s"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

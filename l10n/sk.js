@@ -12,7 +12,6 @@ OC.L10N.register(
     "Related Resources" : "Príbuzné zdroje",
     "Displays resources related to current item in right panel" : "Zobrazuje zdroje súvisiace s aktuálnou položkou v pravom paneli",
     "Displays resources related to current item in right panel." : "Zobrazuje zdroje súvisiace s aktuálnou položkou v pravom paneli",
-    "Talk conversation" : "Konverzácia v Rozhovoroch",
-    "1:1 Conversation" : "Rozhovor 1:1"
+    "Talk conversation" : "Konverzácia v Rozhovoroch"
 },
 "nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);");

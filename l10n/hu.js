@@ -13,7 +13,6 @@ OC.L10N.register(
     "Displays resources related to current item in right panel" : "Megjeleníti a jelenlegi elemhez kapcsolódó erőforrásokat a jobb oldali panelen",
     "Displays resources related to current item in right panel." : "Megjeleníti a jelenlegi elemhez kapcsolódó erőforrásokat a jobb oldali panelen.",
     "Talk conversation" : "Beszélgetés",
-    "Conversation with %s" : "Beszélgetés a következővel: %s",
-    "1:1 Conversation" : "Beszélgetés négyszemközt"
+    "Conversation with %s" : "Beszélgetés a következővel: %s"
 },
 "nplurals=2; plural=(n != 1);");
