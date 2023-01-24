@@ -51,6 +51,7 @@ use OCA\RelatedResources\RelatedResourceProviders\TalkRelatedResourceProvider;
 use OCA\RelatedResources\Tools\Exceptions\InvalidItemException;
 use OCA\RelatedResources\Tools\Traits\TDeserialize;
 use OCP\App\IAppManager;
+use OCP\AutoloadNotAllowedException;
 use OCP\ICache;
 use OCP\ICacheFactory;
 use OCP\Server;
@@ -96,7 +97,7 @@ class RelatedService {
 
 		try {
 			$this->circlesManager = Server::get(CirclesManager::class);
-		} catch (ContainerExceptionInterface $e) {
+		} catch (ContainerExceptionInterface | AutoloadNotAllowedException $e) {
 			$this->logger->notice($e->getMessage());
 		}
 	}

@@ -43,6 +43,7 @@ use OCA\RelatedResources\Model\Calendar;
 use OCA\RelatedResources\Model\CalendarShare;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
+use OCP\AutoloadNotAllowedException;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Server;
@@ -68,7 +69,7 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 		$this->calendarShareRequest = $calendarShareRequest;
 		try {
 			$this->circlesManager = Server::get(CirclesManager::class);
-		} catch (ContainerExceptionInterface $e) {
+		} catch (ContainerExceptionInterface | AutoloadNotAllowedException $e) {
 		}
 	}
 

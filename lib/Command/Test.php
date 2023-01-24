@@ -37,6 +37,7 @@ use OCA\Circles\CirclesManager;
 use OCA\RelatedResources\Exceptions\RelatedResourceProviderNotFound;
 use OCA\RelatedResources\Service\RelatedService;
 use OCA\RelatedResources\Tools\Traits\TStringTools;
+use OCP\AutoloadNotAllowedException;
 use OCP\ICache;
 use OCP\ICacheFactory;
 use OCP\IConfig;
@@ -122,7 +123,7 @@ class Test extends Base {
 		try {
 			/** @var CirclesManager $circleManager */
 			$circleManager = Server::get(CirclesManager::class);
-		} catch (ContainerExceptionInterface $e) {
+		} catch (ContainerExceptionInterface | AutoloadNotAllowedException $e) {
 			throw new Exception('Circles needs to be enabled');
 		}
 

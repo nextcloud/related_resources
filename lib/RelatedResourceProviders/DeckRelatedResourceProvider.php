@@ -43,6 +43,7 @@ use OCA\RelatedResources\Model\DeckBoard;
 use OCA\RelatedResources\Model\DeckShare;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
+use OCP\AutoloadNotAllowedException;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Server;
@@ -71,7 +72,7 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		$this->deckSharesRequest = $deckSharesRequest;
 		try {
 			$this->circlesManager = Server::get(CirclesManager::class);
-		} catch (ContainerExceptionInterface $e) {
+		} catch (ContainerExceptionInterface | AutoloadNotAllowedException $e) {
 		}
 	}
 

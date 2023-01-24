@@ -42,6 +42,7 @@ use OCA\RelatedResources\IRelatedResourceProvider;
 use OCA\RelatedResources\Model\FilesShare;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
+use OCP\AutoloadNotAllowedException;
 use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
@@ -77,7 +78,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 		$this->filesShareRequest = $filesShareRequest;
 		try {
 			$this->circlesManager = Server::get(CirclesManager::class);
-		} catch (ContainerExceptionInterface $e) {
+		} catch (ContainerExceptionInterface | AutoloadNotAllowedException $e) {
 		}
 	}
 

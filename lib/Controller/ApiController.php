@@ -41,6 +41,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCS\OCSException;
 use OCP\AppFramework\OCSController;
+use OCP\AutoloadNotAllowedException;
 use OCP\IRequest;
 use OCP\IUserSession;
 use OCP\Server;
@@ -73,7 +74,7 @@ class ApiController extends OcsController {
 		$this->configService = $configService;
 		try {
 			$this->circlesManager = Server::get(CirclesManager::class);
-		} catch (ContainerExceptionInterface $e) {
+		} catch (ContainerExceptionInterface | AutoloadNotAllowedException $e) {
 		}
 	}
 
