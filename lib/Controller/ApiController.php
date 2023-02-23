@@ -97,6 +97,25 @@ class ApiController extends OcsController {
 		try {
 			$this->circlesManager->startSession();
 
+			// testing getCurrentFederatedUser() right after startSession()
+			try {
+				$curr = $this->circlesManager->getCurrentFederatedUser();
+				$this->logger->debug('current session looks good with singleId ' . $curr->getSingleId());
+			} catch (\Throwable $e) {
+				$user = $this->userSession->getUser();
+				if ($user === null) {
+					$this->logger->debug('current session is null');
+				} else {
+					try {
+						$fed = $this->circlesManager->getLocalFederatedUser($user->getUID());
+
+						$this->logger->debug('local federated user based on ' . $user->getUID(), ['fed' => json_encode($fed)]);
+					} catch (Exception $e) {
+						$this->logger->debug('could not get local federated user based on ' . $user->getUID(), ['exception' => $e]);
+					}
+				}
+			}
+
 			$result = $this->relatedService->getRelatedToItem(
 				$providerId,
 				$itemId,
