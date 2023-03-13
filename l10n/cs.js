@@ -7,7 +7,7 @@ OC.L10N.register(
     "Deck board \"%s\"" : "Tabule „%s“ v Deck",
     "Files" : "Soubory",
     "File \"%s\"" : "File „%s“",
-    "Talk" : "Hovor",
+    "Talk" : "Talk",
     "Talk conversation \"%s\"" : "Konverzace „%s“ v Talk",
     "Related Resources" : "Související prostředky",
     "Displays resources related to current item in right panel" : "V panelu napravo zobrazuje prostředky související s právě označenou položkou",
