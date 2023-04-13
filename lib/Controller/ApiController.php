@@ -33,6 +33,7 @@ namespace OCA\RelatedResources\Controller;
 
 use Exception;
 use OCA\Circles\CirclesManager;
+use OCA\Circles\Exceptions\FederatedUserNotFoundException;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Service\ConfigService;
 use OCA\RelatedResources\Service\RelatedService;
@@ -97,6 +98,13 @@ class ApiController extends OcsController {
 
 		try {
 			$this->circlesManager->startSession();
+
+			try {
+				$this->circlesManager->getCurrentFederatedUser();
+				$this->logger->debug('federatedUser available at begin of session');
+			} catch (FederatedUserNotFoundException $e) {
+				$this->logger->debug('federatedUser NOT available at begin of session');
+			}
 
 			$result = $this->relatedService->getRelatedToItem(
 				$providerId,

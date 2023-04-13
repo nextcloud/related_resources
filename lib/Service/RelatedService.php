@@ -32,6 +32,7 @@ namespace OCA\RelatedResources\Service;
 
 use Exception;
 use OCA\Circles\CirclesManager;
+use OCA\Circles\Exceptions\FederatedUserNotFoundException;
 use OCA\Circles\Model\FederatedUser;
 use OCA\Circles\Model\Member;
 use OCA\RelatedResources\Exceptions\CacheNotFoundException;
@@ -116,6 +117,14 @@ class RelatedService {
 			return [];
 		}
 
+		try {
+			$this->circlesManager->getCurrentFederatedUser();
+			$this->logger->debug('federatedUser available while getRelatedToItem');
+		} catch (FederatedUserNotFoundException $e) {
+			$this->logger->debug('federatedUser NOT available while getRelatedToItem');
+			return [];
+		}
+
 		$result = $this->retrieveRelatedToItem($providerId, $itemId);
 
 		usort($result, function (IRelatedResource $r1, IRelatedResource $r2): int {
@@ -195,6 +204,14 @@ class RelatedService {
 					$result[] = $related;
 				}
 			}
+		}
+
+		try {
+			$this->circlesManager->getCurrentFederatedUser();
+			$this->logger->debug('federatedUser available before strictMatching');
+		} catch (FederatedUserNotFoundException $e) {
+			$this->logger->debug('federatedUser NOT available before strictMatching');
+			return [];
 		}
 
 		$result = $this->strictMatching($current, $result);
