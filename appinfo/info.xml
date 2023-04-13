@@ -7,7 +7,7 @@
 	<description>
 		Displays resources related to current item in right panel.
 	</description>
-	<version>1.1.0-alpha1</version>
+	<version>1.1.0</version>
 	<licence>agpl</licence>
 	<author>Maxence Lange</author>
 	<namespace>RelatedResources</namespace>
@@ -19,7 +19,7 @@
 	<bugs>https://github.com/nextcloud/related_resources/issues</bugs>
 	<repository>https://github.com/nextcloud/related_resources.git</repository>
 	<dependencies>
-		<nextcloud min-version="25" max-version="26"/>
+		<nextcloud min-version="26" max-version="26"/>
 	</dependencies>
 
 	<commands>
