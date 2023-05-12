@@ -127,7 +127,7 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 
 
 	public function convertToRelatedResource(array $folderData): IRelatedResource {
-		$related = new RelatedResource(self::PROVIDER_ID, (string)$folderData['id'] ?? 0);
+		$related = new RelatedResource(self::PROVIDER_ID, (string)($folderData['id'] ?? 0));
 		$folderName = $folderData['mount_point'] ?? 'groupfolder';
 		$related->setTitle($folderName);
 		$related->setSubtitle($this->l10n->t('Group Folder'));

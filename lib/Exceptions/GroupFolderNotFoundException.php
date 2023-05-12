@@ -30,5 +30,6 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\Exceptions;
 
 use Exception;
+
 class GroupFolderNotFoundException extends Exception {
 }

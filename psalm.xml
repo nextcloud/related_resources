@@ -32,14 +32,17 @@
                 <referencedClass name="OCA\Circles\Model\FederatedUser" />
                 <referencedClass name="OCA\Circles\Exceptions\MembershipNotFoundException" />
                 <referencedClass name="OCA\Circles\Exceptions\FederatedUserNotFoundException" />
+                <referencedClass name="OCA\GroupFolders\Folder\FolderManager" />
+                <referencedClass name="OCA\GroupFolders\Mount\GroupMountPoint" />
                 <referencedClass name="OCA\Talk\Room" />
             </errorLevel>
         </UndefinedClass>
         <UndefinedDocblockClass>
             <errorLevel type="suppress">
+                <referencedClass name="OC\DB\SchemaWrapper" />
                 <referencedClass name="OCA\Circles\CirclesManager" />
                 <referencedClass name="OCA\Circles\Model\FederatedUser" />
-                <referencedClass name="OC\DB\SchemaWrapper" />
+                <referencedClass name="OCA\GroupFolders\Folder\FolderManager" />
                 <referencedClass name="Doctrine\DBAL\Schema\Schema" />
                 <referencedClass name="Doctrine\DBAL\Schema\SchemaException" />
                 <referencedClass name="Doctrine\DBAL\Driver\Statement" />
@@ -57,5 +60,10 @@
                 <referencedMethod name="OC\DB\SchemaWrapper::dropTable" />
             </errorLevel>
         </UndefinedMethod>
+        <UndefinedInterfaceMethod>
+            <errorLevel type="suppress">
+                <referencedMethod name="(OCP\Files\Mount\IMountPoint&amp;OCA\GroupFolders\Mount\GroupMountPoint)::getFolderId" />
+            </errorLevel>
+        </UndefinedInterfaceMethod>
     </issueHandlers>
 </psalm>

@@ -110,7 +110,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 		$itemIds = array_values(
 			array_filter(
 				array_map(function (array $entry): int {
-					return (($entry['type'] ?? 'files') === 'files') ? $entry['id'] : 0;
+					return (($entry['type'] ?? 'files') === 'files') ? (int)$entry['id'] : 0;
 				}, $itemEntries)
 			)
 		);
@@ -233,7 +233,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	/**
 	 * @param int $itemId
 	 *
-	 * @return int[]
+	 * @return list<array<array-key, int|string>>
 	 * @throws InvalidPathException
 	 * @throws NotFoundException
 	 * @throws NotPermittedException
