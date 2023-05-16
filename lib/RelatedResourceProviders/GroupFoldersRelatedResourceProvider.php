@@ -135,7 +135,10 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 
 		$related->setIcon(
 			$this->urlGenerator->getAbsoluteURL(
-				$this->urlGenerator->imagePath('groupfolders', 'app-dark.svg')
+				$this->urlGenerator->imagePath(
+					'groupfolders',
+					'app.svg'
+				)
 			)
 		);
 
