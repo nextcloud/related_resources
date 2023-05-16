@@ -202,19 +202,16 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	}
 
 
-
+	/**
+	 * @param list<array{id:int,type?:string}> $itemEntries
+	 */
 	private function managerGroupFolders(?IRelatedResource $related, array $itemEntries): ?IRelatedResource {
-		$groupFolderIds = array_values(
-			array_filter(
-				array_map(function (array $entry): int {
-					return (($entry['type'] ?? '') === 'groupfolder') ? $entry['id'] : 0;
-				}, $itemEntries)
-			)
-		);
-
-		foreach ($groupFolderIds as $folderId) {
+		foreach ($itemEntries as $entry) {
+			if (($entry['type'] ?? '') !== 'groupfolder') {
+				continue;
+			}
 			try {
-				$folder = $this->groupFoldersRRProvider->getFolder($folderId);
+				$folder = $this->groupFoldersRRProvider->getFolder($entry['id']);
 			} catch (GroupFolderNotFoundException $e) {
 				continue;
 			}
@@ -233,7 +230,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	/**
 	 * @param int $itemId
 	 *
-	 * @return list<array<array-key, int|string>>
+	 * @return list<array{id:int,type?:string}>
 	 * @throws InvalidPathException
 	 * @throws NotFoundException
 	 * @throws NotPermittedException
@@ -248,12 +245,12 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 		$paths = $this->rootFolder->getUserFolder($current->getUserId())
 								  ->getById($itemId);
 
-		$itemIds = [];
+		$itemEntries = [];
 		foreach ($paths as $path) {
 			while (true) {
 				$mountPoint = $path->getMountPoint();
 				if ($mountPoint instanceof GroupMountPoint) {
-					$itemIds[] = [
+					$itemEntries[] = [
 						'id' => $mountPoint->getFolderId(),
 						'type' => 'groupfolder'
 					];
@@ -263,12 +260,12 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 					break;
 				}
 
-				$itemIds[] = ['id' => $path->getId()];
+				$itemEntries[] = ['id' => $path->getId()];
 				$path = $path->getParent();
 			}
 		}
 
-		return $itemIds;
+		return $itemEntries;
 	}
 
 

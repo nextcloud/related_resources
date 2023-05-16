@@ -53,6 +53,9 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 
 	private ?CirclesManager $circlesManager = null;
 	private ?FolderManager $folderManager = null;
+	/**
+	 * @var array<int, array{acl: bool, groups: array<array-key, array<array-key, int|string>>, id: int, mount_point: mixed, quota: int, size: 0}>
+	 */
 	private array $folders = [];
 
 	public function __construct(
@@ -125,7 +128,9 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 	public function improveRelatedResource(IRelatedResource $entry): void {
 	}
 
-
+	/**
+	 * @param array{acl: bool, groups: array<array-key, array<array-key, int|string>>, id: int, mount_point: mixed, quota: int, size: 0} $folderData
+	 */
 	public function convertToRelatedResource(array $folderData): IRelatedResource {
 		$related = new RelatedResource(self::PROVIDER_ID, (string)($folderData['id'] ?? 0));
 		$folderName = $folderData['mount_point'] ?? 'groupfolder';
@@ -156,16 +161,14 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 
 	/**
 	 * @param RelatedResource $related
-	 * @param array $applicableMap
+	 * @param array<array-key, array<array-key, int|string>> $applicableMap
 	 */
 	public function processApplicableMap(RelatedResource $related, array $applicableMap): void {
 		foreach ($applicableMap as $k => $entry) {
 			$entityId = '';
 			if ($entry['type'] === 'circle') {
-				$entityId = $k;
-			}
-
-			if ($entry['type'] === 'group') {
+				$entityId = (string)$k;
+			} elseif ($entry['type'] === 'group') {
 				$federatedGroup = $this->circlesManager->getFederatedUser($k, Member::TYPE_GROUP);
 				$entityId = $federatedGroup->getSingleId();
 			}
@@ -179,7 +182,7 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 	/**
 	 * @param int $folderId
 	 *
-	 * @return array
+	 * @return array{acl: bool, groups: array<array-key, array<array-key, int|string>>, id: int, mount_point: mixed, quota: int, size: 0}
 	 * @throws GroupFolderNotFoundException
 	 */
 	public function getFolder(int $folderId): array {
