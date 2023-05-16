@@ -1,7 +1,7 @@
 # RelatedResources
 
 Find all related resources linked to the current displayed item.  
-Related resources and displayed item can comes from multiple providers:
+Related resources and displayed item can come from multiple providers:
 
 - Files,
 - Deck,
@@ -10,30 +10,30 @@ Related resources and displayed item can comes from multiple providers:
 
 ### related resources
 
-Based on currently displayed item from one of the available provider, the app:
+Based on the currently displayed item from one of the available providers, the app:
 
-- get all entities that specific item is shared to,
-- get all resources from each provider shared to each entity,
+- gets all entities that specific item is shared to,
+- gets all resources from each provider shared to each entity,
 - filters results based on current user access rights,
-- weight each related resource using different rules:
+- weights each related resource using different rules:
     - in case of duplicated entry, only one will be kept and have its score improved,
     - compare keywords with the one from the displayed item to improve score,
     - improve score on shares generated in the same period of time,
     - compare the owner of the shares
-    - in case of duplicate improvement, apply a diminishing return on the score improvement for each
-      entry
-    - decrease score in case of not-related shares
-    - decrease score on old shares
+    - apply a diminishing return on the score improvement for each
+      entry in case of duplicate improvement
+    - decrease score for not-related shares
+    - decrease score for old shares
 
 ### building the app
 
 >     $ make
 
-app will be available in `build/artifacts/`
+The app will be available in `build/artifacts/`
 
 ### ocs
 
-front-end will use this endpoint to get related resources to an item:
+The front-end will use this endpoint to get related resources for an item:
 
 - `providerId` can be `files`, `deck`, `talk`, `calendar`
 - `itemId` will be the unique Id to the current displayed item
@@ -42,7 +42,7 @@ front-end will use this endpoint to get related resources to an item:
 
 ### occ
 
-A command is available to get related resources from a terminal. The command will returns 2 tables
+A. OCC command is available to get related resources from the terminal. The command will returns 2 tables
 displaying:
 
 - all shares' recipients to an item
