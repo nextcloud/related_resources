@@ -112,6 +112,7 @@ class ApiController extends OcsController {
 
 			return new DataResponse($new);
 		} catch (Exception $e) {
+			$this->logger->error($e->getMessage(), ['exception' => $e]);
 			throw new OCSException(
 				($e->getMessage() === '') ? get_class($e) : $e->getMessage(),
 				Http::STATUS_BAD_REQUEST
