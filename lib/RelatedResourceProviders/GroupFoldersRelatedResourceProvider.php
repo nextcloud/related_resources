@@ -138,14 +138,18 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 		$related->setSubtitle($this->l10n->t('Group Folder'));
 		$related->setTooltip($this->l10n->t('Group Folder "%s"', '/' . $folderName . '/'));
 
-		$related->setIcon(
-			$this->urlGenerator->getAbsoluteURL(
-				$this->urlGenerator->imagePath(
-					'groupfolders',
-					'app.svg'
+		try {
+			$related->setIcon(
+				$this->urlGenerator->getAbsoluteURL(
+					$this->urlGenerator->imagePath(
+						'groupfolders',
+						'app.svg'
+					)
 				)
-			)
-		);
+			);
+		} catch (\Exception $e) {
+			// try/catch can be removed once groupfolders is released for nc27
+		}
 
 		$related->setUrl(
 			$this->urlGenerator->linkToRouteAbsolute(
