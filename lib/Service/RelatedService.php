@@ -47,6 +47,7 @@ use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\RelatedResourceProviders\CalendarRelatedResourceProvider;
 use OCA\RelatedResources\RelatedResourceProviders\DeckRelatedResourceProvider;
 use OCA\RelatedResources\RelatedResourceProviders\FilesRelatedResourceProvider;
+use OCA\RelatedResources\RelatedResourceProviders\GroupFoldersRelatedResourceProvider;
 use OCA\RelatedResources\RelatedResourceProviders\TalkRelatedResourceProvider;
 use OCA\RelatedResources\Tools\Exceptions\InvalidItemException;
 use OCA\RelatedResources\Tools\Traits\TDeserialize;
@@ -544,6 +545,14 @@ class RelatedService {
 		if ($this->appManager->isInstalled('spreed')) {
 			try {
 				$providers[] = Server::get(TalkRelatedResourceProvider::class);
+			} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
+				$this->logger->notice($e->getMessage());
+			}
+		}
+
+		if ($this->appManager->isInstalled('groupfolders')) {
+			try {
+				$providers[] = Server::get(GroupFoldersRelatedResourceProvider::class);
 			} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
 				$this->logger->notice($e->getMessage());
 			}
