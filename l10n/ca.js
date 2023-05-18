@@ -12,7 +12,7 @@ OC.L10N.register(
     "Related Resources" : "Recursos relacionats",
     "Displays resources related to current item in right panel" : "Mostra recursos relacionats amb l'element actual en el tauler dret",
     "Displays resources related to current item in right panel." : "Mostra recursos relacionats amb l'element actual en el tauler dret.",
-    "Talk conversation" : "Conversa de Talk",
+    "Talk conversation" : "Conversa",
     "Conversation with %s" : "Conversa amb %s"
 },
 "nplurals=2; plural=(n != 1);");
