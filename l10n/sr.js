@@ -12,6 +12,8 @@ OC.L10N.register(
     "Related Resources" : "Сродни ресурси",
     "Displays resources related to current item in right panel" : "Приказује ресурсе који су у вези са текућом ставком у десном панелу",
     "Displays resources related to current item in right panel." : "Приказује ресурсе који су у вези са текућом ставком у десном панелу.",
+    "Group Folder" : "Фолдер групе",
+    "Group Folder \"%s\"" : "Фолдер групе „%s”",
     "Talk conversation" : "Talk разговори",
     "Conversation with %s" : "Конверзација са %s"
 },

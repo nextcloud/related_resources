@@ -12,6 +12,8 @@ OC.L10N.register(
     "Related Resources" : "Recursos relacionats",
     "Displays resources related to current item in right panel" : "Mostra recursos relacionats amb l'element actual en el tauler dret",
     "Displays resources related to current item in right panel." : "Mostra recursos relacionats amb l'element actual en el tauler dret.",
+    "Group Folder" : "Carpeta de grup",
+    "Group Folder \"%s\"" : "Carpeta de grup «%s»",
     "Talk conversation" : "Conversa",
     "Conversation with %s" : "Conversa amb %s"
 },
