@@ -1,6 +1,8 @@
 { "translations": {
     "Calendar" : "Kalender",
     "Files" : "Failid",
-    "Talk" : "Talk"
+    "Talk" : "Talk",
+    "Group Folder" : "Grupikaust",
+    "Group Folder \"%s\"" : "Grupikaust \"%s\""
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

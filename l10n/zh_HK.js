@@ -12,6 +12,8 @@ OC.L10N.register(
     "Related Resources" : "相關資源",
     "Displays resources related to current item in right panel" : "在右側面板中顯示與當前項目相關的資源",
     "Displays resources related to current item in right panel." : "在右側面板中顯示與當前項目相關的資源。",
+    "Group Folder" : "群組資料夾",
+    "Group Folder \"%s\"" : "群組資料夾「%s」",
     "Talk conversation" : "Talk 對話",
     "Conversation with %s" : "與 %s 的對話"
 },
