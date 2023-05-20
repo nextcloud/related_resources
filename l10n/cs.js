@@ -12,6 +12,8 @@ OC.L10N.register(
     "Related Resources" : "Související prostředky",
     "Displays resources related to current item in right panel" : "V panelu napravo zobrazuje prostředky související s právě označenou položkou",
     "Displays resources related to current item in right panel." : "V panelu napravo zobrazuje prostředky související s právě označenou položkou.",
+    "Group Folder" : "Skupinová složka",
+    "Group Folder \"%s\"" : "Skupinová složka „%s“",
     "Talk conversation" : "Konverzace v Talk",
     "Conversation with %s" : "Konverzace s %s"
 },
