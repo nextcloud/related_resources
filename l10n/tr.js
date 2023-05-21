@@ -12,6 +12,8 @@ OC.L10N.register(
     "Related Resources" : "İlişkili kaynaklar",
     "Displays resources related to current item in right panel" : "Geçerli öge ile ilişkili kaynaklar sağ panoda görüntülensin",
     "Displays resources related to current item in right panel." : "Bu seçenek etkinleştirildiğinde, geçerli öge ile ilişkili kaynaklar sağ panoda görüntülenir.",
+    "Group Folder" : "Grup klasörü",
+    "Group Folder \"%s\"" : "\"%s\" grup klasörü",
     "Talk conversation" : "Talk görüşmesi",
     "Conversation with %s" : "%s ile görüşme"
 },
