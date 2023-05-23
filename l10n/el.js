@@ -4,7 +4,7 @@ OC.L10N.register(
     "Calendar" : "Ημερολόγιο",
     "Deck" : "Deck",
     "Files" : "Αρχεία",
-    "Talk" : "Ομιλία",
-    "Talk conversation" : "Συνομιλία στο Talk"
+    "Talk conversation" : "Συνομιλία στο Talk",
+    "Talk" : "Ομιλία"
 },
 "nplurals=2; plural=(n != 1);");
