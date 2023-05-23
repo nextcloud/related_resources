@@ -7,12 +7,12 @@ OC.L10N.register(
     "Deck board \"%s\"" : "\"%s\" Deck mahaia",
     "Files" : "Fitxategiak",
     "File \"%s\"" : "\"%s\" fitxategia",
+    "Talk conversation" : "Talk elkarrizketa",
+    "Conversation with %s" : "Elkarrizketa %s-(r)ekin",
     "Talk" : "Hizketaldia",
     "Talk conversation \"%s\"" : "\"%s\" Talk elkarrizketa",
     "Related Resources" : "Erlazionatutako baliabideak",
     "Displays resources related to current item in right panel" : "Uneko elementuarekin lotutako baliabideak erakusten ditu eskuineko panelean",
-    "Displays resources related to current item in right panel." : "Uneko elementuarekin lotutako baliabideak erakusten ditu eskuineko panelean.",
-    "Talk conversation" : "Talk elkarrizketa",
-    "Conversation with %s" : "Elkarrizketa %s-(r)ekin"
+    "Displays resources related to current item in right panel." : "Uneko elementuarekin lotutako baliabideak erakusten ditu eskuineko panelean."
 },
 "nplurals=2; plural=(n != 1);");
