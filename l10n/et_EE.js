@@ -3,8 +3,8 @@ OC.L10N.register(
     {
     "Calendar" : "Kalender",
     "Files" : "Failid",
-    "Talk" : "Talk",
     "Group Folder" : "Grupikaust",
-    "Group Folder \"%s\"" : "Grupikaust \"%s\""
+    "Group Folder \"%s\"" : "Grupikaust \"%s\"",
+    "Talk" : "Talk"
 },
 "nplurals=2; plural=(n != 1);");

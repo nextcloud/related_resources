@@ -4,7 +4,7 @@ OC.L10N.register(
     "Calendar" : "カレンダー",
     "Deck" : "デッキ",
     "Files" : "ファイル",
-    "Talk" : "トーク",
-    "Talk conversation" : "会話"
+    "Talk conversation" : "会話",
+    "Talk" : "トーク"
 },
 "nplurals=1; plural=0;");

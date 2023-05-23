@@ -7,12 +7,12 @@ OC.L10N.register(
     "Deck board \"%s\"" : "Deck табло \"%s\"",
     "Files" : "Файлове",
     "File \"%s\"" : "Файл \"%s\"",
+    "Talk conversation" : "Talk разговор",
+    "Conversation with %s" : "Разговор с %s",
     "Talk" : "Разговор",
     "Talk conversation \"%s\"" : "Talk разговори \"%s\"",
     "Related Resources" : "Свързани ресурси",
     "Displays resources related to current item in right panel" : "Показва ресурси, свързани с текущия елемент в десния панел",
-    "Displays resources related to current item in right panel." : "Показва ресурси, свързани с текущия елемент в десния панел.",
-    "Talk conversation" : "Talk разговор",
-    "Conversation with %s" : "Разговор с %s"
+    "Displays resources related to current item in right panel." : "Показва ресурси, свързани с текущия елемент в десния панел."
 },
 "nplurals=2; plural=(n != 1);");
