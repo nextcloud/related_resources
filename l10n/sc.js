@@ -4,7 +4,7 @@ OC.L10N.register(
     "Calendar" : "Calendàriu",
     "Deck" : "Deck",
     "Files" : "Archìvios",
-    "Talk" : "Faedda",
-    "Talk conversation" : "Resonada de Talk"
+    "Talk conversation" : "Resonada de Talk",
+    "Talk" : "Faedda"
 },
 "nplurals=2; plural=(n != 1);");
