@@ -33,6 +33,7 @@ namespace OCA\RelatedResources\RelatedResourceProviders;
 
 use Exception;
 use OCA\Circles\CirclesManager;
+use OCA\Circles\Exceptions\FederatedUserNotFoundException;
 use OCA\Circles\Model\FederatedUser;
 use OCA\Circles\Model\Member;
 use OCA\RelatedResources\Db\TalkRoomRequest;
@@ -48,27 +49,21 @@ use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Server;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Log\LoggerInterface;
 
 class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	use TArrayTools;
 
-
 	private const PROVIDER_ID = 'talk';
 
-	private IURLGenerator $urlGenerator;
-	private IL10N $l10n;
-	private TalkRoomRequest $talkRoomRequest;
 	private ?CirclesManager $circlesManager = null;
 
-
 	public function __construct(
-		IURLGenerator $urlGenerator,
-		IL10N $l10n,
-		TalkRoomRequest $talkRoomRequest
+		private IURLGenerator $urlGenerator,
+		private IL10N $l10n,
+		private TalkRoomRequest $talkRoomRequest,
+		private LoggerInterface $logger
 	) {
-		$this->urlGenerator = $urlGenerator;
-		$this->l10n = $l10n;
-		$this->talkRoomRequest = $talkRoomRequest;
 		try {
 			$this->circlesManager = Server::get(CirclesManager::class);
 		} catch (ContainerExceptionInterface | AutoloadNotAllowedException $e) {
@@ -129,7 +124,14 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 			return;
 		}
 
-		$current = $this->circlesManager->getCurrentFederatedUser();
+		try {
+			$current = $this->circlesManager->getCurrentFederatedUser();
+		} catch (FederatedUserNotFoundException $e) {
+			$this->circlesManager->startSession(); // enforce new session if not available
+			$current = $this->circlesManager->getCurrentFederatedUser();
+			$this->logger->info('session restarted', ['current' => $current]);
+		}
+
 		if (!$current->isLocal() || $current->getUserType() !== Member::TYPE_USER) {
 			return;
 		}

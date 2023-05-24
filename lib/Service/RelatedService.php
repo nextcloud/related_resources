@@ -32,6 +32,7 @@ namespace OCA\RelatedResources\Service;
 
 use Exception;
 use OCA\Circles\CirclesManager;
+use OCA\Circles\Exceptions\FederatedUserNotFoundException;
 use OCA\Circles\Model\FederatedUser;
 use OCA\Circles\Model\Member;
 use OCA\RelatedResources\Exceptions\CacheNotFoundException;
@@ -429,7 +430,13 @@ class RelatedService {
 	 * @return IRelatedResource[]
 	 */
 	private function filterUnavailableResults(array $result): array {
-		$current = $this->circlesManager->getCurrentFederatedUser();
+		try {
+			$current = $this->circlesManager->getCurrentFederatedUser();
+		} catch (FederatedUserNotFoundException $e) {
+			$this->circlesManager->startSession(); // it should not happen at this point, but we log if it does
+			$current = $this->circlesManager->getCurrentFederatedUser();
+			$this->logger->warning('session restarted while filtering results', ['current' => $current]);
+		}
 
 		return array_filter($result, function (IRelatedResource $res) use ($current): bool {
 			$all = array_values(array_unique(array_merge($res->getVirtualGroup(), $res->getRecipients())));
