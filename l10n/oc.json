@@ -1,7 +1,7 @@
 { "translations": {
     "Calendar" : "Calendièr",
     "Files" : "Fichièrs",
-    "Talk" : "Talk",
-    "Talk conversation" : "Conversacion Talk"
+    "Talk conversation" : "Conversacion Talk",
+    "Talk" : "Talk"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

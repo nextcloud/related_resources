@@ -7,12 +7,14 @@ OC.L10N.register(
     "Deck board \"%s\"" : "Deck 看板「%s」",
     "Files" : "檔案",
     "File \"%s\"" : "檔案「%s」",
+    "Group Folder" : "群組資料夾",
+    "Group Folder \"%s\"" : "群組資料夾「%s」",
+    "Talk conversation" : "Talk 對話",
+    "Conversation with %s" : "與 %s 的對話",
     "Talk" : "交談",
     "Talk conversation \"%s\"" : "交談對話「%s」",
     "Related Resources" : "相關資源",
     "Displays resources related to current item in right panel" : "在右側面板中顯示與目前項目相關的資源",
-    "Displays resources related to current item in right panel." : "在右側面板中顯示與目前項目相關的資源。",
-    "Talk conversation" : "Talk 對話",
-    "Conversation with %s" : "與 %s 的對話"
+    "Displays resources related to current item in right panel." : "在右側面板中顯示與目前項目相關的資源。"
 },
 "nplurals=1; plural=0;");

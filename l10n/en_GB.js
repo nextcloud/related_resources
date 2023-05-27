@@ -7,12 +7,14 @@ OC.L10N.register(
     "Deck board \"%s\"" : "Deck board \"%s\"",
     "Files" : "Files",
     "File \"%s\"" : "File \"%s\"",
+    "Group Folder" : "Group Folder",
+    "Group Folder \"%s\"" : "Group Folder \"%s\"",
+    "Talk conversation" : "Talk conversation",
+    "Conversation with %s" : "Conversation with %s",
     "Talk" : "Talk",
     "Talk conversation \"%s\"" : "Talk conversation \"%s\"",
     "Related Resources" : "Related Resources",
     "Displays resources related to current item in right panel" : "Displays resources related to current item in right panel",
-    "Displays resources related to current item in right panel." : "Displays resources related to current item in right panel.",
-    "Talk conversation" : "Talk conversation",
-    "Conversation with %s" : "Conversation with %s"
+    "Displays resources related to current item in right panel." : "Displays resources related to current item in right panel."
 },
 "nplurals=2; plural=(n != 1);");
