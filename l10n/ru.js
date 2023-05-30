@@ -7,6 +7,8 @@ OC.L10N.register(
     "Deck board \"%s\"" : "Доска \"%s\"",
     "Files" : "Файлы",
     "File \"%s\"" : "Файл \"%s\"",
+    "Group Folder" : "Групповая папка",
+    "Group Folder \"%s\"" : "Групповая папка \"%s\"",
     "Talk conversation" : "Название обсуждения",
     "Conversation with %s" : "Обсуждение с %s",
     "Talk" : "Говорить ",
