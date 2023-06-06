@@ -226,7 +226,7 @@ class RelatedService {
 		}
 
 		$result = $this->getRelatedResourceProvider($providerId)
-					   ->getRelatedFromItem($itemId);
+					   ->getRelatedFromItem($this->circlesManager, $itemId);
 
 		$this->logger->debug('get related to ' . $providerId . '.' . $itemId . ' - ' . json_encode($result));
 
@@ -470,7 +470,7 @@ class RelatedService {
 	private function improveResult(array $result): array {
 		foreach ($result as $entry) {
 			$this->getRelatedResourceProvider($entry->getProviderId())
-				 ->improveRelatedResource($entry);
+				 ->improveRelatedResource($this->circlesManager, $entry);
 		}
 
 		return $result;
