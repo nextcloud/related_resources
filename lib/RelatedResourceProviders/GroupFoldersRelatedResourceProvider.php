@@ -51,7 +51,6 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 
 	private const PROVIDER_ID = 'groupfolders';
 
-	private ?CirclesManager $circlesManager = null;
 	private ?FolderManager $folderManager = null;
 	/**
 	 * @var array<int, array{acl: bool, groups: array<array-key, array<array-key, int|string>>, id: int, mount_point: mixed, quota: int, size: 0}>
@@ -65,7 +64,6 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 		private FilesShareRequest $filesShareRequest,
 	) {
 		try {
-			$this->circlesManager = Server::get(CirclesManager::class);
 			$this->folderManager = Server::get(FolderManager::class);
 			$this->folders = $this->folderManager->getAllFolders();
 		} catch (ContainerExceptionInterface|AutoloadNotAllowedException $e) {
@@ -80,11 +78,7 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 		return [];
 	}
 
-	public function getRelatedFromItem(string $itemId): ?IRelatedResource {
-		if ($this->circlesManager === null) {
-			return null;
-		}
-
+	public function getRelatedFromItem(CirclesManager $circlesManager, string $itemId): ?IRelatedResource {
 		$itemId = (int)$itemId;
 		if ($itemId < 1) {
 			return null;
@@ -98,7 +92,7 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 		}
 
 		$related = $this->convertToRelatedResource($folder);
-		$this->processApplicableMap($related, $folder['groups'] ?? []);
+		$this->processApplicableMap($circlesManager, $related, $folder['groups'] ?? []);
 
 		return $related;
 	}
@@ -125,7 +119,7 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 	}
 
 
-	public function improveRelatedResource(IRelatedResource $entry): void {
+	public function improveRelatedResource(CirclesManager $circlesManager, IRelatedResource $entry): void {
 	}
 
 	/**
@@ -167,13 +161,17 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 	 * @param RelatedResource $related
 	 * @param array<array-key, array<array-key, int|string>> $applicableMap
 	 */
-	public function processApplicableMap(RelatedResource $related, array $applicableMap): void {
+	public function processApplicableMap(
+		CirclesManager $circlesManager,
+		RelatedResource $related,
+		array $applicableMap
+	): void {
 		foreach ($applicableMap as $k => $entry) {
 			$entityId = '';
 			if ($entry['type'] === 'circle') {
 				$entityId = (string)$k;
 			} elseif ($entry['type'] === 'group') {
-				$federatedGroup = $this->circlesManager->getFederatedUser($k, Member::TYPE_GROUP);
+				$federatedGroup = $circlesManager->getFederatedUser($k, Member::TYPE_GROUP);
 				$entityId = $federatedGroup->getSingleId();
 			}
 

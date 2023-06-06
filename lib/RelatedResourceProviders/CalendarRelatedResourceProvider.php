@@ -43,11 +43,8 @@ use OCA\RelatedResources\Model\Calendar;
 use OCA\RelatedResources\Model\CalendarShare;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
-use OCP\AutoloadNotAllowedException;
 use OCP\IL10N;
 use OCP\IURLGenerator;
-use OCP\Server;
-use Psr\Container\ContainerExceptionInterface;
 
 class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 	use TArrayTools;
@@ -57,7 +54,6 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 	private IURLGenerator $urlGenerator;
 	private IL10N $l10n;
 	private CalendarShareRequest $calendarShareRequest;
-	private ?CirclesManager $circlesManager = null;
 
 	public function __construct(
 		IURLGenerator $urlGenerator,
@@ -67,10 +63,6 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 		$this->urlGenerator = $urlGenerator;
 		$this->l10n = $l10n;
 		$this->calendarShareRequest = $calendarShareRequest;
-		try {
-			$this->circlesManager = Server::get(CirclesManager::class);
-		} catch (ContainerExceptionInterface | AutoloadNotAllowedException $e) {
-		}
 	}
 
 	public function getProviderId(): string {
@@ -86,11 +78,7 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 	 *
 	 * @return IRelatedResource|null
 	 */
-	public function getRelatedFromItem(string $itemId): ?IRelatedResource {
-		if ($this->circlesManager === null) {
-			return null;
-		}
-
+	public function getRelatedFromItem(CirclesManager $circlesManager, string $itemId): ?IRelatedResource {
 		[$principalUri, $uri] = explode(':', $itemId, 2);
 		$itemId = (int)$itemId;
 
@@ -104,7 +92,7 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 		$related = $this->convertToRelatedResource($calendar);
 		if (strtolower(substr($calendar->getCalendarPrincipalUri(), 0, 17)) === 'principals/users/') {
 			$calendarOwner = substr($calendar->getCalendarPrincipalUri(), 17);
-			$owner = $this->circlesManager->getFederatedUser($calendarOwner, Member::TYPE_USER);
+			$owner = $circlesManager->getFederatedUser($calendarOwner, Member::TYPE_USER);
 			$related->addToVirtualGroup($owner->getSingleId());
 		}
 
@@ -114,7 +102,7 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 			} catch (Exception $e) {
 				continue;
 			}
-			$this->processCalendarShare($related, $share);
+			$this->processCalendarShare($circlesManager, $related, $share);
 		}
 
 		return $related;
@@ -145,7 +133,7 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 	}
 
 
-	public function improveRelatedResource(IRelatedResource $entry): void {
+	public function improveRelatedResource(CirclesManager $circlesManager, IRelatedResource $entry): void {
 	}
 
 
@@ -186,14 +174,6 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 			$related->setMetaArray(RelatedResource::ITEM_KEYWORDS, $keywords);
 		}
 
-//		try {
-//			$related->setMeta(
-//				RelatedResource::LINK_CREATOR,
-//				$this->extractEntity($share->getCalendarPrincipalUri())->getSingleId()
-//			);
-//		} catch (Exception $e) {
-//		}
-
 		return $related;
 	}
 
@@ -202,9 +182,12 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 	 * @param RelatedResource $related
 	 * @param CalendarShare $share
 	 */
-	private function processCalendarShare(RelatedResource $related, CalendarShare $share) {
+	private function processCalendarShare(
+		CirclesManager $circlesManager,
+		RelatedResource $related,
+		CalendarShare $share) {
 		try {
-			$participant = $this->circlesManager->getFederatedUser($share->getUser(), $share->getType());
+			$participant = $circlesManager->getFederatedUser($share->getUser(), $share->getType());
 
 			if ($share->getType() === Member::TYPE_USER) {
 				$related->addToVirtualGroup($participant->getSingleId());
