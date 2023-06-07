@@ -43,24 +43,18 @@ use OCA\RelatedResources\Model\DeckBoard;
 use OCA\RelatedResources\Model\DeckShare;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
-use OCP\AutoloadNotAllowedException;
 use OCP\IL10N;
 use OCP\IURLGenerator;
-use OCP\Server;
 use OCP\Share\IShare;
-use Psr\Container\ContainerExceptionInterface;
 
 class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	use TArrayTools;
-
 
 	private const PROVIDER_ID = 'deck';
 
 	private IUrlGenerator $urlGenerator;
 	private IL10N $l10n;
 	private DeckRequest $deckSharesRequest;
-	private ?CirclesManager $circlesManager = null;
-
 
 	public function __construct(
 		IUrlGenerator $urlGenerator,
@@ -70,10 +64,6 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		$this->urlGenerator = $urlGenerator;
 		$this->l10n = $l10n;
 		$this->deckSharesRequest = $deckSharesRequest;
-		try {
-			$this->circlesManager = Server::get(CirclesManager::class);
-		} catch (ContainerExceptionInterface | AutoloadNotAllowedException $e) {
-		}
 	}
 
 	public function getProviderId(): string {
@@ -90,11 +80,7 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	 *
 	 * @return IRelatedResource|null
 	 */
-	public function getRelatedFromItem(string $itemId): ?IRelatedResource {
-		if ($this->circlesManager === null) {
-			return null;
-		}
-
+	public function getRelatedFromItem(CirclesManager $circlesManager, string $itemId): ?IRelatedResource {
 		$itemId = (int)$itemId;
 
 		/** @var DeckBoard $board */
@@ -105,11 +91,11 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		}
 
 		$related = $this->convertToRelatedResource($board);
-		$owner = $this->circlesManager->getFederatedUser($board->getOwner(), Member::TYPE_USER);
+		$owner = $circlesManager->getFederatedUser($board->getOwner(), Member::TYPE_USER);
 		$related->addToVirtualGroup($owner->getSingleId());
 
 		foreach ($this->deckSharesRequest->getSharesByBoardId($itemId) as $share) {
-			$this->processDeckShare($related, $share);
+			$this->processDeckShare($circlesManager, $related, $share);
 		}
 
 		return $related;
@@ -140,7 +126,7 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	}
 
 
-	public function improveRelatedResource(IRelatedResource $entry): void {
+	public function improveRelatedResource(CirclesManager $circlesManager, IRelatedResource $entry): void {
 	}
 
 	private function convertToRelatedResource(DeckBoard $board): IRelatedResource {
@@ -181,9 +167,13 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	 * @param RelatedResource $related
 	 * @param DeckShare $share
 	 */
-	private function processDeckShare(RelatedResource $related, DeckShare $share) {
+	private function processDeckShare(
+		CirclesManager $circlesManager,
+		RelatedResource $related,
+		DeckShare $share
+	) {
 		try {
-			$participant = $this->convertDeckShare($share);
+			$participant = $this->convertDeckShare($circlesManager, $share);
 			if ($share->getRecipientType() === IShare::TYPE_USER) {
 				$related->addToVirtualGroup($participant->getSingleId());
 			} else {
@@ -196,33 +186,20 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 
 
 	/**
+	 * @param CirclesManager $circlesManager
 	 * @param DeckShare $share
 	 *
 	 * @return FederatedUser
 	 * @throws Exception
 	 */
-	public function convertDeckShare(DeckShare $share): FederatedUser {
-		if (is_null($this->circlesManager)) {
-			throw new Exception('Circles needs to be enabled');
-		}
+	public function convertDeckShare(CirclesManager $circlesManager, DeckShare $share): FederatedUser {
+		$type = match ($share->getRecipientType()) {
+			IShare::TYPE_USER => Member::TYPE_USER,
+			IShare::TYPE_GROUP => Member::TYPE_GROUP,
+			IShare::TYPE_CIRCLE => Member::TYPE_SINGLE,
+			default => throw new Exception('unknown deck share type (' . $share->getRecipientType() . ')'),
+		};
 
-		switch ($share->getRecipientType()) {
-			case IShare::TYPE_USER:
-				$type = Member::TYPE_USER;
-				break;
-
-			case IShare::TYPE_GROUP:
-				$type = Member::TYPE_GROUP;
-				break;
-
-			case IShare::TYPE_CIRCLE:
-				$type = Member::TYPE_SINGLE;
-				break;
-
-			default:
-				throw new Exception('unknown deck share type (' . $share->getRecipientType() . ')');
-		}
-
-		return $this->circlesManager->getFederatedUser($share->getRecipientId(), $type);
+		return $circlesManager->getFederatedUser($share->getRecipientId(), $type);
 	}
 }

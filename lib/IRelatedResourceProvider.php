@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources;
 
+use OCA\Circles\CirclesManager;
 use OCA\Circles\Model\FederatedUser;
 
 interface IRelatedResourceProvider {
@@ -46,11 +47,12 @@ interface IRelatedResourceProvider {
 	/**
 	 * convert item to IRelatedResource, based on available shares
 	 *
+	 * @param CirclesManager $circlesManager
 	 * @param string $itemId
 	 *
 	 * @return IRelatedResource|null
 	 */
-	public function getRelatedFromItem(string $itemId): ?IRelatedResource;
+	public function getRelatedFromItem(CirclesManager $circlesManager, string $itemId): ?IRelatedResource;
 
 	/**
 	 * returns itemIds (as string) the entity have access to
@@ -64,9 +66,10 @@ interface IRelatedResourceProvider {
 	/**
 	 * improve a related resource before sending result to front-end.
 	 *
+	 * @param CirclesManager $circlesManager
 	 * @param IRelatedResource $entry
 	 *
 	 * @return void
 	 */
-	public function improveRelatedResource(IRelatedResource $entry): void;
+	public function improveRelatedResource(CirclesManager $circlesManager, IRelatedResource $entry): void;
 }

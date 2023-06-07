@@ -27,8 +27,8 @@ declare(strict_types=1);
 
 namespace OCA\RelatedResources\Listener;
 
-use OCA\RelatedResources\AppInfo\Application;
 use OCA\Files\Event\LoadSidebar;
+use OCA\RelatedResources\AppInfo\Application;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Util;

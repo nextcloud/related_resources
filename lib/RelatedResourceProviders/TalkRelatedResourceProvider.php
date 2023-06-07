@@ -44,11 +44,8 @@ use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Model\TalkActor;
 use OCA\RelatedResources\Model\TalkRoom;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
-use OCP\AutoloadNotAllowedException;
 use OCP\IL10N;
 use OCP\IURLGenerator;
-use OCP\Server;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Log\LoggerInterface;
 
 class TalkRelatedResourceProvider implements IRelatedResourceProvider {
@@ -56,18 +53,12 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 
 	private const PROVIDER_ID = 'talk';
 
-	private ?CirclesManager $circlesManager = null;
-
 	public function __construct(
 		private IURLGenerator $urlGenerator,
 		private IL10N $l10n,
 		private TalkRoomRequest $talkRoomRequest,
 		private LoggerInterface $logger
 	) {
-		try {
-			$this->circlesManager = Server::get(CirclesManager::class);
-		} catch (ContainerExceptionInterface | AutoloadNotAllowedException $e) {
-		}
 	}
 
 
@@ -86,11 +77,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	 *
 	 * @return IRelatedResource|null
 	 */
-	public function getRelatedFromItem(string $itemId): ?IRelatedResource {
-		if ($this->circlesManager === null) {
-			return null;
-		}
-
+	public function getRelatedFromItem(CirclesManager $circlesManager, string $itemId): ?IRelatedResource {
 		/** @var TalkRoom $room */
 		try {
 			$room = $this->talkRoomRequest->getRoomByToken($itemId);
@@ -100,7 +87,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 
 		$related = $this->convertToRelatedResource($room);
 		foreach ($this->talkRoomRequest->getActorsByToken($room->getToken()) as $actor) {
-			$this->processRoomParticipant($related, $actor);
+			$this->processRoomParticipant($circlesManager, $related, $actor);
 		}
 
 		if (!$related->isGroupShared()) {
@@ -119,16 +106,16 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	}
 
 
-	public function improveRelatedResource(IRelatedResource $entry): void {
+	public function improveRelatedResource(CirclesManager $circlesManager, IRelatedResource $entry): void {
 		if (!$entry->hasMeta('1on1')) {
 			return;
 		}
 
 		try {
-			$current = $this->circlesManager->getCurrentFederatedUser();
+			$current = $circlesManager->getCurrentFederatedUser();
 		} catch (FederatedUserNotFoundException $e) {
-			$this->circlesManager->startSession(); // enforce new session if not available
-			$current = $this->circlesManager->getCurrentFederatedUser();
+			$circlesManager->startSession(); // enforce new session if not available
+			$current = $circlesManager->getCurrentFederatedUser();
 			$this->logger->info('session restarted', ['current' => $current]);
 		}
 
@@ -207,9 +194,13 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	 * @param RelatedResource $related
 	 * @param TalkActor $actor
 	 */
-	private function processRoomParticipant(RelatedResource $related, TalkActor $actor) {
+	private function processRoomParticipant(
+		CirclesManager $circlesManager,
+		RelatedResource $related,
+		TalkActor $actor
+	) {
 		try {
-			$participant = $this->convertRoomParticipant($actor);
+			$participant = $this->convertRoomParticipant($circlesManager, $actor);
 			if ($actor->getActorType() === 'users') {
 				$related->addToVirtualGroup($participant->getSingleId());
 			} else {
@@ -227,11 +218,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	 * @return FederatedUser
 	 * @throws Exception
 	 */
-	public function convertRoomParticipant(TalkActor $actor): FederatedUser {
-		if (is_null($this->circlesManager)) {
-			throw new Exception('Circles needs to be enabled');
-		}
-
+	public function convertRoomParticipant(CirclesManager $circlesManager, TalkActor $actor): FederatedUser {
 		switch ($actor->getActorType()) {
 			case 'users':
 				$type = Member::TYPE_USER;
@@ -249,6 +236,6 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 				throw new Exception('unknown actor type (' . $actor->getActorType() . ')');
 		}
 
-		return $this->circlesManager->getFederatedUser($actor->getActorId(), $type);
+		return $circlesManager->getFederatedUser($actor->getActorId(), $type);
 	}
 }
