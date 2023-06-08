@@ -7,6 +7,8 @@ OC.L10N.register(
     "Deck board \"%s\"" : "Deck-taulu \"%s\"",
     "Files" : "Tiedostot",
     "File \"%s\"" : "Tiedosto \"%s\"",
+    "Group Folder" : "Ryhmäkansio",
+    "Group Folder \"%s\"" : "Ryhmäkansio \"%s\"",
     "Talk conversation" : "Talk-keskustelu",
     "Conversation with %s" : "Keskustelu käyttäjän %s kanssa",
     "Talk" : "Talk",
