@@ -44,24 +44,18 @@ use OCA\RelatedResources\IRelatedResourceProvider;
 use OCA\RelatedResources\Model\FilesShare;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\Tools\Traits\TArrayTools;
-use OCP\AutoloadNotAllowedException;
 use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\IL10N;
 use OCP\IURLGenerator;
-use OCP\Server;
 use OCP\Share\IShare;
-use Psr\Container\ContainerExceptionInterface;
 
 class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	use TArrayTools;
 
 	private const PROVIDER_ID = 'files';
-
-
-	private ?CirclesManager $circlesManager = null;
 
 	public function __construct(
 		private IRootFolder $rootFolder,
@@ -70,10 +64,6 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 		private FilesShareRequest $filesShareRequest,
 		private GroupFoldersRelatedResourceProvider $groupFoldersRRProvider,
 	) {
-		try {
-			$this->circlesManager = Server::get(CirclesManager::class);
-		} catch (ContainerExceptionInterface|AutoloadNotAllowedException $e) {
-		}
 	}
 
 	public function getProviderId(): string {
@@ -86,11 +76,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	}
 
 
-	public function getRelatedFromItem(string $itemId): ?IRelatedResource {
-		if ($this->circlesManager === null) {
-			return null;
-		}
-
+	public function getRelatedFromItem(CirclesManager $circlesManager, string $itemId): ?IRelatedResource {
 		$itemId = (int)$itemId;
 		if ($itemId <= 1) {
 			return null;
@@ -98,7 +84,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 
 		$related = null;
 		try {
-			$itemEntries = $this->getItemIdsFromParentPath($itemId);
+			$itemEntries = $this->getItemIdsFromParentPath($circlesManager, $itemId);
 		} catch (Exception $e) {
 			$itemEntries = [['id' => $itemId]];
 		}
@@ -119,10 +105,10 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 			if ($related === null) {
 				$related = $this->convertToRelatedResource($share);
 			}
-			$this->processShareRecipient($related, $share);
+			$this->processShareRecipient($circlesManager, $related, $share);
 		}
 
-		$related = $this->managerGroupFolders($related, $itemEntries);
+		$related = $this->managerGroupFolders($circlesManager, $related, $itemEntries);
 
 		return $related;
 	}
@@ -152,8 +138,8 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	}
 
 
-	public function improveRelatedResource(IRelatedResource $entry): void {
-		$current = $this->circlesManager->getCurrentFederatedUser();
+	public function improveRelatedResource(CirclesManager $circlesManager, IRelatedResource $entry): void {
+		$current = $circlesManager->getCurrentFederatedUser();
 		if (!$current->isLocal() || $current->getUserType() !== Member::TYPE_USER) {
 			return;
 		}
@@ -205,7 +191,11 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	/**
 	 * @param list<array{id:int,type?:string}> $itemEntries
 	 */
-	private function managerGroupFolders(?IRelatedResource $related, array $itemEntries): ?IRelatedResource {
+	private function managerGroupFolders(
+		CirclesManager $circlesManager,
+		?IRelatedResource $related,
+		array $itemEntries
+	): ?IRelatedResource {
 		foreach ($itemEntries as $entry) {
 			if (($entry['type'] ?? '') !== 'groupfolder') {
 				continue;
@@ -220,7 +210,11 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 				$related = $this->groupFoldersRRProvider->convertToRelatedResource($folder);
 			}
 
-			$this->groupFoldersRRProvider->processApplicableMap($related, $folder['groups'] ?? []);
+			$this->groupFoldersRRProvider->processApplicableMap(
+				$circlesManager,
+				$related,
+				$folder['groups'] ?? []
+			);
 		}
 
 		return $related;
@@ -236,8 +230,8 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	 * @throws NotPermittedException
 	 * @throws NoUserException
 	 */
-	private function getItemIdsFromParentPath(int $itemId): array {
-		$current = $this->circlesManager->getCurrentFederatedUser();
+	private function getItemIdsFromParentPath(CirclesManager $circlesManager, int $itemId): array {
+		$current = $circlesManager->getCurrentFederatedUser();
 		if (!$current->isLocal() || $current->getUserType() !== Member::TYPE_USER) {
 			return [['id' => $itemId]];
 		}
@@ -273,15 +267,21 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	 * @param RelatedResource $related
 	 * @param FilesShare $share
 	 */
-	private function processShareRecipient(RelatedResource $related, FilesShare $share) {
+	private function processShareRecipient(
+		CirclesManager $circlesManager,
+		RelatedResource $related,
+		FilesShare $share
+	) {
 		try {
 			$sharedWith = $this->convertShareRecipient(
+				$circlesManager,
 				$share->getShareType(),
 				$share->getSharedWith()
 			);
 
 			if ($share->getShareType() === IShare::TYPE_USER) {
 				$shareCreator = $this->convertShareRecipient(
+					$circlesManager,
 					IShare::TYPE_USER,
 					$share->getShareCreator()
 				);
@@ -308,28 +308,18 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	 * @return FederatedUser
 	 * @throws Exception
 	 */
-	private function convertShareRecipient(int $shareType, string $sharedWith): FederatedUser {
-		if (is_null($this->circlesManager)) {
-			throw new Exception('Circles needs to be enabled');
-		}
+	private function convertShareRecipient(
+		CirclesManager $circlesManager,
+		int $shareType,
+		string $sharedWith
+	): FederatedUser {
+		$type = match ($shareType) {
+			IShare::TYPE_USER => Member::TYPE_USER,
+			IShare::TYPE_GROUP => Member::TYPE_GROUP,
+			IShare::TYPE_CIRCLE => Member::TYPE_SINGLE,
+			default => throw new Exception('unknown share type (' . $shareType . ')'),
+		};
 
-		switch ($shareType) {
-			case IShare::TYPE_USER:
-				$type = Member::TYPE_USER;
-				break;
-
-			case IShare::TYPE_GROUP:
-				$type = Member::TYPE_GROUP;
-				break;
-
-			case IShare::TYPE_CIRCLE:
-				$type = Member::TYPE_SINGLE;
-				break;
-
-			default:
-				throw new Exception('unknown share type (' . $shareType . ')');
-		}
-
-		return $this->circlesManager->getFederatedUser($sharedWith, $type);
+		return $circlesManager->getFederatedUser($sharedWith, $type);
 	}
 }
