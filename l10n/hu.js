@@ -7,6 +7,8 @@ OC.L10N.register(
     "Deck board \"%s\"" : "„%s” kártyatábla",
     "Files" : "Fájlok",
     "File \"%s\"" : "„%s” fájl",
+    "Group Folder" : "Csoportmappa",
+    "Group Folder \"%s\"" : "„%s” csoportmappa",
     "Talk conversation" : "Beszélgetés",
     "Conversation with %s" : "Beszélgetés a következővel: %s",
     "Talk" : "Beszélgetés",
