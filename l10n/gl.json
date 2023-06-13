@@ -1,14 +1,14 @@
 { "translations": {
     "Calendar" : "Calendario",
-    "Calendar \"%s\"" : "Calendario \"%s\"",
+    "Calendar \"%s\"" : "Calendario «%s»",
     "Deck" : "Deck",
-    "Deck board \"%s\"" : "Taboleiro \"%s\"",
+    "Deck board \"%s\"" : "Taboleiro do Deck «%s»",
     "Files" : "Ficheiros",
-    "File \"%s\"" : "Ficheiro \"%s\"",
+    "File \"%s\"" : "Ficheiro «%s»",
     "Talk conversation" : "Conversa co Talk",
     "Conversation with %s" : "Conversa con %s",
     "Talk" : "Talk",
-    "Talk conversation \"%s\"" : "Conversación de Talk \"%s\"",
+    "Talk conversation \"%s\"" : "Conversa co Talk «%s»",
     "Related Resources" : "Recursos Relacionados",
     "Displays resources related to current item in right panel" : "Mostra os recursos relacionados co elemento actual no panel dereito",
     "Displays resources related to current item in right panel." : "Mostra os recursos relacionados co elemento actual no panel dereito."
