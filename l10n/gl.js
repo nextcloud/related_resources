@@ -7,12 +7,14 @@ OC.L10N.register(
     "Deck board \"%s\"" : "Taboleiro do Deck «%s»",
     "Files" : "Ficheiros",
     "File \"%s\"" : "Ficheiro «%s»",
+    "Group Folder" : "Cartafol do grupo",
+    "Group Folder \"%s\"" : "Cartafol do grupo «%s»",
     "Talk conversation" : "Conversa co Talk",
     "Conversation with %s" : "Conversa con %s",
     "Talk" : "Talk",
     "Talk conversation \"%s\"" : "Conversa co Talk «%s»",
-    "Related Resources" : "Recursos Relacionados",
-    "Displays resources related to current item in right panel" : "Mostra os recursos relacionados co elemento actual no panel dereito",
-    "Displays resources related to current item in right panel." : "Mostra os recursos relacionados co elemento actual no panel dereito."
+    "Related Resources" : "Recursos relacionados",
+    "Displays resources related to current item in right panel" : "Amosar os recursos relacionados co elemento actual no panel dereito",
+    "Displays resources related to current item in right panel." : "Amosar os recursos relacionados co elemento actual no panel dereito."
 },
 "nplurals=2; plural=(n != 1);");
