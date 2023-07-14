@@ -7,6 +7,8 @@ OC.L10N.register(
     "Deck board \"%s\"" : "\"%s\" Deck mahaia",
     "Files" : "Fitxategiak",
     "File \"%s\"" : "\"%s\" fitxategia",
+    "Group Folder" : "Talde-karpeta",
+    "Group Folder \"%s\"" : "\"%s\" talde-karpeta",
     "Talk conversation" : "Talk elkarrizketa",
     "Conversation with %s" : "Elkarrizketa %s-(r)ekin",
     "Talk" : "Hizketaldia",
