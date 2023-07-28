@@ -433,9 +433,8 @@ class RelatedService {
 		try {
 			$current = $this->circlesManager->getCurrentFederatedUser();
 		} catch (FederatedUserNotFoundException $e) {
-			$this->circlesManager->startSession(); // it should not happen at this point, but we log if it does
+			$this->circlesManager->startSession(); // in case session is lost, restart fresh one
 			$current = $this->circlesManager->getCurrentFederatedUser();
-			$this->logger->warning('session restarted while filtering results', ['current' => $current]);
 		}
 
 		return array_filter($result, function (IRelatedResource $res) use ($current): bool {
