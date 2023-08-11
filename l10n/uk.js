@@ -10,7 +10,7 @@ OC.L10N.register(
     "Talk conversation" : "Розмова Talk",
     "Conversation with %s" : "Розмова з %s",
     "Talk" : "Розмови",
-    "Talk conversation \"%s\"" : "Talk conversation \"%s\"",
+    "Talk conversation \"%s\"" : "Розмова Talk \"%s\"",
     "Related Resources" : "Пов'язані ресурси",
     "Displays resources related to current item in right panel" : "Відображає ресурси, пов’язані з поточним елементом, на правій панелі",
     "Displays resources related to current item in right panel." : "Відображає ресурси, пов’язані з поточним елементом, на правій панелі."
