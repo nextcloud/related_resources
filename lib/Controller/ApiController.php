@@ -84,11 +84,11 @@ class ApiController extends OcsController {
 	 *
 	 * @param string $providerId
 	 * @param string $itemId
-	 *
+	 * @param string $resourceType
 	 * @return DataResponse
 	 * @throws OCSException
 	 */
-	public function getRelatedResources(string $providerId, string $itemId): DataResponse {
+	public function getRelatedResources(string $providerId, string $itemId, string $resourceType = ''): DataResponse {
 		if (is_null($this->circlesManager)) {
 			$this->logger->info('RelatedResources require Circles');
 
@@ -101,7 +101,8 @@ class ApiController extends OcsController {
 			$result = $this->relatedService->getRelatedToItem(
 				$providerId,
 				$itemId,
-				$this->configService->getAppValueInt(ConfigService::RESULT_MAX)
+				$this->configService->getAppValueInt(ConfigService::RESULT_MAX),
+				$resourceType
 			);
 
 			// cleanData on result, to not send useless data.
