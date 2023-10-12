@@ -46,6 +46,7 @@ use OCA\RelatedResources\LinkWeightCalculators\KeywordWeightCalculator;
 use OCA\RelatedResources\LinkWeightCalculators\TimeWeightCalculator;
 use OCA\RelatedResources\Model\RelatedResource;
 use OCA\RelatedResources\RelatedResourceProviders\CalendarRelatedResourceProvider;
+use OCA\RelatedResources\RelatedResourceProviders\AccountRelatedResourceProvider;
 use OCA\RelatedResources\RelatedResourceProviders\DeckRelatedResourceProvider;
 use OCA\RelatedResources\RelatedResourceProviders\FilesRelatedResourceProvider;
 use OCA\RelatedResources\RelatedResourceProviders\GroupFoldersRelatedResourceProvider;
@@ -531,7 +532,6 @@ class RelatedService {
 			$this->logger->notice($e->getMessage());
 		}
 
-
 		if ($this->appManager->isInstalled('deck')) {
 			try {
 				$providers[] = Server::get(DeckRelatedResourceProvider::class);
@@ -563,6 +563,12 @@ class RelatedService {
 				$this->logger->notice($e->getMessage());
 			}
 		}
+
+			try {
+				$providers[] = Server::get(AccountRelatedResourceProvider::class);
+			} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
+				$this->logger->notice($e->getMessage());
+			}
 
 		return $providers;
 	}
