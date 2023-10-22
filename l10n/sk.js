@@ -9,7 +9,7 @@ OC.L10N.register(
     "File \"%s\"" : "Súbor \"%s\"",
     "Talk conversation" : "Konverzácia v Rozhovoroch",
     "Talk" : "Rozhovor",
-    "Talk conversation \"%s\"" : "Rozhovor v Talk \"%s\"",
+    "Talk conversation \"%s\"" : "Konverzácia v Rozhovore \"%s\"",
     "Related Resources" : "Príbuzné zdroje",
     "Displays resources related to current item in right panel" : "Zobrazuje zdroje súvisiace s aktuálnou položkou v pravom paneli",
     "Displays resources related to current item in right panel." : "Zobrazuje zdroje súvisiace s aktuálnou položkou v pravom paneli"
