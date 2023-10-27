@@ -114,12 +114,17 @@ class RelatedService {
 	 * @return IRelatedResource[]
 	 * @throws RelatedResourceProviderNotFound
 	 */
-	public function getRelatedToItem(string $providerId, string $itemId, int $chunk = -1): array {
+	public function getRelatedToItem(
+		string $providerId,
+		string $itemId,
+		int $chunk = -1,
+		string $resourceType = ''
+	): array {
 		if ($this->circlesManager === null) {
 			return [];
 		}
 
-		$result = $this->retrieveRelatedToItem($providerId, $itemId);
+		$result = $this->retrieveRelatedToItem($providerId, $itemId, $resourceType);
 
 		usort($result, function (IRelatedResource $r1, IRelatedResource $r2): int {
 			$a = $r1->getScore();
@@ -141,7 +146,11 @@ class RelatedService {
 	 * @return IRelatedResource[]
 	 * @throws RelatedResourceProviderNotFound
 	 */
-	private function retrieveRelatedToItem(string $providerId, string $itemId): array {
+	private function retrieveRelatedToItem(
+		string $providerId,
+		string $itemId,
+		string $resourceType = ''
+	): array {
 		$this->logger->debug('retrieving related to item ' . $providerId . '.' . $itemId);
 
 		try {
@@ -158,8 +167,14 @@ class RelatedService {
 			$recipients = $current->getVirtualGroup();
 		}
 
+		if ($resourceType === '') {
+			$providers = $this->getRelatedResourceProviders();
+		} else {
+			$providers = [$this->getRelatedResourceProvider($resourceType)];
+		}
+
 		$result = [];
-		foreach ($this->getRelatedResourceProviders() as $provider) {
+		foreach ($providers as $provider) {
 			$known = [];
 			if ($provider->getProviderId() === $providerId) {
 				$known[] = $current->getItemId();
@@ -528,7 +543,14 @@ class RelatedService {
 
 		try {
 			$providers[] = Server::get(FilesRelatedResourceProvider::class);
-		} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
+		} catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
+			$this->logger->notice($e->getMessage());
+		}
+
+
+		try {
+			$providers[] = Server::get(AccountRelatedResourceProvider::class);
+		} catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
 			$this->logger->notice($e->getMessage());
 		}
 
@@ -563,12 +585,6 @@ class RelatedService {
 				$this->logger->notice($e->getMessage());
 			}
 		}
-
-			try {
-				$providers[] = Server::get(AccountRelatedResourceProvider::class);
-			} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
-				$this->logger->notice($e->getMessage());
-			}
 
 		return $providers;
 	}

@@ -88,12 +88,13 @@ class Test extends Base {
 	protected function configure() {
 		parent::configure();
 		$this->setName('related:test')
-			 ->setHidden(!$this->config->getSystemValueBool('debug'))
-			 ->setDescription('returns related resource to a share')
-			 ->addArgument('userId', InputArgument::REQUIRED, 'user\'s point of view')
-			 ->addArgument('providerId', InputArgument::REQUIRED, 'Provider Id (ie. files)')
-			 ->addOption('clear-cache', '', InputOption::VALUE_NONE, 'clear cache')
-			 ->addArgument('itemId', InputArgument::REQUIRED, 'Item Id');
+			->setHidden(!$this->config->getSystemValueBool('debug'))
+			->setDescription('returns related resource to a share')
+			->addArgument('userId', InputArgument::REQUIRED, 'user\'s point of view')
+			->addArgument('providerId', InputArgument::REQUIRED, 'Provider Id (ie. files)')
+			->addOption('clear-cache', '', InputOption::VALUE_NONE, 'clear cache')
+			->addOption('resource-type', '', InputOption::VALUE_REQUIRED, 'limit to a type of resources', '')
+			->addArgument('itemId', InputArgument::REQUIRED, 'Item Id');
 	}
 
 
@@ -130,7 +131,7 @@ class Test extends Base {
 		$circleManager->startSession($circleManager->getLocalFederatedUser($userId));
 
 		$this->displayRecipients($providerId, $itemId);
-		$this->displayRelated($providerId, $itemId, ($input->getOption('output') === 'json'));
+		$this->displayRelated($providerId, $itemId, $input->getOption('resource-type'), ($input->getOption('output') === 'json'));
 
 		return 0;
 	}
@@ -148,8 +149,8 @@ class Test extends Base {
 	}
 
 
-	private function displayRelated(string $providerId, string $itemId, bool $json): void {
-		$result = $this->relatedService->getRelatedToItem($providerId, $itemId);
+	private function displayRelated(string $providerId, string $itemId, string $resourceType, bool $json): void {
+		$result = $this->relatedService->getRelatedToItem($providerId, $itemId, -1, $resourceType);
 
 		$output = new ConsoleOutput();
 		if ($json) {
