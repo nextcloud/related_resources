@@ -179,7 +179,13 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 						)
 					)
 				)
-				->setUrl($url);
+			->setPreview(
+				$this->urlGenerator->linkToOCSRouteAbsolute(
+					'spreed.Avatar.getAvatar',
+					['token' => $share->getToken(), 'apiVersion' => 'v1']
+				)
+			)
+			->setUrl($url);
 
 		$keywords = preg_split('/[\/_\-. ]/', ltrim(strtolower($share->getRoomName()), '/'));
 		if (is_array($keywords)) {
