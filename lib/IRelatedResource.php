@@ -52,6 +52,10 @@ interface IRelatedResource {
 
 	public function getIcon(): string;
 
+	public function setPreview(string $preview): self;
+
+	public function getPreview(): string;
+
 	public function setUrl(string $url): self;
 
 	public function getUrl(): string;

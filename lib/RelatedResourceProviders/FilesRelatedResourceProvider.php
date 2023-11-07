@@ -166,6 +166,12 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 				)
 			)
 		);
+		$related->setPreview(
+			$this->urlGenerator->linkToRouteAbsolute(
+				'core.Preview.getPreviewByFileId',
+				['x' => 64, 'y' => 64, 'fileId' => $share->getFileId()]
+			)
+		);
 
 		$related->setUrl(
 			$this->urlGenerator->linkToRouteAbsolute('files.View.showFile', ['fileid' => $share->getFileId()])

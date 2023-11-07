@@ -63,6 +63,7 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 	private string $subtitle = '';
 	private string $tooltip = '';
 	private string $icon = '';
+	private string $preview = '';
 	private string $url = '';
 	private int $range = 0;
 	private array $virtualGroup = [];
@@ -139,6 +140,16 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 
 	public function getIcon(): string {
 		return $this->icon;
+	}
+
+	public function setPreview(string $preview): self {
+		$this->preview = $preview;
+
+		return $this;
+	}
+
+	public function getPreview(): string {
+		return $this->preview;
 	}
 
 
@@ -270,6 +281,7 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		$this->setSubtitle($this->get('subtitle', $data));
 		$this->setTooltip($this->get('tooltip', $data));
 		$this->setIcon($this->get('icon', $data));
+		$this->setPreview($this->get('preview', $data));
 		$this->setUrl($this->get('url', $data));
 		$this->setScore($this->getInt('score', $data));
 		$this->setAsGroupShared($this->getBool('groupShared', $data));
@@ -290,6 +302,7 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 			'subtitle' => $this->getSubtitle(),
 			'tooltip' => $this->getTooltip(),
 			'icon' => $this->getIcon(),
+			'preview' => $this->getPreview(),
 			'url' => $this->getUrl(),
 			'score' => $this->getScore(),
 			'groupShared' => $this->isGroupShared(),
@@ -303,8 +316,8 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 
 	public static function cleanData(array $arr): array {
 		static $acceptedKeys = [
-			'providerId', 'itemId', 'title', 'subtitle', 'tooltip', 'url', 'icon', 'score',
-			'improvements'
+			'providerId', 'itemId', 'title', 'subtitle', 'tooltip', 'url',
+			'icon', 'preview', 'score', 'improvements'
 		];
 
 		$new = [];
