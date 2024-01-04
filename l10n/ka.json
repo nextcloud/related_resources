@@ -1,4 +1,8 @@
 { "translations": {
-    "Files" : "ფაილები"
+    "Calendar" : "Calendar",
+    "Deck" : "Deck",
+    "Files" : "ფაილები",
+    "Talk conversation" : "Talk conversation",
+    "Talk" : "Talk"
 },"pluralForm" :"nplurals=2; plural=(n!=1);"
 }
