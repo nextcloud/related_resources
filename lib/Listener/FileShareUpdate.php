@@ -36,6 +36,9 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\Share\Events\ShareCreatedEvent;
 use OCP\Share\Events\ShareDeletedEvent;
 
+/**
+ * @template-implements IEventListener<Event>
+ */
 class FileShareUpdate implements IEventListener {
 	private RelatedService $relatedService;
 
