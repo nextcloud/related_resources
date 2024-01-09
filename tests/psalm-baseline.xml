@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.29.0@7ec5ffbd5f68ae03782d7fd33fff0c45a69f95b3">
+<files psalm-version="5.18.0@b113f3ed0259fd6e212d87c3df80eec95a6abf19">
+  <file src="lib/AppInfo/Application.php">
+    <InvalidArgument>
+      <code>registerEventListener(LoadSidebar::class, LoadSidebarScript::class)</code>
+    </InvalidArgument>
+  </file>
   <file src="lib/Tools/Traits/TStringTools.php">
-    <InvalidArrayOffset occurrences="1">
+    <InvalidArrayOffset>
       <code>$s[$e]</code>
     </InvalidArrayOffset>
   </file>
