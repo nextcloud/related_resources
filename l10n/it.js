@@ -4,7 +4,7 @@ OC.L10N.register(
     "Calendar" : "Calendario",
     "Calendar \"%s\"" : "Calendario \"%s\"",
     "Deck" : "Deck",
-    "Deck board \"%s\"" : "Deck board \"%s\"",
+    "Deck board \"%s\"" : "Lavagna di Deck \"%s\"",
     "Files" : "File",
     "File \"%s\"" : "File \"%s\"",
     "Group Folder" : "Cartella del gruppo",
@@ -13,7 +13,7 @@ OC.L10N.register(
     "Conversation with %s" : "Conversazione con %s",
     "Talk" : "Parlare",
     "Talk conversation \"%s\"" : "Conversazioni di Talk %s",
-    "Related Resources" : "Risorse Correlate",
+    "Related Resources" : "Risorse correlate",
     "Displays resources related to current item in right panel" : "Visualizza le risorse relative all'elemento corrente nel pannello di destra",
     "Displays resources related to current item in right panel." : "Visualizza le risorse relative all'elemento corrente nel pannello di destra."
 },
