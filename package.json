@@ -43,6 +43,6 @@
 	"homepage": "https://github.com/nextcloud/related_resources#readme",
 	"engines": {
 		"node": "^20.0.0",
-		"npm": "^9.0.0"
+		"npm": "^10.0.0"
 	}
 }
