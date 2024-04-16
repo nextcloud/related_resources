@@ -38,7 +38,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	import('@nextcloud/vue/dist/Components/NcRelatedResourcesPanel.js').then((Module) => {
 		OCA.Sharing.ShareTabSections.registerSection((el, fileInfo) => {
-			return Module.default
+			return {
+				render(h) {
+					return h(Module.default, {
+						props: {
+							providerId: 'files',
+							itemId: fileInfo.id,
+						},
+					})
+				},
+			}
 		})
 	})
 })
