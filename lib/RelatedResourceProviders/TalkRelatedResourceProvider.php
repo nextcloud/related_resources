@@ -143,8 +143,8 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 				break;
 
 			case Member::TYPE_CIRCLE:
-				$shares = $this->talkRoomRequest->getRoomsAvailableToCircle($entity->getSingleId());
-				break;
+				// We skip circle shares for related resources as they are covered by team resources
+				return [];
 
 			default:
 				return [];
