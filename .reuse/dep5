@@ -1,8 +1,0 @@
-Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: related_resources
-Upstream-Contact: Nextcloud <info@nextcloud.com>
-Source: https://github.com/nextcloud/related_resources
-
-Files: l10n/*.js l10n/*.json .tx/config .github/CODEOWNERS composer.json composer.lock package-lock.json package.json
-Copyright: 2022 Nextcloud GmbH and Nextcloud contributors
-License: AGPL-3.0-or-later
