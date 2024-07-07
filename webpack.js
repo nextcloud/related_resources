@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 const webpackConfig = require('@nextcloud/webpack-vue-config')
+const WebpackSPDXPlugin = require('./build/WebpackSPDXPlugin.js')
 const path = require('path')
 
 webpackConfig.entry = {
@@ -22,5 +23,18 @@ webpackConfig.output = {
 	path: path.resolve('./js'),
 	filename: 'related_resources.js',
 }
+
+webpackConfig.plugins = [
+	...webpackConfig.plugins,
+	// Generate reuse license files
+	new WebpackSPDXPlugin({
+		override: {
+			// TODO: Remove if they fixed the license in the package.json
+			'@nextcloud/axios': 'GPL-3.0-or-later',
+			'@nextcloud/vue': 'AGPL-3.0-or-later',
+			'nextcloud-vue-collections': 'AGPL-3.0-or-later',
+		}
+	}),
+]
 
 module.exports = webpackConfig
