@@ -36,8 +36,8 @@
 		"url": "git+https://github.com/nextcloud/related_resources.git"
 	},
 	"keywords": [],
-	"author": "",
-	"license": "AGPL",
+	"author": "Nextcloud GmbH and Nextcloud contributors",
+	"license": "AGPL-3.0-or-later",
 	"bugs": {
 		"url": "https://github.com/nextcloud/related_resources/issues"
 	},
