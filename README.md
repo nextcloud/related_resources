@@ -1,4 +1,10 @@
+<!--
+  - SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
 # RelatedResources
+
+[![REUSE status](https://api.reuse.software/badge/github.com/nextcloud/related_resources)](https://api.reuse.software/info/github.com/nextcloud/related_resources)
 
 Find all related resources linked to the current displayed item.  
 Related resources and displayed item can come from multiple providers:
