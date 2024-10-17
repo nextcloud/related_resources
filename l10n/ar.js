@@ -3,8 +3,8 @@ OC.L10N.register(
     {
     "Calendar" : "التقويم Calendar",
     "Calendar \"%s\"" : "تقويم \"%s\"",
-    "Deck" : "الرُّقعة Deck",
-    "Deck board \"%s\"" : "لوح الرُّقعة Deck board \"%s\"",
+    "Deck" : "البطاقات",
+    "Deck board \"%s\"" : "لوحة البطاقات \"%s\"",
     "Files" : "الملفات",
     "File \"%s\"" : "ملف \"%s\"",
     "Group Folder" : "المجلّدات الجماعية Group Folder",
