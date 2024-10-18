@@ -4,7 +4,7 @@
  */
 const webpackConfig = require('@nextcloud/webpack-vue-config')
 const TerserPlugin = require('terser-webpack-plugin')
-const WebpackSPDXPlugin = require('./build/WebpackSPDXPlugin.js')
+const WebpackSPDXPlugin = require('./build-js/WebpackSPDXPlugin.js')
 const path = require('path')
 
 webpackConfig.entry = {
