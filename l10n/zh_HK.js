@@ -14,7 +14,7 @@ OC.L10N.register(
     "Talk" : "講座",
     "Talk conversation \"%s\"" : "Talk 對話 \"%s\"",
     "Related Resources" : "相關資源",
-    "Displays resources related to current item in right panel" : "在右側面板中顯示與當前項目相關的資源",
-    "Displays resources related to current item in right panel." : "在右側面板中顯示與當前項目相關的資源。"
+    "Displays resources related to current item in right panel" : "在右側面板中顯示與目前項目相關的資源",
+    "Displays resources related to current item in right panel." : "在右側面板中顯示與目前項目相關的資源。"
 },
 "nplurals=1; plural=0;");
