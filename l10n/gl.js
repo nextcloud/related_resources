@@ -9,10 +9,10 @@ OC.L10N.register(
     "File \"%s\"" : "Ficheiro «%s»",
     "Group Folder" : "Cartafol do grupo",
     "Group Folder \"%s\"" : "Cartafol do grupo «%s»",
-    "Talk conversation" : "Conversa co Talk",
+    "Talk conversation" : "Conversa en Parlar",
     "Conversation with %s" : "Conversa con %s",
-    "Talk" : "Talk",
-    "Talk conversation \"%s\"" : "Conversa co Talk «%s»",
+    "Talk" : "Parlar",
+    "Talk conversation \"%s\"" : "Conversa en Parlar «%s»",
     "Related Resources" : "Recursos relacionados",
     "Displays resources related to current item in right panel" : "Amosar os recursos relacionados co elemento actual no panel dereito",
     "Displays resources related to current item in right panel." : "Amosar os recursos relacionados co elemento actual no panel dereito."
