@@ -7,6 +7,7 @@ OC.L10N.register(
     "Deck board \"%s\"" : "Opslagstavle \"%s\"",
     "Files" : "Filer",
     "File \"%s\"" : "Fil \"%s\"",
+    "Talk conversation" : "Snak samtale",
     "Talk" : "Snak",
     "Talk conversation \"%s\"" : "Snak samtale \"%s\""
 },
