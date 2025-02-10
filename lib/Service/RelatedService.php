@@ -104,6 +104,10 @@ class RelatedService {
 			return [];
 		}
 
+		if ($providerId && !$this->appManager->isInstalled($providerId)) {
+			return [];
+		}
+
 		$result = $this->retrieveRelatedToItem($providerId, $itemId, $resourceType);
 
 		usort($result, function (IRelatedResource $r1, IRelatedResource $r2): int {
