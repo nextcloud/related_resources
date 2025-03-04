@@ -11,7 +11,7 @@ OC.L10N.register(
     "Group Folder \"%s\"" : "Dossier de groupes « %s »",
     "Talk conversation" : "Conversation Talk",
     "Conversation with %s" : "Conversation avec %s",
-    "Talk" : "Discussion",
+    "Talk" : "Talk",
     "Talk conversation \"%s\"" : "Conversation Talk « %s »",
     "Related Resources" : "Ressources liées",
     "Displays resources related to current item in right panel" : "Affiche les ressources liées à l'élément courant dans le panneau latéral.",
