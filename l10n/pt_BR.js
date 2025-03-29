@@ -4,7 +4,7 @@ OC.L10N.register(
     "Calendar" : "Calendário",
     "Calendar \"%s\"" : "Calendário \"%s\"",
     "Deck" : "Deck",
-    "Deck board \"%s\"" : "Tabela do Deck \"%s\"",
+    "Deck board \"%s\"" : "Painel do Deck \"%s\"",
     "Files" : "Arquivos",
     "File \"%s\"" : "Arquivo \"%s\"",
     "Group Folder" : "Pasta de Grupo",
