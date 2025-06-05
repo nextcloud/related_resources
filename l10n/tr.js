@@ -15,6 +15,6 @@ OC.L10N.register(
     "Talk conversation \"%s\"" : "\"%s\" Talk görüşmesi",
     "Related Resources" : "İlişkili kaynaklar",
     "Displays resources related to current item in right panel" : "Geçerli öge ile ilişkili kaynaklar sağ panoda görüntülensin",
-    "Displays resources related to current item in right panel." : "Bu seçenek kullanıma alındığında, geçerli öge ile ilişkili kaynaklar sağ panoda görüntülenir."
+    "Displays resources related to current item in right panel." : "Bu seçenek etkinse, geçerli öge ile ilişkili kaynaklar sağ panoda görüntülenir."
 },
 "nplurals=2; plural=(n > 1);");
