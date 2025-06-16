@@ -3,7 +3,7 @@ OC.L10N.register(
     {
     "Calendar" : "Kалендар",
     "Calendar \"%s\"" : "Календар \"%s\"",
-    "Deck" : "Набор",
+    "Deck" : "Deck",
     "Deck board \"%s\"" : "Deck табло \"%s\"",
     "Files" : "Файлове",
     "File \"%s\"" : "Файл \"%s\"",
