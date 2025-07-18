@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Calendar" : "Kalenda",
     "Deck" : "Deki",
-    "Files" : "Mafaili"
+    "Files" : "Mafaili",
+    "Talk conversation" : "Mazungumzo ya Talk"
 },
 "nplurals=2; plural=(n != 1);");
