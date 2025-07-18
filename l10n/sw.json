@@ -1,6 +1,7 @@
 { "translations": {
     "Calendar" : "Kalenda",
     "Deck" : "Deki",
-    "Files" : "Mafaili"
+    "Files" : "Mafaili",
+    "Talk conversation" : "Mazungumzo ya Talk"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
