@@ -27,7 +27,7 @@ This file is generated from multiple sources. Included packages:
 	- version: 2.7.16
 	- license: MIT
 - webpack
-	- version: 5.90.1
+	- version: 5.95.0
 	- license: MIT
 - related_resources
 	- version: 3.0.0-dev.0
