@@ -1,5 +1,6 @@
 { "translations": {
     "Calendar" : "Calendar",
-    "Files" : "Files"
+    "Deck" : "Pastki qavat",
+    "Files" : "Fayllar"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

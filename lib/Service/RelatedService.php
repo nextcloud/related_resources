@@ -71,7 +71,7 @@ class RelatedService {
 		IAppManager $appManager,
 		ICacheFactory $cacheFactory,
 		LoggerInterface $logger,
-		ConfigService $configService
+		ConfigService $configService,
 	) {
 		$this->appManager = $appManager;
 		$this->cache = $cacheFactory->createDistributed(self::CACHE_RELATED);
@@ -80,7 +80,7 @@ class RelatedService {
 
 		try {
 			$this->circlesManager = Server::get(CirclesManager::class);
-		} catch (ContainerExceptionInterface | AutoloadNotAllowedException $e) {
+		} catch (ContainerExceptionInterface|AutoloadNotAllowedException $e) {
 			$this->logger->notice($e->getMessage());
 		}
 	}
@@ -98,7 +98,7 @@ class RelatedService {
 		string $providerId,
 		string $itemId,
 		int $chunk = -1,
-		string $resourceType = ''
+		string $resourceType = '',
 	): array {
 		if ($this->circlesManager === null) {
 			return [];
@@ -129,7 +129,7 @@ class RelatedService {
 	private function retrieveRelatedToItem(
 		string $providerId,
 		string $itemId,
-		string $resourceType = ''
+		string $resourceType = '',
 	): array {
 		$this->logger->debug('retrieving related to item ' . $providerId . '.' . $itemId);
 
@@ -154,7 +154,14 @@ class RelatedService {
 		if ($resourceType === '') {
 			$providers = $this->getRelatedResourceProviders();
 		} else {
-			$providers = [$this->getRelatedResourceProvider($resourceType)];
+			if ((($resourceType == 'deck') && !$this->appManager->isInstalled('deck'))
+				|| (($resourceType == 'calendar') && !$this->appManager->isInstalled('calendar'))
+				|| (($resourceType == 'spreed') && !$this->appManager->isInstalled('spreed'))
+				|| (($resourceType == 'groupfolders') && !$this->appManager->isInstalled('groupfolders'))) {
+				$providers = [];
+			} else {
+				$providers = [$this->getRelatedResourceProvider($resourceType)];
+			}
 		}
 
 		$result = [];
@@ -226,7 +233,7 @@ class RelatedService {
 		}
 
 		$result = $this->getRelatedResourceProvider($providerId)
-					   ->getRelatedFromItem($this->circlesManager, $itemId);
+			->getRelatedFromItem($this->circlesManager, $itemId);
 
 		$this->logger->debug('get related to ' . $providerId . '.' . $itemId . ' - ' . json_encode($result));
 
@@ -249,7 +256,7 @@ class RelatedService {
 	 */
 	private function getCachedRelatedFromItem(
 		string $providerId,
-		string $itemId
+		string $itemId,
 	): RelatedResource {
 		$key = $this->generateRelatedFromItemCacheKey($providerId, $itemId);
 		$cachedData = $this->cache->get($key);
@@ -280,7 +287,7 @@ class RelatedService {
 	private function cacheRelatedFromItem(
 		string $providerId,
 		string $itemId,
-		RelatedResource $related
+		RelatedResource $related,
 	): void {
 		$this->logger->debug(
 			'caching related from ' . $providerId . '.' . $itemId . ' - ' . json_encode($related)
@@ -298,7 +305,7 @@ class RelatedService {
 	 */
 	private function generateRelatedFromItemCacheKey(
 		string $providerId,
-		string $itemId
+		string $itemId,
 	): string {
 		return 'relatedFromItem/' . $providerId . '::' . $itemId;
 	}
@@ -312,7 +319,7 @@ class RelatedService {
 	 */
 	private function getItemsAvailableToEntity(
 		IRelatedResourceProvider $provider,
-		FederatedUser $entity
+		FederatedUser $entity,
 	): array {
 		try {
 			return $this->getCachedItemsAvailableToEntity($provider->getProviderId(), $entity->getSingleId());
@@ -339,7 +346,7 @@ class RelatedService {
 	 */
 	private function getCachedItemsAvailableToEntity(
 		string $providerId,
-		string $singleId
+		string $singleId,
 	): array {
 		$key = $this->generateItemsAvailableToEntityCacheKey($providerId, $singleId);
 		$cachedData = $this->cache->get($key);
@@ -369,7 +376,7 @@ class RelatedService {
 	private function cacheItemsAvailableToEntity(
 		string $providerId,
 		string $singleId,
-		array $result
+		array $result,
 	): void {
 		$this->logger->debug(
 			'caching available items to ' . $singleId . ' from ' . $providerId . ' - ' . json_encode($result)
@@ -387,7 +394,7 @@ class RelatedService {
 	 */
 	private function generateItemsAvailableToEntityCacheKey(
 		string $providerId,
-		string $singleId
+		string $singleId,
 	): string {
 		return 'availableItem/' . $providerId . '::' . $singleId;
 	}
@@ -469,7 +476,7 @@ class RelatedService {
 	private function improveResult(array $result): array {
 		foreach ($result as $entry) {
 			$this->getRelatedResourceProvider($entry->getProviderId())
-				 ->improveRelatedResource($this->circlesManager, $entry);
+				->improveRelatedResource($this->circlesManager, $entry);
 		}
 
 		return $result;
@@ -509,7 +516,7 @@ class RelatedService {
 					}
 
 					$this->weightCalculators[] = Server::get($class);
-				} catch (NotFoundExceptionInterface | ContainerExceptionInterface | ReflectionException $e) {
+				} catch (NotFoundExceptionInterface|ContainerExceptionInterface|ReflectionException $e) {
 					$this->logger->notice($e->getMessage());
 				}
 			}
@@ -541,7 +548,7 @@ class RelatedService {
 		if ($this->appManager->isInstalled('deck')) {
 			try {
 				$providers[] = Server::get(DeckRelatedResourceProvider::class);
-			} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
+			} catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
 				$this->logger->notice($e->getMessage());
 			}
 		}
@@ -549,7 +556,7 @@ class RelatedService {
 		if ($this->appManager->isInstalled('calendar')) {
 			try {
 				$providers[] = Server::get(CalendarRelatedResourceProvider::class);
-			} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
+			} catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
 				$this->logger->notice($e->getMessage());
 			}
 		}
@@ -557,7 +564,7 @@ class RelatedService {
 		if ($this->appManager->isInstalled('spreed')) {
 			try {
 				$providers[] = Server::get(TalkRelatedResourceProvider::class);
-			} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
+			} catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
 				$this->logger->notice($e->getMessage());
 			}
 		}
@@ -565,7 +572,7 @@ class RelatedService {
 		if ($this->appManager->isInstalled('groupfolders')) {
 			try {
 				$providers[] = Server::get(GroupFoldersRelatedResourceProvider::class);
-			} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
+			} catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
 				$this->logger->notice($e->getMessage());
 			}
 		}

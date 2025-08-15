@@ -144,7 +144,7 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 	public function processApplicableMap(
 		CirclesManager $circlesManager,
 		RelatedResource $related,
-		array $applicableMap
+		array $applicableMap,
 	): void {
 		foreach ($applicableMap as $k => $entry) {
 			$entityId = '';
@@ -156,7 +156,7 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 			}
 
 			$related->addRecipient($entityId)
-					->setAsGroupShared();
+				->setAsGroupShared();
 		}
 	}
 

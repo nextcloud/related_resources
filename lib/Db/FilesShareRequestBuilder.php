@@ -38,7 +38,7 @@ class FilesShareRequestBuilder extends CoreQueryBuilder {
 		/** @var FilesShare $share */
 		try {
 			$share = $qb->asItem(FilesShare::class);
-		} catch (InvalidItemException | RowNotFoundException $e) {
+		} catch (InvalidItemException|RowNotFoundException $e) {
 			throw new FilesShareNotFoundException();
 		}
 

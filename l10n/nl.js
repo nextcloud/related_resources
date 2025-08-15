@@ -2,9 +2,19 @@ OC.L10N.register(
     "related_resources",
     {
     "Calendar" : "Agenda",
+    "Calendar \"%s\"" : "Agenda \"%s\"",
     "Deck" : "Deck",
+    "Deck board \"%s\"" : "Deck board \"%s\"",
     "Files" : "Bestanden",
-    "Talk conversation" : "Talk gesprek",
-    "Talk" : "Talk"
+    "File \"%s\"" : "Bestand \"%s\"",
+    "Group Folder" : "Groepsmap",
+    "Group Folder \"%s\"" : "Groepsmap \"%s\"",
+    "Talk conversation" : "Talk-gesprek",
+    "Conversation with %s" : "Gesprek met %s",
+    "Talk" : "Talk",
+    "Talk conversation \"%s\"" : "Talk-gesprek \"%s\"",
+    "Related Resources" : "Gerelateerde bronnen",
+    "Displays resources related to current item in right panel" : "Geeft bronnen weer die verband houden met het huidige item in het rechterpaneel",
+    "Displays resources related to current item in right panel." : "Toont bronnen met betrekking tot het huidige item in het rechterpaneel."
 },
 "nplurals=2; plural=(n != 1);");

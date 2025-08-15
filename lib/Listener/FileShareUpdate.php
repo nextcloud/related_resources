@@ -23,7 +23,7 @@ class FileShareUpdate implements IEventListener {
 	private RelatedService $relatedService;
 
 	public function __construct(
-		RelatedService $relatedService
+		RelatedService $relatedService,
 	) {
 		$this->relatedService = $relatedService;
 	}

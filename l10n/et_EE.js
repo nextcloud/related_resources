@@ -2,9 +2,19 @@ OC.L10N.register(
     "related_resources",
     {
     "Calendar" : "Kalender",
+    "Calendar \"%s\"" : "Kalender „%s“",
+    "Deck" : "Kanban",
+    "Deck board \"%s\"" : "Kanbani kaart „%s“",
     "Files" : "Failid",
+    "File \"%s\"" : "Fail „%s“",
     "Group Folder" : "Grupikaust",
-    "Group Folder \"%s\"" : "Grupikaust \"%s\"",
-    "Talk" : "Talk"
+    "Group Folder \"%s\"" : "Grupikaust „%s“",
+    "Talk conversation" : "Suhtlus vestlusrakenduses",
+    "Conversation with %s" : "Suhtlus kasutajaga %s",
+    "Talk" : "Vestlusrakendus Talk",
+    "Talk conversation \"%s\"" : "Suhtlus vestlusrakenduses „%s“",
+    "Related Resources" : "Seotud ressursid",
+    "Displays resources related to current item in right panel" : "Kuvab paremal paneelil antud objektiga seotud ressursid",
+    "Displays resources related to current item in right panel." : "Kuvab paremal paneelil antud objektiga seotud ressursid"
 },
 "nplurals=2; plural=(n != 1);");

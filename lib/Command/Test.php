@@ -48,7 +48,7 @@ class Test extends Base {
 		IUserManager $userManager,
 		IConfig $config,
 		RelatedService $relatedService,
-		ICacheFactory $cacheFactory
+		ICacheFactory $cacheFactory,
 	) {
 		$this->config = $config;
 		parent::__construct();
@@ -102,7 +102,7 @@ class Test extends Base {
 		try {
 			/** @var CirclesManager $circleManager */
 			$circleManager = Server::get(CirclesManager::class);
-		} catch (ContainerExceptionInterface | AutoloadNotAllowedException $e) {
+		} catch (ContainerExceptionInterface|AutoloadNotAllowedException $e) {
 			throw new Exception('Circles needs to be enabled');
 		}
 

@@ -107,9 +107,9 @@ class TalkRoom implements IQueryRow, JsonSerializable {
 	 */
 	public function importFromDatabase(array $data): IQueryRow {
 		$this->setRoomId($this->getInt('id', $data))
-			 ->setRoomName($this->get('name', $data))
-			 ->setRoomType($this->getInt('type', $data))
-			 ->setToken($this->get('token', $data));
+			->setRoomName($this->get('name', $data))
+			->setRoomType($this->getInt('type', $data))
+			->setToken($this->get('token', $data));
 
 		return $this;
 	}

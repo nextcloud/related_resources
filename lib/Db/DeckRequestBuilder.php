@@ -43,7 +43,7 @@ class DeckRequestBuilder extends CoreQueryBuilder {
 		/** @var DeckBoard $deck */
 		try {
 			$deck = $qb->asItem(DeckBoard::class);
-		} catch (InvalidItemException | RowNotFoundException $e) {
+		} catch (InvalidItemException|RowNotFoundException $e) {
 			throw new DeckDataNotFoundException();
 		}
 

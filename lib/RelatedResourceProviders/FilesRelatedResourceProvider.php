@@ -125,7 +125,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 		}
 
 		$paths = $this->rootFolder->getUserFolder($current->getUserId())
-								  ->getById((int)$entry->getItemId());
+			->getById((int)$entry->getItemId());
 
 		if (sizeof($paths) > 0) {
 			$entry->setTitle($paths[0]->getName());
@@ -180,7 +180,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	private function managerGroupFolders(
 		CirclesManager $circlesManager,
 		?IRelatedResource $related,
-		array $itemEntries
+		array $itemEntries,
 	): ?IRelatedResource {
 		foreach ($itemEntries as $entry) {
 			if (($entry['type'] ?? '') !== 'groupfolder') {
@@ -223,7 +223,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 		}
 
 		$paths = $this->rootFolder->getUserFolder($current->getUserId())
-								  ->getById($itemId);
+			->getById($itemId);
 
 		$itemEntries = [];
 		foreach ($paths as $path) {
@@ -256,7 +256,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	private function processShareRecipient(
 		CirclesManager $circlesManager,
 		RelatedResource $related,
-		FilesShare $share
+		FilesShare $share,
 	) {
 		try {
 			$sharedWith = $this->convertShareRecipient(
@@ -280,7 +280,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 				);
 			} else {
 				$related->addRecipient($sharedWith->getSingleId())
-						->setAsGroupShared();
+					->setAsGroupShared();
 			}
 		} catch (Exception $e) {
 		}
@@ -297,7 +297,7 @@ class FilesRelatedResourceProvider implements IRelatedResourceProvider {
 	private function convertShareRecipient(
 		CirclesManager $circlesManager,
 		int $shareType,
-		string $sharedWith
+		string $sharedWith,
 	): FederatedUser {
 		$type = match ($shareType) {
 			IShare::TYPE_USER => Member::TYPE_USER,

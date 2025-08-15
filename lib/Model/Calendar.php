@@ -72,9 +72,9 @@ class Calendar implements IQueryRow, JsonSerializable {
 
 	public function importFromDatabase(array $data): IQueryRow {
 		$this->setCalendarId($this->getInt('id', $data))
-			 ->setCalendarName($this->get('displayname', $data))
-			 ->setCalendarPrincipalUri($this->get('principaluri', $data))
-			 ->setCalendarUri($this->get('uri', $data));
+			->setCalendarName($this->get('displayname', $data))
+			->setCalendarPrincipalUri($this->get('principaluri', $data))
+			->setCalendarUri($this->get('uri', $data));
 
 		return $this;
 	}

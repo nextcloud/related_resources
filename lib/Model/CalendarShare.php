@@ -86,7 +86,7 @@ class CalendarShare implements IQueryRow, JsonSerializable {
 
 	public function importFromDatabase(array $data): IQueryRow {
 		$this->setCalendarId($this->getInt('resourceid', $data))
-			 ->setSharePrincipalUri($this->get('principaluri', $data));
+			->setSharePrincipalUri($this->get('principaluri', $data));
 
 		return $this;
 	}

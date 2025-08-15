@@ -3,10 +3,18 @@ OC.L10N.register(
     {
     "Calendar" : "Kalender",
     "Calendar \"%s\"" : "Kalender \"%s\"",
-    "Deck" : "Deck",
+    "Deck" : "Opslag",
+    "Deck board \"%s\"" : "Opslagstavle \"%s\"",
     "Files" : "Filer",
     "File \"%s\"" : "Fil \"%s\"",
+    "Group Folder" : "Gruppemappe",
+    "Group Folder \"%s\"" : "Gruppemappe \"%s\"",
+    "Talk conversation" : "Snak samtale",
+    "Conversation with %s" : "Samtale med %s",
     "Talk" : "Snak",
-    "Talk conversation \"%s\"" : "Snak samtale \"%s\""
+    "Talk conversation \"%s\"" : "Snak samtale \"%s\"",
+    "Related Resources" : "Relaterede ressourcer",
+    "Displays resources related to current item in right panel" : "Viser ressourcer relateret til det aktuelle element i højre panel",
+    "Displays resources related to current item in right panel." : "Viser ressourcer relateret til det aktuelle element i højre panel."
 },
 "nplurals=2; plural=(n != 1);");

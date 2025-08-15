@@ -68,7 +68,7 @@ class TalkActor implements IQueryRow, JsonSerializable {
 	 */
 	public function importFromDatabase(array $data): IQueryRow {
 		$this->setActorType($this->get('actor_type', $data))
-			 ->setActorId($this->get('actor_id', $data));
+			->setActorId($this->get('actor_id', $data));
 
 		return $this;
 	}
