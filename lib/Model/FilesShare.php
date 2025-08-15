@@ -125,12 +125,12 @@ class FilesShare implements IQueryRow, JsonSerializable {
 
 	public function importFromDatabase(array $data): IQueryRow {
 		$this->setShareType($this->getInt('share_type', $data))
-			 ->setSharedWith($this->get('share_with', $data))
-			 ->setShareCreator($this->get('uid_initiator', $data))
-			 ->setFileId($this->getInt('file_source', $data))
-			 ->setFileOwner($this->get('uid_owner', $data))
-			 ->setFileTarget($this->get('file_target', $data))
-			 ->setShareTime($this->getInt('stime', $data));
+			->setSharedWith($this->get('share_with', $data))
+			->setShareCreator($this->get('uid_initiator', $data))
+			->setFileId($this->getInt('file_source', $data))
+			->setFileOwner($this->get('uid_owner', $data))
+			->setFileTarget($this->get('file_target', $data))
+			->setShareTime($this->getInt('stime', $data));
 
 		return $this;
 	}

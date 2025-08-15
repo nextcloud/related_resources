@@ -108,9 +108,9 @@ class DeckBoard implements IQueryRow, JsonSerializable {
 	 */
 	public function importFromDatabase(array $data): IQueryRow {
 		$this->setBoardId($this->getInt('id', $data))
-			 ->setBoardName($this->get('title', $data))
-			 ->setOwner($this->get('owner', $data))
-			 ->setLastModified($this->getInt('last_modified', $data));
+			->setBoardName($this->get('title', $data))
+			->setOwner($this->get('owner', $data))
+			->setLastModified($this->getInt('last_modified', $data));
 
 		return $this;
 	}

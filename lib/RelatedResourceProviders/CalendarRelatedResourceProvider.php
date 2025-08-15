@@ -38,7 +38,7 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 	public function __construct(
 		IURLGenerator $urlGenerator,
 		IL10N $l10n,
-		CalendarShareRequest $calendarShareRequest
+		CalendarShareRequest $calendarShareRequest,
 	) {
 		$this->urlGenerator = $urlGenerator;
 		$this->l10n = $l10n;
@@ -134,17 +134,17 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 		}
 
 		$related->setTitle($calendar->getCalendarName())
-				->setSubtitle($this->l10n->t('Calendar'))
-				->setTooltip($this->l10n->t('Calendar "%s"', $calendar->getCalendarName()))
-				->setIcon(
-					$this->urlGenerator->getAbsoluteURL(
-						$this->urlGenerator->imagePath(
-							'calendar',
-							'calendar.svg'
-						)
+			->setSubtitle($this->l10n->t('Calendar'))
+			->setTooltip($this->l10n->t('Calendar "%s"', $calendar->getCalendarName()))
+			->setIcon(
+				$this->urlGenerator->getAbsoluteURL(
+					$this->urlGenerator->imagePath(
+						'calendar',
+						'calendar.svg'
 					)
 				)
-				->setUrl($url);
+			)
+			->setUrl($url);
 
 		$keywords = preg_split(
 			'/[\/_\-. ]/',
@@ -173,7 +173,7 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 				$related->addToVirtualGroup($participant->getSingleId());
 			} else {
 				$related->addRecipient($participant->getSingleId())
-						->setAsGroupShared();
+					->setAsGroupShared();
 			}
 		} catch (Exception $e) {
 		}
@@ -200,6 +200,6 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 		}
 
 		$share->setType($type)
-			  ->setUser($user);
+			->setUser($user);
 	}
 }

@@ -46,7 +46,7 @@ class CalendarShareRequestBuilder extends CoreQueryBuilder {
 		/** @var Calendar $calendar */
 		try {
 			$calendar = $qb->asItem(Calendar::class);
-		} catch (InvalidItemException | RowNotFoundException $e) {
+		} catch (InvalidItemException|RowNotFoundException $e) {
 			throw new CalendarDataNotFoundException();
 		}
 
