@@ -91,8 +91,8 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	 */
 	public function importFromDatabase(array $data): IQueryRow {
 		$this->setBoardId($this->getInt('board_id', $data))
-			 ->setRecipientType($this->getInt('type', $data))
-			 ->setRecipientId($this->get('participant', $data));
+			->setRecipientType($this->getInt('type', $data))
+			->setRecipientId($this->get('participant', $data));
 
 		return $this;
 	}

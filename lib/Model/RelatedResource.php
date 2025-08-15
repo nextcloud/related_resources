@@ -146,7 +146,7 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 	public function improve(
 		float $quality,
 		string $type,
-		bool $diminishingReturn = true
+		bool $diminishingReturn = true,
 	): IRelatedResource {
 		$quality = ($this->currentQuality[$type] ?? $quality);
 		$this->score = $this->score * $quality;

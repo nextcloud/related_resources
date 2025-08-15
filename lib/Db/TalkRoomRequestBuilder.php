@@ -47,7 +47,7 @@ class TalkRoomRequestBuilder extends CoreQueryBuilder {
 		/** @var TalkRoom $room */
 		try {
 			$room = $qb->asItem(TalkRoom::class);
-		} catch (InvalidItemException | RowNotFoundException $e) {
+		} catch (InvalidItemException|RowNotFoundException $e) {
 			throw new TalkDataNotFoundException();
 		}
 

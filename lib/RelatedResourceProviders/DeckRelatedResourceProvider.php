@@ -39,7 +39,7 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	public function __construct(
 		IUrlGenerator $urlGenerator,
 		IL10N $l10n,
-		DeckRequest $deckSharesRequest
+		DeckRequest $deckSharesRequest,
 	) {
 		$this->urlGenerator = $urlGenerator;
 		$this->l10n = $l10n;
@@ -112,25 +112,25 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	private function convertToRelatedResource(DeckBoard $board): IRelatedResource {
 		$url = '';
 		try {
-			$url =
-				$this->urlGenerator->linkToRouteAbsolute('deck.page.index')
+			$url
+				= $this->urlGenerator->linkToRouteAbsolute('deck.page.index')
 				. '#/board/' . $board->getBoardId();
 		} catch (Exception $e) {
 		}
 
 		$related = new RelatedResource(self::PROVIDER_ID, (string)$board->getBoardId());
 		$related->setTitle($board->getBoardName())
-				->setSubtitle($this->l10n->t('Deck'))
-				->setTooltip($this->l10n->t('Deck board "%s"', $board->getBoardName()))
-				->setIcon(
-					$this->urlGenerator->getAbsoluteURL(
-						$this->urlGenerator->imagePath(
-							'deck',
-							'deck.svg'
-						)
+			->setSubtitle($this->l10n->t('Deck'))
+			->setTooltip($this->l10n->t('Deck board "%s"', $board->getBoardName()))
+			->setIcon(
+				$this->urlGenerator->getAbsoluteURL(
+					$this->urlGenerator->imagePath(
+						'deck',
+						'deck.svg'
 					)
 				)
-				->setUrl($url);
+			)
+			->setUrl($url);
 
 		$related->setMetaInt(RelatedResource::ITEM_LAST_UPDATE, $board->getLastModified());
 
@@ -150,7 +150,7 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 	private function processDeckShare(
 		CirclesManager $circlesManager,
 		RelatedResource $related,
-		DeckShare $share
+		DeckShare $share,
 	) {
 		try {
 			$participant = $this->convertDeckShare($circlesManager, $share);
@@ -158,7 +158,7 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 				$related->addToVirtualGroup($participant->getSingleId());
 			} else {
 				$related->addRecipient($participant->getSingleId())
-						->setAsGroupShared();
+					->setAsGroupShared();
 			}
 		} catch (Exception $e) {
 		}

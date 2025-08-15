@@ -37,7 +37,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 		private IURLGenerator $urlGenerator,
 		private IL10N $l10n,
 		private TalkRoomRequest $talkRoomRequest,
-		private LoggerInterface $logger
+		private LoggerInterface $logger,
 	) {
 	}
 
@@ -78,7 +78,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 
 			if ($countActor === 2 && $room->getRoomType() === \OCA\Talk\Room::TYPE_ONE_TO_ONE) {
 				$related->setTitle($this->l10n->t('Talk conversation'))
-						->setMetaArray('1on1', json_decode($room->getRoomName()));
+					->setMetaArray('1on1', json_decode($room->getRoomName()));
 			}
 		}
 
@@ -149,16 +149,16 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 		}
 		$related = new RelatedResource(self::PROVIDER_ID, $share->getToken());
 		$related->setTitle($share->getRoomName())
-				->setSubtitle($this->l10n->t('Talk'))
-				->setTooltip($this->l10n->t('Talk conversation "%s"', $share->getRoomName()))
-				->setIcon(
-					$this->urlGenerator->getAbsoluteURL(
-						$this->urlGenerator->imagePath(
-							'spreed',
-							'app.svg'
-						)
+			->setSubtitle($this->l10n->t('Talk'))
+			->setTooltip($this->l10n->t('Talk conversation "%s"', $share->getRoomName()))
+			->setIcon(
+				$this->urlGenerator->getAbsoluteURL(
+					$this->urlGenerator->imagePath(
+						'spreed',
+						'app.svg'
 					)
 				)
+			)
 			->setPreview(
 				$this->urlGenerator->linkToOCSRouteAbsolute(
 					'spreed.Avatar.getAvatar',
@@ -183,7 +183,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	private function processRoomParticipant(
 		CirclesManager $circlesManager,
 		RelatedResource $related,
-		TalkActor $actor
+		TalkActor $actor,
 	) {
 		try {
 			$participant = $this->convertRoomParticipant($circlesManager, $actor);
@@ -191,7 +191,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 				$related->addToVirtualGroup($participant->getSingleId());
 			} else {
 				$related->addRecipient($participant->getSingleId())
-						->setAsGroupShared();
+					->setAsGroupShared();
 			}
 		} catch (Exception $e) {
 		}

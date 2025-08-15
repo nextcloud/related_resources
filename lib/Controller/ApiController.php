@@ -44,7 +44,7 @@ class ApiController extends OcsController {
 		LoggerInterface $logger,
 		IUserSession $userSession,
 		RelatedService $relatedService,
-		ConfigService $configService
+		ConfigService $configService,
 	) {
 		parent::__construct($appName, $request);
 
@@ -54,7 +54,7 @@ class ApiController extends OcsController {
 		$this->configService = $configService;
 		try {
 			$this->circlesManager = Server::get(CirclesManager::class);
-		} catch (ContainerExceptionInterface | AutoloadNotAllowedException $e) {
+		} catch (ContainerExceptionInterface|AutoloadNotAllowedException $e) {
 		}
 	}
 
@@ -72,7 +72,7 @@ class ApiController extends OcsController {
 		string $providerId,
 		string $itemId,
 		int $limit = 0,
-		string $resourceType = ''
+		string $resourceType = '',
 	): DataResponse {
 		if (is_null($this->circlesManager)) {
 			$this->logger->info('RelatedResources require Circles');
