@@ -1,0 +1,20 @@
+OC.L10N.register(
+    "related_resources",
+    {
+    "Calendar" : "Kalenda",
+    "Calendar \"%s\"" : "Kalenda \"%s\"",
+    "Deck" : "Deki",
+    "Deck board \"%s\"" : "Ubao wa deki \"%s\"",
+    "Files" : "Faili",
+    "File \"%s\"" : "Faili \"%s\"",
+    "Group Folder" : "Folda ya Kikundi",
+    "Group Folder \"%s\"" : "Folda ya Kikundi \"%s\"",
+    "Talk conversation" : "Mazungumzo ya Talk",
+    "Conversation with %s" : "Mazungumzo na %s",
+    "Talk" : "Talk",
+    "Talk conversation \"%s\"" : " Mazungumzo ya Talk \"%s\"",
+    "Related Resources" : "Rasilimali Zinazohusiana",
+    "Displays resources related to current item in right panel" : "Huonyesha rasilimali zinazohusiana na kipengee cha sasa kwenye kidirisha cha kulia",
+    "Displays resources related to current item in right panel." : "Huonyesha rasilimali zinazohusiana na kipengee cha sasa kwenye kidirisha cha kulia."
+},
+"nplurals=2; plural=(n != 1);");
