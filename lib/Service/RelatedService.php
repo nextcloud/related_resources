@@ -150,7 +150,14 @@ class RelatedService {
 		if ($resourceType === '') {
 			$providers = $this->getRelatedResourceProviders();
 		} else {
-			$providers = [$this->getRelatedResourceProvider($resourceType)];
+			if ((($resourceType == 'deck') && !$this->appManager->isInstalled('deck'))
+				|| (($resourceType == 'calendar') && !$this->appManager->isInstalled('calendar'))
+				|| (($resourceType == 'spreed') && !$this->appManager->isInstalled('spreed'))
+				|| (($resourceType == 'groupfolders') && !$this->appManager->isInstalled('groupfolders'))) {
+				$providers = [];
+			} else {
+				$providers = [$this->getRelatedResourceProvider($resourceType)];
+			}
 		}
 
 		$result = [];
