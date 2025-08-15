@@ -9,12 +9,12 @@ OC.L10N.register(
     "File \"%s\"" : "\"%s\" dosyası",
     "Group Folder" : "Grup klasörü",
     "Group Folder \"%s\"" : "\"%s\" grup klasörü",
-    "Talk conversation" : "Talk görüşmesi",
+    "Talk conversation" : "Konuş görüşmesi",
     "Conversation with %s" : "%s ile görüşme",
-    "Talk" : "Talk",
-    "Talk conversation \"%s\"" : "\"%s\" Talk görüşmesi",
+    "Talk" : "Konuş",
+    "Talk conversation \"%s\"" : "\"%s\" Konuş görüşmesi",
     "Related Resources" : "İlişkili kaynaklar",
     "Displays resources related to current item in right panel" : "Geçerli öge ile ilişkili kaynaklar sağ panoda görüntülensin",
-    "Displays resources related to current item in right panel." : "Bu seçenek etkinse, geçerli öge ile ilişkili kaynaklar sağ panoda görüntülenir."
+    "Displays resources related to current item in right panel." : "Bu seçenek açıksa, geçerli öge ile ilişkili kaynaklar sağ panoda görüntülenir."
 },
 "nplurals=2; plural=(n > 1);");

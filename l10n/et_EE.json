@@ -7,12 +7,12 @@
     "File \"%s\"" : "Fail „%s“",
     "Group Folder" : "Grupikaust",
     "Group Folder \"%s\"" : "Grupikaust „%s“",
-    "Talk conversation" : "Talk suhtlus",
+    "Talk conversation" : "Suhtlus vestlusrakenduses",
     "Conversation with %s" : "Suhtlus kasutajaga %s",
-    "Talk" : "Talk",
-    "Talk conversation \"%s\"" : "Talk suhtlus \"%s\"",
-    "Related Resources" : "Seotud Ressursid",
-    "Displays resources related to current item in right panel" : "Kuvab paremal paneelil seotud esemega seotud ressursid",
-    "Displays resources related to current item in right panel." : "Kuvab paremal paneelil seotud esemega seotud ressursid"
+    "Talk" : "Vestlusrakendus Talk",
+    "Talk conversation \"%s\"" : "Suhtlus vestlusrakenduses „%s“",
+    "Related Resources" : "Seotud ressursid",
+    "Displays resources related to current item in right panel" : "Kuvab paremal paneelil antud objektiga seotud ressursid",
+    "Displays resources related to current item in right panel." : "Kuvab paremal paneelil antud objektiga seotud ressursid"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
