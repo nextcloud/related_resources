@@ -72,7 +72,7 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 		}
 
 		$related = $this->convertToRelatedResource($folder);
-		$this->processApplicableMap($circlesManager, $related, $folder['groups'] ?? []);
+		$this->processApplicableMap($circlesManager, $related, $folder->groups ?? []);
 
 		return $related;
 	}
@@ -80,17 +80,17 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 	public function getItemsAvailableToEntity(FederatedUser $entity): array {
 		$items = [];
 		foreach ($this->folders as $folder) {
-			foreach ($folder['groups'] as $k => $entry) {
+			foreach ($folder->groups as $k => $entry) {
 				if ($entity->getBasedOn()->getSource() === Member::TYPE_GROUP
 					&& $entry['type'] === 'group'
 					&& $k === $entity->getUserId()) {
-					$items[] = (string)$folder['id'];
+					$items[] = (string)$folder->id;
 				}
 
 				if ($entity->getBasedOn()->getSource() === Member::TYPE_CIRCLE
 					&& $entry['type'] === 'circle'
 					&& $k === $entity->getSingleId()) {
-					$items[] = (string)$folder['id'];
+					$items[] = (string)$folder->id;
 				}
 			}
 		}
@@ -169,7 +169,7 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 	 */
 	public function getFolder(int $folderId): array {
 		foreach ($this->folders as $folder) {
-			if ($folder['id'] === $folderId) {
+			if ($folder->id === $folderId) {
 				return $folder;
 			}
 		}
