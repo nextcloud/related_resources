@@ -43,6 +43,7 @@
                 <referencedClass name="OC\DB\SchemaWrapper" />
                 <referencedClass name="OCA\Circles\CirclesManager" />
                 <referencedClass name="OCA\Circles\Model\FederatedUser" />
+                <referencedClass name="OCA\GroupFolders\Folder\FolderDefinitionWithMappings" />
                 <referencedClass name="OCA\GroupFolders\Folder\FolderManager" />
                 <referencedClass name="Doctrine\DBAL\Schema\Schema" />
                 <referencedClass name="Doctrine\DBAL\Schema\SchemaException" />
