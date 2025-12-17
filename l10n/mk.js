@@ -2,9 +2,19 @@ OC.L10N.register(
     "related_resources",
     {
     "Calendar" : "Календар",
+    "Calendar \"%s\"" : "Календар \"%s\"",
     "Deck" : "Deck",
+    "Deck board \"%s\"" : "Deck табла \"%s\"",
     "Files" : "Датотеки",
+    "File \"%s\"" : "Датотека \"%s\"",
+    "Group Folder" : "Групна папка",
+    "Group Folder \"%s\"" : "Групна папка \"%s\"",
     "Talk conversation" : "Talk раговор",
-    "Talk" : "Разговор"
+    "Conversation with %s" : "Разговор со %s",
+    "Talk" : "Разговор",
+    "Talk conversation \"%s\"" : "Talk разговор \"%s\"",
+    "Related Resources" : "Поврзани ресурси",
+    "Displays resources related to current item in right panel" : "Ги прикажува ресурсите поврзани со тековната ставка во десниот панел",
+    "Displays resources related to current item in right panel." : "Ги прикажува ресурсите поврзани со тековната ставка во десниот панел."
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");
