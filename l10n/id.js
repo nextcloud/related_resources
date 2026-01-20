@@ -2,8 +2,19 @@ OC.L10N.register(
     "related_resources",
     {
     "Calendar" : "Kalender",
-    "Deck" : "Longgok",
-    "Files" : "Berkas",
-    "Talk" : "Talk"
+    "Calendar \"%s\"" : "Kalender \"%s\"",
+    "Deck" : "Deck",
+    "Deck board \"%s\"" : "Papan deck \"%s\"",
+    "Files" : "File",
+    "File \"%s\"" : "File \"%s\"",
+    "Group Folder" : "Folder Grup",
+    "Group Folder \"%s\"" : "Folder Grup \"%s\"",
+    "Talk conversation" : "Percakapan Talk",
+    "Conversation with %s" : "Percakapan dengan %s",
+    "Talk" : "Talk",
+    "Talk conversation \"%s\"" : "Percakapan Talk \"%s\"",
+    "Related Resources" : "Sumber Daya Terkait",
+    "Displays resources related to current item in right panel" : "Menampilkan sumber daya terkait dengan item saat ini di panel kanan",
+    "Displays resources related to current item in right panel." : "Menampilkan sumber daya terkait dengan item saat ini di panel kanan."
 },
 "nplurals=1; plural=0;");
