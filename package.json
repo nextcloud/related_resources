@@ -1,6 +1,6 @@
 {
   "name": "related_resources",
-  "version": "4.0.0-dev.0",
+  "version": "5.0.0-dev.0",
   "description": "Related Resources",
   "main": "main.js",
   "private": true,
