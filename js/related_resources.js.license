@@ -29,6 +29,6 @@ This file is generated from multiple sources. Included packages:
 - webpack
 	- version: 5.101.3
 	- license: MIT
-- nextcloud
-	- version: 1.0.0
+- related_resources
+	- version: 5.0.0-dev.0
 	- license: AGPL-3.0-or-later
