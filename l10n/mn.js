@@ -2,7 +2,19 @@ OC.L10N.register(
     "related_resources",
     {
     "Calendar" : "Календарь",
+    "Calendar \"%s\"" : "\"%s\" календарь",
     "Deck" : "Ажлын талбар",
-    "Files" : "файлууд"
+    "Deck board \"%s\"" : "\"%s\" Deck самбар",
+    "Files" : "файлууд",
+    "File \"%s\"" : "\"%s\" файл",
+    "Group Folder" : "Бүлгийн хавтас",
+    "Group Folder \"%s\"" : "\"%s\" бүлгийн хавтас",
+    "Talk conversation" : "Talk яриа",
+    "Conversation with %s" : "%s-тай яриа",
+    "Talk" : "Talk",
+    "Talk conversation \"%s\"" : "\"%s\" Talk яриа",
+    "Related Resources" : "Холбоотой эх сурвалжууд",
+    "Displays resources related to current item in right panel" : "Одоогийн зүйлтэй холбоотой эх сурвалжуудыг баруун хэсэгт харуулна",
+    "Displays resources related to current item in right panel." : "Одоогийн зүйлтэй холбоотой эх сурвалжуудыг баруун хэсэгт харуулна."
 },
 "nplurals=2; plural=(n != 1);");
