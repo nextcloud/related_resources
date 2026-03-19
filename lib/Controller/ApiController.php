@@ -80,7 +80,7 @@ class ApiController extends OcsController {
 			return new DataResponse([]);
 		}
 
-		$limit = ($limit > 0) ? $limit : $this->configService->getAppValueInt(ConfigService::RESULT_MAX);
+		$limit = min(max(1, $limit), $this->configService->getAppValueInt(ConfigService::RESULT_MAX));
 		try {
 			$this->circlesManager->startSession();
 
