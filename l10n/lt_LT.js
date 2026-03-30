@@ -2,9 +2,19 @@ OC.L10N.register(
     "related_resources",
     {
     "Calendar" : "Kalendorius",
+    "Calendar \"%s\"" : "\"%s\" kalendorius ",
     "Deck" : "Darbai",
+    "Deck board \"%s\"" : "\"Deck\" lenta \"%s\"",
     "Files" : "Failai",
+    "File \"%s\"" : "\"%s\" failas",
+    "Group Folder" : "Grupės aplankas",
+    "Group Folder \"%s\"" : "Grupės aplankas \"%s\"",
     "Talk conversation" : "\"Talk\" pokalbis",
-    "Related Resources" : "Susiję ištekliai"
+    "Conversation with %s" : "Pokalbis su %s",
+    "Talk" : "\"Talk\"",
+    "Talk conversation \"%s\"" : "\"Talk\" pokalbis \"%s\"",
+    "Related Resources" : "Susiję ištekliai",
+    "Displays resources related to current item in right panel" : "Dešiniajame skydelyje rodomi su dabartiniu elementu susiję ištekliai",
+    "Displays resources related to current item in right panel." : "Dešiniajame skydelyje rodomi su dabartiniu elementu susiję ištekliai"
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");
