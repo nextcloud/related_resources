@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Calendar" : "Calendar",
     "Deck" : "Pastki qavat",
-    "Files" : "Fayllar"
+    "Files" : "Fayllar",
+    "Talk" : "Gaplash"
 },
 "nplurals=1; plural=0;");
