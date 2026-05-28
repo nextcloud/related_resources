@@ -8,8 +8,6 @@
 
 namespace OC;
 
-use OCP\IConfig;
-
 /**
  * Class which provides access to the system config values stored in config.php
  * Internal class for bootstrap only.
@@ -114,17 +112,17 @@ class SystemConfig {
 		'PASS' => true,
 	];
 
-	public function __construct(private Config $config)
- {
- }
+	public function __construct(
+		private Config $config
+	) {
+	}
 
 	/**
 	 * Lists all available config keys
 	 * @return array an array of key names
 	 */
-	public function getKeys()
- {
- }
+	public function getKeys() {
+	}
 
 	/**
 	 * Sets a new system wide value
@@ -132,9 +130,8 @@ class SystemConfig {
 	 * @param string $key the key of the value, under which will be saved
 	 * @param mixed $value the value that should be stored
 	 */
-	public function setValue($key, $value)
- {
- }
+	public function setValue($key, $value) {
+	}
 
 	/**
 	 * Sets and deletes values and writes the config.php
@@ -142,9 +139,8 @@ class SystemConfig {
 	 * @param array $configs Associative array with `key => value` pairs
 	 *                       If value is null, the config key will be deleted
 	 */
-	public function setValues(array $configs)
- {
- }
+	public function setValues(array $configs) {
+	}
 
 	/**
 	 * Looks up a system wide defined value
@@ -153,9 +149,8 @@ class SystemConfig {
 	 * @param mixed $default the default value to be returned if the value isn't set
 	 * @return mixed the value or $default
 	 */
-	public function getValue($key, $default = '')
- {
- }
+	public function getValue($key, $default = '') {
+	}
 
 	/**
 	 * Looks up a system wide defined value and filters out sensitive data
@@ -164,25 +159,22 @@ class SystemConfig {
 	 * @param mixed $default the default value to be returned if the value isn't set
 	 * @return mixed the value or $default
 	 */
-	public function getFilteredValue($key, $default = '')
- {
- }
+	public function getFilteredValue($key, $default = '') {
+	}
 
 	/**
 	 * Delete a system wide defined value
 	 *
 	 * @param string $key the key of the value, under which it was saved
 	 */
-	public function deleteValue($key)
- {
- }
+	public function deleteValue($key) {
+	}
 
 	/**
 	 * @param bool|array $keysToRemove
 	 * @param mixed $value
 	 * @return mixed
 	 */
-	protected function removeSensitiveValue($keysToRemove, $value)
- {
- }
+	protected function removeSensitiveValue($keysToRemove, $value) {
+	}
 }

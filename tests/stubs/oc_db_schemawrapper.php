@@ -9,11 +9,8 @@ namespace OC\DB;
 
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Platforms\OraclePlatform;
 use Doctrine\DBAL\Schema\Schema;
 use OCP\DB\ISchemaWrapper;
-use OCP\Server;
-use Psr\Log\LoggerInterface;
 
 class SchemaWrapper implements ISchemaWrapper {
 	protected Schema $schema;
@@ -21,17 +18,17 @@ class SchemaWrapper implements ISchemaWrapper {
 	/** @var array<string, true> */
 	protected array $tablesToDelete = [];
 
-	public function __construct(protected Connection $connection, ?Schema $schema = null)
- {
- }
+	public function __construct(
+		protected Connection $connection,
+		?Schema $schema = null
+	) {
+	}
 
-	public function getWrappedSchema()
- {
- }
+	public function getWrappedSchema() {
+	}
 
-	public function performDropTableCalls(): void
- {
- }
+	public function performDropTableCalls(): void {
+	}
 
 	/**
 	 * Gets all table names
@@ -39,9 +36,8 @@ class SchemaWrapper implements ISchemaWrapper {
 	 * @return array
 	 */
 	#[\Override]
- public function getTableNamesWithoutPrefix()
- {
- }
+	public function getTableNamesWithoutPrefix() {
+	}
 
 	// Overwritten methods
 
@@ -49,9 +45,8 @@ class SchemaWrapper implements ISchemaWrapper {
 	 * @return array
 	 */
 	#[\Override]
- public function getTableNames()
- {
- }
+	public function getTableNames() {
+	}
 
 	/**
 	 * @param string $tableName
@@ -60,9 +55,8 @@ class SchemaWrapper implements ISchemaWrapper {
 	 * @throws \Doctrine\DBAL\Schema\SchemaException
 	 */
 	#[\Override]
- public function getTable($tableName)
- {
- }
+	public function getTable($tableName) {
+	}
 
 	/**
 	 * Does this schema have a table with the given name?
@@ -72,9 +66,8 @@ class SchemaWrapper implements ISchemaWrapper {
 	 * @return boolean
 	 */
 	#[\Override]
- public function hasTable($tableName)
- {
- }
+	public function hasTable($tableName) {
+	}
 
 	/**
 	 * Creates a new table.
@@ -83,9 +76,8 @@ class SchemaWrapper implements ISchemaWrapper {
 	 * @return \Doctrine\DBAL\Schema\Table
 	 */
 	#[\Override]
- public function createTable($tableName)
- {
- }
+	public function createTable($tableName) {
+	}
 
 	/**
 	 * Drops a table from the schema.
@@ -94,9 +86,8 @@ class SchemaWrapper implements ISchemaWrapper {
 	 * @return \Doctrine\DBAL\Schema\Schema
 	 */
 	#[\Override]
- public function dropTable($tableName)
- {
- }
+	public function dropTable($tableName) {
+	}
 
 	/**
 	 * Gets all tables of this schema.
@@ -104,9 +95,8 @@ class SchemaWrapper implements ISchemaWrapper {
 	 * @return \Doctrine\DBAL\Schema\Table[]
 	 */
 	#[\Override]
- public function getTables()
- {
- }
+	public function getTables() {
+	}
 
 	/**
 	 * Gets the DatabasePlatform for the database.
@@ -116,12 +106,10 @@ class SchemaWrapper implements ISchemaWrapper {
 	 * @throws Exception
 	 */
 	#[\Override]
- public function getDatabasePlatform()
- {
- }
+	public function getDatabasePlatform() {
+	}
 
 	#[\Override]
- public function dropAutoincrementColumn(string $table, string $column): void
- {
- }
+	public function dropAutoincrementColumn(string $table, string $column): void {
+	}
 }

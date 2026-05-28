@@ -9,10 +9,8 @@ declare(strict_types=1);
 
 namespace OC\DB;
 
-use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\Schema;
-use OC\DB\Exceptions\DbalException;
 use OC\DB\QueryBuilder\Sharded\CrossShardMoveHelper;
 use OC\DB\QueryBuilder\Sharded\ShardDefinition;
 use OCP\DB\IPreparedStatement;
@@ -31,192 +29,156 @@ class ConnectionAdapter implements IDBConnection {
 	}
 
 	#[\Override]
- public function getQueryBuilder(): IQueryBuilder
- {
- }
+	public function getQueryBuilder(): IQueryBuilder {
+	}
 
 	#[\Override]
- public function getTypedQueryBuilder(): ITypedQueryBuilder
- {
- }
+	public function getTypedQueryBuilder(): ITypedQueryBuilder {
+	}
 
 	#[\Override]
- public function prepare($sql, $limit = null, $offset = null): IPreparedStatement
- {
- }
+	public function prepare($sql, $limit = null, $offset = null): IPreparedStatement {
+	}
 
 	#[\Override]
- public function executeQuery(string $sql, array $params = [], $types = []): IResult
- {
- }
+	public function executeQuery(string $sql, array $params = [], $types = []): IResult {
+	}
 
 	#[\Override]
- public function executeUpdate(string $sql, array $params = [], array $types = []): int
- {
- }
+	public function executeUpdate(string $sql, array $params = [], array $types = []): int {
+	}
 
 	#[\Override]
- public function executeStatement($sql, array $params = [], array $types = []): int
- {
- }
+	public function executeStatement($sql, array $params = [], array $types = []): int {
+	}
 
 	#[\Override]
- public function lastInsertId(string $table): int
- {
- }
+	public function lastInsertId(string $table): int {
+	}
 
 	#[\Override]
- public function insertIfNotExist(string $table, array $input, ?array $compare = null)
- {
- }
+	public function insertIfNotExist(string $table, array $input, ?array $compare = null) {
+	}
 
 	#[\Override]
- public function insertIgnoreConflict(string $table, array $values): int
- {
- }
+	public function insertIgnoreConflict(string $table, array $values): int {
+	}
 
 	#[\Override]
- public function setValues($table, array $keys, array $values, array $updatePreconditionValues = []): int
- {
- }
+	public function setValues($table, array $keys, array $values, array $updatePreconditionValues = []): int {
+	}
 
 	#[\Override]
- public function lockTable($tableName): void
- {
- }
+	public function lockTable($tableName): void {
+	}
 
 	#[\Override]
- public function unlockTable(): void
- {
- }
+	public function unlockTable(): void {
+	}
 
 	#[\Override]
- public function beginTransaction(): void
- {
- }
+	public function beginTransaction(): void {
+	}
 
 	#[\Override]
- public function inTransaction(): bool
- {
- }
+	public function inTransaction(): bool {
+	}
 
 	#[\Override]
- public function commit(): void
- {
- }
+	public function commit(): void {
+	}
 
 	#[\Override]
- public function rollBack(): void
- {
- }
+	public function rollBack(): void {
+	}
 
 	#[\Override]
- public function getError(): string
- {
- }
+	public function getError(): string {
+	}
 
 	#[\Override]
- public function errorCode()
- {
- }
+	public function errorCode() {
+	}
 
 	#[\Override]
- public function errorInfo()
- {
- }
+	public function errorInfo() {
+	}
 
 	#[\Override]
- public function connect(): bool
- {
- }
+	public function connect(): bool {
+	}
 
 	#[\Override]
- public function close(): void
- {
- }
+	public function close(): void {
+	}
 
 	#[\Override]
- public function quote($input, $type = IQueryBuilder::PARAM_STR)
- {
- }
+	public function quote($input, $type = IQueryBuilder::PARAM_STR) {
+	}
 
 	/**
 	 * @todo we are leaking a 3rdparty type here
 	 */
 	#[\Override]
- public function getDatabasePlatform(): AbstractPlatform
- {
- }
+	public function getDatabasePlatform(): AbstractPlatform {
+	}
 
 	#[\Override]
- public function dropTable(string $table): void
- {
- }
+	public function dropTable(string $table): void {
+	}
 
 	#[\Override]
- public function truncateTable(string $table, bool $cascade): void
- {
- }
+	public function truncateTable(string $table, bool $cascade): void {
+	}
 
 	#[\Override]
- public function tableExists(string $table): bool
- {
- }
+	public function tableExists(string $table): bool {
+	}
 
 	#[\Override]
- public function escapeLikeParameter(string $param): string
- {
- }
+	public function escapeLikeParameter(string $param): string {
+	}
 
 	#[\Override]
- public function supports4ByteText(): bool
- {
- }
+	public function supports4ByteText(): bool {
+	}
 
 	/**
 	 * @todo leaks a 3rdparty type
 	 */
 	#[\Override]
- public function createSchema(): Schema
- {
- }
+	public function createSchema(): Schema {
+	}
 
 	#[\Override]
- public function migrateToSchema(Schema $toSchema): void
- {
- }
+	public function migrateToSchema(Schema $toSchema): void {
+	}
 
-	public function getInner(): Connection
- {
- }
+	public function getInner(): Connection {
+	}
 
 	/**
 	 * @return self::PLATFORM_MYSQL|self::PLATFORM_ORACLE|self::PLATFORM_POSTGRES|self::PLATFORM_SQLITE|self::PLATFORM_MARIADB
 	 */
 	#[\Override]
- public function getDatabaseProvider(bool $strict = false): string
- {
- }
+	public function getDatabaseProvider(bool $strict = false): string {
+	}
 
 	/**
 	 * @internal Should only be used inside the QueryBuilder, ExpressionBuilder and FunctionBuilder
 	 * All apps and API code should not need this and instead use provided functionality from the above.
 	 */
-	public function getServerVersion(): string
- {
- }
+	public function getServerVersion(): string {
+	}
 
-	public function logDatabaseException(\Exception $exception)
- {
- }
+	public function logDatabaseException(\Exception $exception) {
+	}
 
 	#[\Override]
- public function getShardDefinition(string $name): ?ShardDefinition
- {
- }
+	public function getShardDefinition(string $name): ?ShardDefinition {
+	}
 
 	#[\Override]
- public function getCrossShardMoveHelper(): CrossShardMoveHelper
- {
- }
+	public function getCrossShardMoveHelper(): CrossShardMoveHelper {
+	}
 }

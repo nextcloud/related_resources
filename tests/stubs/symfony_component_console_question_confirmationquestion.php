@@ -16,14 +16,12 @@ namespace Symfony\Component\Console\Question;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class ConfirmationQuestion extends Question
-{
-    /**
-     * @param string $question        The question to ask to the user
-     * @param bool   $default         The default answer to return, true or false
-     * @param string $trueAnswerRegex A regex to match the "yes" answer
-     */
-    public function __construct(string $question, bool $default = true, string $trueAnswerRegex = '/^y/i')
-    {
-    }
+class ConfirmationQuestion extends Question {
+	/**
+	 * @param string $question The question to ask to the user
+	 * @param bool $default The default answer to return, true or false
+	 * @param string $trueAnswerRegex A regex to match the "yes" answer
+	 */
+	public function __construct(string $question, bool $default = true, string $trueAnswerRegex = '/^y/i') {
+	}
 }
