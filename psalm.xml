@@ -6,9 +6,27 @@
         xmlns="https://getpsalm.org/schema/config"
         xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
         errorBaseline="tests/psalm-baseline.xml"
+		findUnusedBaselineEntry="true"
+		findUnusedCode="false"
 >
     <stubs>
-        <file name="tests/stub.phpstub" preloadClasses="true"/>
+		<file name="tests/stubs/doctrine_dbal_query_querybuilder.php"/>
+		<file name="tests/stubs/oc_core_command_base.php"/>
+		<file name="tests/stubs/oc_db_connectionadapter.php"/>
+		<file name="tests/stubs/oc_db_querybuilder_querybuilder.php" preloadClasses="true"/>
+		<file name="tests/stubs/oc_db_querybuilder_typedquerybuilder.php" preloadClasses="true"/>
+		<file name="tests/stubs/oc_db_schemawrapper.php"/>
+		<file name="tests/stubs/oc_hooks_emitter.php"/>
+		<file name="tests/stubs/oc_systemconfig.php"/>
+		<file name="tests/stubs/oc_user_nouserexception.php"/>
+		<file name="tests/stubs/oca_files_event_loadsidebar.php"/>
+		<file name="tests/stubs/stecman_component_symfony_console_bashcompletion_completion_completionawareinterface.php"/>
+		<file name="tests/stubs/symfony_component_console_helper_table.php"/>
+		<file name="tests/stubs/symfony_component_console_input_inputargument.php"/>
+		<file name="tests/stubs/symfony_component_console_input_inputinterface.php"/>
+		<file name="tests/stubs/symfony_component_console_input_inputoption.php"/>
+		<file name="tests/stubs/symfony_component_console_output_outputinterface.php"/>
+		<file name="tests/stubs/symfony_component_console_question_confirmationquestion.php"/>
     </stubs>
     <projectFiles>
         <directory name="lib" />
