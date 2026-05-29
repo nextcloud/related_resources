@@ -166,7 +166,7 @@ trait TStringTools {
 		}
 
 		$s = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
-		$e = floor(log($bytes, 1024));
+		$e = (int)floor(log($bytes, 1024));
 
 		return round($bytes / pow(1024, $e), 2) . ' ' . $s[$e];
 	}
