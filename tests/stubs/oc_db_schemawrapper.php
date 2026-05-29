@@ -20,7 +20,7 @@ class SchemaWrapper implements ISchemaWrapper {
 
 	public function __construct(
 		protected Connection $connection,
-		?Schema $schema = null
+		?Schema $schema = null,
 	) {
 	}
 

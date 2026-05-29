@@ -113,7 +113,7 @@ class SystemConfig {
 	];
 
 	public function __construct(
-		private Config $config
+		private Config $config,
 	) {
 	}
 
