@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 
 namespace OCA\RelatedResources\Tools\Traits;
 
@@ -36,7 +34,6 @@ trait TDeserialize {
 		return json_decode(json_encode($data), true);
 	}
 
-
 	/**
 	 * @param array $data
 	 * @param string $class
@@ -61,7 +58,6 @@ trait TDeserialize {
 
 		return $item;
 	}
-
 
 	/**
 	 * force deserialize without checking for implementation of IDeserializable.
@@ -122,7 +118,6 @@ trait TDeserialize {
 
 		return $arr;
 	}
-
 
 	/**
 	 * @param string $json

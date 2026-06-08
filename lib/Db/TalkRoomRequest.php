@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 
 namespace OCA\RelatedResources\Db;
 
@@ -26,14 +24,12 @@ class TalkRoomRequest extends CoreQueryBuilder {
 		return $qb;
 	}
 
-
 	protected function getActorSelectSql(): ExtendedQueryBuilder {
 		$qb = $this->getQueryBuilder();
 		$qb->generateSelect(self::TABLE_TALK_ATTENDEE, self::EXTERNAL_TABLES[self::TABLE_TALK_ATTENDEE]);
 
 		return $qb;
 	}
-
 
 	/**
 	 * @throws TalkDataNotFoundException
@@ -75,7 +71,6 @@ class TalkRoomRequest extends CoreQueryBuilder {
 		return $this->getRoomFromRequest($qb);
 	}
 
-
 	/**
 	 * @param string $token
 	 *
@@ -92,7 +87,6 @@ class TalkRoomRequest extends CoreQueryBuilder {
 
 		return $this->getActorsFromRequest($qb);
 	}
-
 
 	/**
 	 * @param string $groupName

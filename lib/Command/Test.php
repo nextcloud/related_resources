@@ -59,10 +59,10 @@ class Test extends Base {
 		$this->relatedService = $relatedService;
 	}
 
-
 	/**
 	 * @return void
 	 */
+	#[\Override]
 	protected function configure() {
 		parent::configure();
 		$this->setName('related:test')
@@ -75,7 +75,6 @@ class Test extends Base {
 			->addArgument('itemId', InputArgument::REQUIRED, 'Item Id');
 	}
 
-
 	/**
 	 * @param InputInterface $input
 	 * @param OutputInterface $output
@@ -83,6 +82,7 @@ class Test extends Base {
 	 * @return int
 	 * @throws RelatedResourceProviderNotFound
 	 */
+	#[\Override]
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$userId = $input->getArgument('userId');
 		$providerId = $input->getArgument('providerId');
@@ -114,7 +114,6 @@ class Test extends Base {
 		return 0;
 	}
 
-
 	private function displayRecipients(string $providerId, string $itemId): void {
 		$result = $this->relatedService->getRelatedFromItem($providerId, $itemId);
 
@@ -125,7 +124,6 @@ class Test extends Base {
 		$output->writeln('<info>Recipients</info>: ' . json_encode($result->getRecipients()));
 		$output->writeln('');
 	}
-
 
 	private function displayRelated(string $providerId, string $itemId, string $resourceType, bool $json): void {
 		$result = $this->relatedService->getRelatedToItem($providerId, $itemId, -1, $resourceType);

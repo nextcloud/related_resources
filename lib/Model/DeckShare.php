@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 
 namespace OCA\RelatedResources\Model;
 
@@ -22,10 +20,8 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	private int $recipientType = 0;
 	private string $recipientId = '';
 
-
 	public function __construct() {
 	}
-
 
 	/**
 	 * @param int $boardId
@@ -45,7 +41,6 @@ class DeckShare implements IQueryRow, JsonSerializable {
 		return $this->boardId;
 	}
 
-
 	/**
 	 * @param int $recipientType
 	 *
@@ -63,7 +58,6 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	public function getRecipientType(): int {
 		return $this->recipientType;
 	}
-
 
 	/**
 	 * @param string $recipientId
@@ -83,12 +77,12 @@ class DeckShare implements IQueryRow, JsonSerializable {
 		return $this->recipientId;
 	}
 
-
 	/**
 	 * @param array $data
 	 *
 	 * @return IQueryRow
 	 */
+	#[\Override]
 	public function importFromDatabase(array $data): IQueryRow {
 		$this->setBoardId($this->getInt('board_id', $data))
 			->setRecipientType($this->getInt('type', $data))
@@ -100,6 +94,7 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	/**
 	 * @return array
 	 */
+	#[\Override]
 	public function jsonSerialize(): array {
 		return [
 			'boardId' => $this->getBoardId(),

@@ -28,7 +28,6 @@ use Throwable;
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'related_resources';
 
-
 	/**
 	 * @param array $params
 	 */
@@ -36,22 +35,22 @@ class Application extends App implements IBootstrap {
 		parent::__construct(self::APP_ID, $params);
 	}
 
-
 	/**
 	 * @param IRegistrationContext $context
 	 */
+	#[\Override]
 	public function register(IRegistrationContext $context): void {
 		$context->registerEventListener(LoadSidebar::class, LoadSidebarScript::class);
 		$context->registerEventListener(ShareCreatedEvent::class, FileShareUpdate::class);
 		$context->registerEventListener(ShareDeletedEvent::class, FileShareUpdate::class);
 	}
 
-
 	/**
 	 * @param IBootContext $context
 	 *
 	 * @throws Throwable
 	 */
+	#[\Override]
 	public function boot(IBootContext $context): void {
 	}
 }

@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 
 namespace OCA\RelatedResources\Model;
 
@@ -26,7 +24,6 @@ class DeckBoard implements IQueryRow, JsonSerializable {
 	public function __construct() {
 	}
 
-
 	/**
 	 * @param int $boardId
 	 *
@@ -44,7 +41,6 @@ class DeckBoard implements IQueryRow, JsonSerializable {
 	public function getBoardId(): int {
 		return $this->boardId;
 	}
-
 
 	/**
 	 * @param string $boardName
@@ -82,7 +78,6 @@ class DeckBoard implements IQueryRow, JsonSerializable {
 		return $this->owner;
 	}
 
-
 	/**
 	 * @param int $lastModified
 	 *
@@ -106,6 +101,7 @@ class DeckBoard implements IQueryRow, JsonSerializable {
 	 *
 	 * @return IQueryRow
 	 */
+	#[\Override]
 	public function importFromDatabase(array $data): IQueryRow {
 		$this->setBoardId($this->getInt('id', $data))
 			->setBoardName($this->get('title', $data))
@@ -118,6 +114,7 @@ class DeckBoard implements IQueryRow, JsonSerializable {
 	/**
 	 * @return array
 	 */
+	#[\Override]
 	public function jsonSerialize(): array {
 		return [
 			'boardId' => $this->getBoardId(),

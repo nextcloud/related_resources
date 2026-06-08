@@ -7,7 +7,6 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-
 namespace OCA\RelatedResources\Listener;
 
 use OCA\Files\Event\LoadSidebar;
@@ -20,6 +19,7 @@ use OCP\Util;
  * @template-implements IEventListener<Event>
  */
 class LoadSidebarScript implements IEventListener {
+	#[\Override]
 	public function handle(Event $event): void {
 		if (!($event instanceof LoadSidebar)) {
 			return;

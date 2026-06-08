@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 
 namespace OCA\RelatedResources\Model;
 
@@ -70,6 +68,7 @@ class Calendar implements IQueryRow, JsonSerializable {
 		return $this->calendarUri;
 	}
 
+	#[\Override]
 	public function importFromDatabase(array $data): IQueryRow {
 		$this->setCalendarId($this->getInt('id', $data))
 			->setCalendarName($this->get('displayname', $data))
@@ -79,6 +78,7 @@ class Calendar implements IQueryRow, JsonSerializable {
 		return $this;
 	}
 
+	#[\Override]
 	public function jsonSerialize(): array {
 		return [
 			'calendarName' => $this->getCalendarName(),

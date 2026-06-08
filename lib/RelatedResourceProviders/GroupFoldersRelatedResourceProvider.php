@@ -50,14 +50,17 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 		}
 	}
 
+	#[\Override]
 	public function getProviderId(): string {
 		return self::PROVIDER_ID;
 	}
 
+	#[\Override]
 	public function loadWeightCalculator(): array {
 		return [];
 	}
 
+	#[\Override]
 	public function getRelatedFromItem(CirclesManager $circlesManager, string $itemId): ?IRelatedResource {
 		$itemId = (int)$itemId;
 		if ($itemId < 1) {
@@ -77,6 +80,7 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 		return $related;
 	}
 
+	#[\Override]
 	public function getItemsAvailableToEntity(FederatedUser $entity): array {
 		$items = [];
 		foreach ($this->folders as $folder) {
@@ -99,7 +103,7 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 		return $items;
 	}
 
-
+	#[\Override]
 	public function improveRelatedResource(CirclesManager $circlesManager, IRelatedResource $entry): void {
 	}
 
@@ -160,7 +164,6 @@ class GroupFoldersRelatedResourceProvider implements IRelatedResourceProvider {
 				->setAsGroupShared();
 		}
 	}
-
 
 	/**
 	 * @param int $folderId

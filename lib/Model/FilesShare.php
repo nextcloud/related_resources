@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 
 namespace OCA\RelatedResources\Model;
 
@@ -18,7 +16,6 @@ use OCA\RelatedResources\Tools\Traits\TArrayTools;
 
 class FilesShare implements IQueryRow, JsonSerializable {
 	use TArrayTools;
-
 
 	private string $sharedWith = '';
 	private int $shareType = 0;
@@ -123,6 +120,7 @@ class FilesShare implements IQueryRow, JsonSerializable {
 		return $this->shareCreator;
 	}
 
+	#[\Override]
 	public function importFromDatabase(array $data): IQueryRow {
 		$this->setShareType($this->getInt('share_type', $data))
 			->setSharedWith($this->get('share_with', $data))
@@ -135,6 +133,7 @@ class FilesShare implements IQueryRow, JsonSerializable {
 		return $this;
 	}
 
+	#[\Override]
 	public function jsonSerialize(): array {
 		return [
 			'shareType' => $this->getShareType(),
