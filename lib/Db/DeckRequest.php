@@ -14,9 +14,55 @@ namespace OCA\RelatedResources\Db;
 use OCA\RelatedResources\Exceptions\DeckDataNotFoundException;
 use OCA\RelatedResources\Model\DeckBoard;
 use OCA\RelatedResources\Model\DeckShare;
+use OCA\RelatedResources\Tools\Db\ExtendedQueryBuilder;
+use OCA\RelatedResources\Tools\Exceptions\InvalidItemException;
+use OCA\RelatedResources\Tools\Exceptions\RowNotFoundException;
+use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\Share\IShare;
 
-class DeckRequest extends DeckRequestBuilder {
+class DeckRequest extends CoreQueryBuilder {
+	protected function getDeckBoardSelectSql(): ExtendedQueryBuilder {
+		$qb = $this->getQueryBuilder();
+		$qb->generateSelect(self::TABLE_DECK_BOARD, self::EXTERNAL_TABLES[self::TABLE_DECK_BOARD]);
+
+		return $qb;
+	}
+
+	protected function getDeckShareSelectSql(): ExtendedQueryBuilder {
+		$qb = $this->getQueryBuilder();
+		$qb->generateSelect(self::TABLE_DECK_SHARE, self::EXTERNAL_TABLES[self::TABLE_DECK_SHARE]);
+
+		return $qb;
+	}
+
+	/**
+	 * @return DeckBoard
+	 * @throws DeckDataNotFoundException
+	 */
+	public function getDeckFromRequest(ExtendedQueryBuilder $qb): DeckBoard {
+		/** @var DeckBoard $deck */
+		try {
+			$deck = $qb->asItem(DeckBoard::class);
+		} catch (InvalidItemException|RowNotFoundException $e) {
+			throw new DeckDataNotFoundException();
+		}
+
+		return $deck;
+	}
+
+	/**
+	 * @return DeckBoard[]
+	 */
+	public function getDecksFromRequest(ExtendedQueryBuilder $qb): array {
+		return $qb->asItems(DeckBoard::class);
+	}
+
+	/**
+	 * @return DeckShare[]
+	 */
+	public function getSharesFromRequest(ExtendedQueryBuilder $qb): array {
+		return $qb->asItems(DeckShare::class);
+	}
 	/**
 	 * @param int $itemId
 	 *
@@ -75,8 +121,8 @@ class DeckRequest extends DeckRequestBuilder {
 			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.id', 'ds.board_id')
 		);
 
-		$qb->limitInt('type', IShare::TYPE_GROUP, 'ds');
-		$qb->limit('participant', $groupName, 'ds');
+		$qb->andWhere($qb->expr()->eq('ds.type', $qb->createNamedParameter(IShare::TYPE_GROUP, IQueryBuilder::PARAM_INT)));
+		$qb->andWhere($qb->expr()->eq('ds.participant', $qb->createNamedParameter($groupName)));
 
 		return $this->getDecksFromRequest($qb);
 	}

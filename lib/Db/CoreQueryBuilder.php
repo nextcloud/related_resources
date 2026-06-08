@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace OCA\RelatedResources\Db;
 
 use OCA\RelatedResources\Service\ConfigService;
+use OCA\RelatedResources\Tools\Db\ExtendedQueryBuilder;
 
 /**
  *
@@ -30,9 +31,7 @@ class CoreQueryBuilder {
 	public const TABLE_CAL_OBJECTS = 'calendarobjects';
 	public const TABLE_CAL_OBJ_PROPS = 'calendarobjects_props';
 
-	protected ConfigService $configService;
-
-	public static array $externalTables = [
+	public const EXTERNAL_TABLES = [
 		self::TABLE_FILES_SHARE => [
 			'share_type',
 			'share_with',
@@ -82,19 +81,12 @@ class CoreQueryBuilder {
 		]
 	];
 
-
-	/**
-	 * @param ConfigService $configService
-	 */
-	public function __construct(ConfigService $configService) {
-		$this->configService = $configService;
+	public function __construct(
+		protected readonly ConfigService $configService,
+	) {
 	}
 
-
-	/**
-	 * @return CoreRequestBuilder
-	 */
-	public function getQueryBuilder(): CoreRequestBuilder {
-		return new CoreRequestBuilder();
+	public function getQueryBuilder(): ExtendedQueryBuilder {
+		return new ExtendedQueryBuilder();
 	}
 }

@@ -918,7 +918,7 @@ class ExtendedQueryBuilder extends QueryBuilder {
 	 * @param string $object
 	 * @param array $params
 	 *
-	 * @return IQueryRow[]
+	 * @return list<IQueryRow>
 	 */
 	public function asItems(string $object, array $params = []): array {
 		return $this->getRows([$this, 'parseSimpleSelectSql'], $object, $params);
@@ -1021,7 +1021,7 @@ class ExtendedQueryBuilder extends QueryBuilder {
 	 * @param string $object
 	 * @param array $params
 	 *
-	 * @return IQueryRow[]
+	 * @return list<IQueryRow>
 	 */
 	public function getRows(callable $method, string $object = '', array $params = []): array {
 		$rows = [];
@@ -1063,33 +1063,6 @@ class ExtendedQueryBuilder extends QueryBuilder {
 		$this->select($selectFields)
 			->from($table, $alias)
 			->setDefaultSelectAlias($alias);
-
-		return $this;
-	}
-
-
-	/**
-	 * @param array $fields
-	 * @param string $alias
-	 * @param string $prefix
-	 * @param array $default
-	 *
-	 * @return $this
-	 */
-	public function generateSelectAlias(
-		array $fields,
-		string $alias,
-		string $prefix,
-		array $default = [],
-	): self {
-		$prefix = trim($prefix) . '_';
-		foreach ($default as $k => $v) {
-			$this->addDefaultValue($prefix . $k, (string)$v);
-		}
-
-		foreach ($fields as $field) {
-			$this->selectAlias($alias . '.' . $field, $prefix . $field);
-		}
 
 		return $this;
 	}

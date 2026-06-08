@@ -14,8 +14,54 @@ namespace OCA\RelatedResources\Db;
 use OCA\RelatedResources\Exceptions\TalkDataNotFoundException;
 use OCA\RelatedResources\Model\TalkActor;
 use OCA\RelatedResources\Model\TalkRoom;
+use OCA\RelatedResources\Tools\Db\ExtendedQueryBuilder;
+use OCA\RelatedResources\Tools\Exceptions\InvalidItemException;
+use OCA\RelatedResources\Tools\Exceptions\RowNotFoundException;
 
-class TalkRoomRequest extends TalkRoomRequestBuilder {
+class TalkRoomRequest extends CoreQueryBuilder {
+	protected function getTalkRoomSelectSql(): ExtendedQueryBuilder {
+		$qb = $this->getQueryBuilder();
+		$qb->generateSelect(self::TABLE_TALK_ROOM, self::EXTERNAL_TABLES[self::TABLE_TALK_ROOM]);
+
+		return $qb;
+	}
+
+
+	protected function getActorSelectSql(): ExtendedQueryBuilder {
+		$qb = $this->getQueryBuilder();
+		$qb->generateSelect(self::TABLE_TALK_ATTENDEE, self::EXTERNAL_TABLES[self::TABLE_TALK_ATTENDEE]);
+
+		return $qb;
+	}
+
+
+	/**
+	 * @throws TalkDataNotFoundException
+	 */
+	public function getRoomFromRequest(ExtendedQueryBuilder $qb): TalkRoom {
+		/** @var TalkRoom $room */
+		try {
+			$room = $qb->asItem(TalkRoom::class);
+		} catch (InvalidItemException|RowNotFoundException $e) {
+			throw new TalkDataNotFoundException();
+		}
+
+		return $room;
+	}
+
+	/**
+	 * @return TalkRoom[]
+	 */
+	public function getRoomsFromRequest(ExtendedQueryBuilder $qb): array {
+		return $qb->asItems(TalkRoom::class);
+	}
+
+	/**
+	 * @return TalkActor[]
+	 */
+	public function getActorsFromRequest(ExtendedQueryBuilder $qb): array {
+		return $qb->asItems(TalkActor::class);
+	}
 	/**
 	 * @param string $token
 	 *
@@ -45,25 +91,6 @@ class TalkRoomRequest extends TalkRoomRequestBuilder {
 		$qb->limit('token', $token, 'tr');
 
 		return $this->getActorsFromRequest($qb);
-	}
-
-
-	/**
-	 * @param string $singleId
-	 *
-	 * @return TalkRoom[]
-	 */
-	public function getRoomsAvailableToCircle(string $singleId): array {
-		$qb = $this->getTalkRoomSelectSql();
-		$qb->innerJoin(
-			$qb->getDefaultSelectAlias(), self::TABLE_TALK_ATTENDEE, 'ta',
-			$qb->expr()->eq($qb->getDefaultSelectAlias() . '.id', 'ta.room_id')
-		);
-
-		$qb->limit('actor_type', 'circles', 'ta');
-		$qb->limit('actor_id', $singleId, 'ta');
-
-		return $this->getRoomsFromRequest($qb);
 	}
 
 

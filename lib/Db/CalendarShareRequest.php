@@ -14,8 +14,53 @@ namespace OCA\RelatedResources\Db;
 use OCA\RelatedResources\Exceptions\CalendarDataNotFoundException;
 use OCA\RelatedResources\Model\Calendar;
 use OCA\RelatedResources\Model\CalendarShare;
+use OCA\RelatedResources\Tools\Db\ExtendedQueryBuilder;
+use OCA\RelatedResources\Tools\Exceptions\InvalidItemException;
+use OCA\RelatedResources\Tools\Exceptions\RowNotFoundException;
 
-class CalendarShareRequest extends CalendarShareRequestBuilder {
+class CalendarShareRequest extends CoreQueryBuilder {
+
+	protected function getCalendarShareSelectSql(): ExtendedQueryBuilder {
+		$qb = $this->getQueryBuilder();
+		$qb->generateSelect(self::TABLE_DAV_SHARE, self::EXTERNAL_TABLES[self::TABLE_DAV_SHARE]);
+
+		return $qb;
+	}
+
+	/**
+	 * @return Calendar
+	 * @throws CalendarDataNotFoundException
+	 */
+	public function getCalendarFromRequest(ExtendedQueryBuilder $qb): Calendar {
+		/** @var Calendar $calendar */
+		try {
+			$calendar = $qb->asItem(Calendar::class);
+		} catch (InvalidItemException|RowNotFoundException $e) {
+			throw new CalendarDataNotFoundException();
+		}
+
+		return $calendar;
+	}
+
+	/**
+	 * @return Calendar[]
+	 */
+	public function getCalendarsFromRequest(ExtendedQueryBuilder $qb): array {
+		return $qb->asItems(Calendar::class);
+	}
+
+	/**
+	 * @return CalendarShare[]
+	 */
+	public function getSharesFromRequest(ExtendedQueryBuilder $qb): array {
+		return $qb->asItems(CalendarShare::class);
+	}
+	protected function getCalendarSelectSql():  ExtendedQueryBuilder {
+		$qb = $this->getQueryBuilder();
+		$qb->generateSelect(self::TABLE_CALENDARS, self::EXTERNAL_TABLES[self::TABLE_CALENDARS]);
+
+		return $qb;
+	}
 	/**
 	 * @param string $principalUri
 	 * @param string $uri
