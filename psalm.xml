@@ -74,12 +74,6 @@
                 <referencedFunction name="OCA\RelatedResources\Controller\ApiController::serialize" />
             </errorLevel>
         </InvalidArgument>
-        <UndefinedMethod>
-            <errorLevel type="suppress">
-                <referencedMethod name="OC\DB\SchemaWrapper::hasTable" />
-                <referencedMethod name="OC\DB\SchemaWrapper::dropTable" />
-            </errorLevel>
-        </UndefinedMethod>
         <UndefinedInterfaceMethod>
             <errorLevel type="suppress">
                 <referencedMethod name="(OCP\Files\Mount\IMountPoint&amp;OCA\GroupFolders\Mount\GroupMountPoint)::getFolderId" />

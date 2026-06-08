@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 
 namespace OCA\RelatedResources\LinkWeightCalculators;
 
@@ -26,6 +24,7 @@ class TimeWeightCalculator implements ILinkWeightCalculator {
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function weight(IRelatedResource $current, array &$result): void {
 		if (!$current->hasMeta(RelatedResource::LINK_CREATION)
 			|| !$current->hasMeta(RelatedResource::LINK_CREATOR)

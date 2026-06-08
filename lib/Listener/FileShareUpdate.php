@@ -28,6 +28,7 @@ class FileShareUpdate implements IEventListener {
 		$this->relatedService = $relatedService;
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if (!($event instanceof ShareCreatedEvent)
 			&& !($event instanceof ShareDeletedEvent)) {

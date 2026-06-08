@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 
 namespace OCA\RelatedResources\Model;
 
@@ -59,6 +57,7 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		$this->itemId = $itemId;
 	}
 
+	#[\Override]
 	public function getProviderId(): string {
 		return $this->providerId;
 	}
@@ -69,6 +68,7 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		return $this;
 	}
 
+	#[\Override]
 	public function getItemId(): string {
 		return $this->itemId;
 	}
@@ -79,70 +79,79 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		return $this;
 	}
 
+	#[\Override]
 	public function setTitle(string $title): IRelatedResource {
 		$this->title = $title;
 
 		return $this;
 	}
 
+	#[\Override]
 	public function getTitle(): string {
 		return $this->title;
 	}
 
-
+	#[\Override]
 	public function setSubtitle(string $subtitle): IRelatedResource {
 		$this->subtitle = $subtitle;
 
 		return $this;
 	}
 
+	#[\Override]
 	public function getSubtitle(): string {
 		return $this->subtitle;
 	}
 
-
+	#[\Override]
 	public function setTooltip(string $tooltip): self {
 		$this->tooltip = $tooltip;
 
 		return $this;
 	}
 
+	#[\Override]
 	public function getTooltip(): string {
 		return $this->tooltip;
 	}
 
-
+	#[\Override]
 	public function setIcon(string $icon): self {
 		$this->icon = $icon;
 
 		return $this;
 	}
 
+	#[\Override]
 	public function getIcon(): string {
 		return $this->icon;
 	}
 
+	#[\Override]
 	public function setPreview(string $preview): self {
 		$this->preview = $preview;
 
 		return $this;
 	}
 
+	#[\Override]
 	public function getPreview(): string {
 		return $this->preview;
 	}
 
-
+	#[\Override]
 	public function setUrl(string $url): IRelatedResource {
 		$this->url = $url;
 
 		return $this;
 	}
 
+	#[\Override]
 	public function getUrl(): string {
 		return $this->url;
 	}
 
+	#[\Override]
 	public function improve(
 		float $quality,
 		string $type,
@@ -164,6 +173,7 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		return $this;
 	}
 
+	#[\Override]
 	public function getScore(): float {
 		return $this->score;
 	}
@@ -174,16 +184,19 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		return $this;
 	}
 
+	#[\Override]
 	public function setVirtualGroup(array $virtualGroup): self {
 		$this->virtualGroup = $virtualGroup;
 
 		return $this;
 	}
 
+	#[\Override]
 	public function getVirtualGroup(): array {
 		return $this->virtualGroup;
 	}
 
+	#[\Override]
 	public function addToVirtualGroup(string $singleId): self {
 		if (!in_array($singleId, $this->virtualGroup)) {
 			$this->virtualGroup[] = $singleId;
@@ -192,22 +205,26 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		return $this;
 	}
 
+	#[\Override]
 	public function mergeVirtualGroup(array $virtualGroup): self {
 		$this->virtualGroup = array_values(array_unique(array_merge($this->virtualGroup, $virtualGroup)));
 
 		return $this;
 	}
 
+	#[\Override]
 	public function setRecipients(array $recipients): self {
 		$this->recipients = $recipients;
 
 		return $this;
 	}
 
+	#[\Override]
 	public function getRecipients(): array {
 		return $this->recipients;
 	}
 
+	#[\Override]
 	public function addRecipient(string $singleId): self {
 		if (!in_array($singleId, $this->recipients)) {
 			$this->recipients[] = $singleId;
@@ -216,23 +233,26 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		return $this;
 	}
 
+	#[\Override]
 	public function mergeRecipients(array $recipients): self {
 		$this->recipients = array_values(array_unique(array_merge($this->recipients, $recipients)));
 
 		return $this;
 	}
 
+	#[\Override]
 	public function setAsGroupShared(bool $groupShared = true): self {
 		$this->groupShared = $groupShared;
 
 		return $this;
 	}
 
+	#[\Override]
 	public function isGroupShared(): bool {
 		return $this->groupShared;
 	}
 
-
+	#[\Override]
 	public function getImprovements(): array {
 		return $this->improvements;
 	}
@@ -253,7 +273,7 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		return $this->currentQuality;
 	}
 
-
+	#[\Override]
 	public function import(array $data): IDeserializable {
 		$this->setProviderId($this->get('providerId', $data));
 		$this->setItemId($this->get('itemId', $data));
@@ -274,6 +294,7 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		return $this;
 	}
 
+	#[\Override]
 	public function jsonSerialize(): array {
 		return [
 			'providerId' => $this->getProviderId(),
@@ -310,46 +331,55 @@ class RelatedResource implements IRelatedResource, IDeserializable, JsonSerializ
 		return $new;
 	}
 
+	#[\Override]
 	public function setMeta(string $k, string $v): IRelatedResource {
 		$this->metas[$k] = $v;
 
 		return $this;
 	}
 
+	#[\Override]
 	public function setMetaInt(string $k, int $v): IRelatedResource {
 		$this->metas[$k] = $v;
 
 		return $this;
 	}
 
+	#[\Override]
 	public function setMetaArray(string $k, array $v): IRelatedResource {
 		$this->metas[$k] = $v;
 
 		return $this;
 	}
 
+	#[\Override]
 	public function setMetas(array $metas): IRelatedResource {
 		$this->metas = array_merge($this->metas, $metas);
 
 		return $this;
 	}
 
+	#[\Override]
 	public function hasMeta(string $k): bool {
 		return $this->validKey($k, $this->metas);
 	}
 
+	#[\Override]
 	public function getMeta(string $k): string {
 		return $this->get($k, $this->metas);
 	}
 
+	#[\Override]
 	public function getMetaInt(string $k): int {
 		return $this->getInt($k, $this->metas);
 	}
 
+	#[\Override]
 	public function getMetaArray(string $k): array {
 		return $this->getArray($k, $this->metas);
 	}
 
+	#[\Override]
 	public function getMetas(): array {
 		return $this->metas;
 	}

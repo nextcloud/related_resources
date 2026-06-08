@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -18,15 +17,14 @@ use OCA\RelatedResources\Tools\Traits\TArrayTools;
 class AncienShareWeightCalculator implements ILinkWeightCalculator {
 	use TArrayTools;
 
-
 	private static float $RATIO_5Y = 0.4;
 	private static float $RATIO_3Y = 0.7;
 	private static float $RATIO_1Y = 0.85;
 
-
 	/**
 	 * @inheritDoc
 	 */
+	#[\Override]
 	public function weight(IRelatedResource $current, array &$result): void {
 		if (!$current->hasMeta(RelatedResource::LINK_CREATION)) {
 			return;
@@ -54,9 +52,9 @@ class AncienShareWeightCalculator implements ILinkWeightCalculator {
 
 			// calculate an improvement base on 0.75 up to 1.2, based on difference of time between 2 shares
 			// with 1.0 score for a 3 month period
-			$neutral = 90 * 24 * 3600;
-			$ratio = $diff - $neutral;
-			$impr = 1 - ($ratio * 0.2 / $neutral);
+			$neutral = 90.0 * 24.0 * 3600.0;
+			$ratio = (float)$diff - $neutral;
+			$impr = 1.0 - ($ratio * 0.2 / $neutral);
 			$impr = max($impr, 0.75);
 			$entry->improve($impr, 'ancien_3m');
 		}

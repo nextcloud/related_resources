@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 
 namespace OCA\RelatedResources\RelatedResourceProviders;
 
@@ -41,22 +39,22 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 	) {
 	}
 
-
+	#[\Override]
 	public function getProviderId(): string {
 		return self::PROVIDER_ID;
 	}
 
-
+	#[\Override]
 	public function loadWeightCalculator(): array {
 		return [];
 	}
-
 
 	/**
 	 * @param string $itemId
 	 *
 	 * @return IRelatedResource|null
 	 */
+	#[\Override]
 	public function getRelatedFromItem(CirclesManager $circlesManager, string $itemId): ?IRelatedResource {
 		/** @var TalkRoom $room */
 		try {
@@ -85,7 +83,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 		return $related;
 	}
 
-
+	#[\Override]
 	public function improveRelatedResource(CirclesManager $circlesManager, IRelatedResource $entry): void {
 		if (!$entry->hasMeta('1on1')) {
 			return;
@@ -112,6 +110,7 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 		}
 	}
 
+	#[\Override]
 	public function getItemsAvailableToEntity(FederatedUser $entity): array {
 		switch ($entity->getBasedOn()->getSource()) {
 			case Member::TYPE_USER:
@@ -125,7 +124,6 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 			case Member::TYPE_CIRCLE:
 				// We skip circle shares for related resources as they are covered by team resources
 				return [];
-
 			default:
 				return [];
 		}
@@ -134,7 +132,6 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 			return $room->getToken();
 		}, $shares);
 	}
-
 
 	private function convertToRelatedResource(TalkRoom $share): IRelatedResource {
 		$url = '';
@@ -175,7 +172,6 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 		return $related;
 	}
 
-
 	/**
 	 * @param RelatedResource $related
 	 * @param TalkActor $actor
@@ -196,7 +192,6 @@ class TalkRelatedResourceProvider implements IRelatedResourceProvider {
 		} catch (Exception $e) {
 		}
 	}
-
 
 	/**
 	 * @param TalkActor $actor

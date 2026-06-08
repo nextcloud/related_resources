@@ -8,7 +8,7 @@
 		"classmap-authoritative": true,
 		"autoloader-suffix": "RelatedResources",
 		"platform": {
-			"php": "8.1"
+			"php": "8.2.27"
 		}
 	},
 	"authors": [
@@ -29,13 +29,13 @@
 		"psalm:init": "psalm --init",
 		"psalm:update-baseline": "psalm --threads=1 --update-baseline",
 		"psalm:clear": "psalm --clear-cache && psalm --clear-global-cache",
-		"psalm:fix": "psalm --alter --issues=InvalidReturnType,MissingReturnType,InvalidNullableReturnType,MissingParamType,InvalidFalsableReturnType",
+		"psalm:fix": "psalm --alter",
 		"lint": "find . -name \\*.php -not -path './vendor/*' -print0 | xargs -0 -n1 php -l",
 		"test:unit": "echo 'Only testing installation of the app'"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^10.5",
-		"vimeo/psalm": "^5.10",
+		"vimeo/psalm": "6.14.3",
 		"nextcloud/coding-standard": "^1.0",
 		"nextcloud/ocp": "dev-master"
 	},

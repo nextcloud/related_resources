@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 
 namespace OCA\RelatedResources\RelatedResourceProviders;
 
@@ -46,20 +44,22 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		$this->deckSharesRequest = $deckSharesRequest;
 	}
 
+	#[\Override]
 	public function getProviderId(): string {
 		return self::PROVIDER_ID;
 	}
 
+	#[\Override]
 	public function loadWeightCalculator(): array {
 		return [];
 	}
-
 
 	/**
 	 * @param string $itemId
 	 *
 	 * @return IRelatedResource|null
 	 */
+	#[\Override]
 	public function getRelatedFromItem(CirclesManager $circlesManager, string $itemId): ?IRelatedResource {
 		$itemId = (int)$itemId;
 
@@ -81,7 +81,7 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		return $related;
 	}
 
-
+	#[\Override]
 	public function getItemsAvailableToEntity(FederatedUser $entity): array {
 		switch ($entity->getBasedOn()->getSource()) {
 			case Member::TYPE_USER:
@@ -95,7 +95,6 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 			case Member::TYPE_CIRCLE:
 				// We skip circle shares for related resources as they are covered by team resources
 				return [];
-
 			default:
 				return [];
 		}
@@ -105,7 +104,7 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		}, $shares);
 	}
 
-
+	#[\Override]
 	public function improveRelatedResource(CirclesManager $circlesManager, IRelatedResource $entry): void {
 	}
 
@@ -142,7 +141,6 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		return $related;
 	}
 
-
 	/**
 	 * @param RelatedResource $related
 	 * @param DeckShare $share
@@ -163,7 +161,6 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		} catch (Exception $e) {
 		}
 	}
-
 
 	/**
 	 * @param CirclesManager $circlesManager

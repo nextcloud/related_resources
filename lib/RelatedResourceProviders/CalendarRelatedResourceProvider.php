@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 
 namespace OCA\RelatedResources\RelatedResourceProviders;
 
@@ -45,10 +43,12 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 		$this->calendarShareRequest = $calendarShareRequest;
 	}
 
+	#[\Override]
 	public function getProviderId(): string {
 		return self::PROVIDER_ID;
 	}
 
+	#[\Override]
 	public function loadWeightCalculator(): array {
 		return [];
 	}
@@ -58,6 +58,7 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 	 *
 	 * @return IRelatedResource|null
 	 */
+	#[\Override]
 	public function getRelatedFromItem(CirclesManager $circlesManager, string $itemId): ?IRelatedResource {
 		[$principalUri, $uri] = explode(':', $itemId, 2);
 		$itemId = (int)$itemId;
@@ -88,7 +89,7 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 		return $related;
 	}
 
-
+	#[\Override]
 	public function getItemsAvailableToEntity(FederatedUser $entity): array {
 		switch ($entity->getBasedOn()->getSource()) {
 			case Member::TYPE_USER:
@@ -112,11 +113,9 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 		}, $shares);
 	}
 
-
+	#[\Override]
 	public function improveRelatedResource(CirclesManager $circlesManager, IRelatedResource $entry): void {
 	}
-
-
 
 	private function convertToRelatedResource(Calendar $calendar): IRelatedResource {
 		$related = new RelatedResource(self::PROVIDER_ID, $calendar->getId());
@@ -157,7 +156,6 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 		return $related;
 	}
 
-
 	/**
 	 * @param RelatedResource $related
 	 * @param CalendarShare $share
@@ -178,7 +176,6 @@ class CalendarRelatedResourceProvider implements IRelatedResourceProvider {
 		} catch (Exception $e) {
 		}
 	}
-
 
 	private function completeShareDetails(CalendarShare $share): void {
 		[$type, $user] = explode('/', substr($share->getSharePrincipalUri(), 11), 2);

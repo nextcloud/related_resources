@@ -22,14 +22,17 @@ class AccountRelatedResourceProvider implements IRelatedResourceProvider {
 	public function __construct() {
 	}
 
+	#[\Override]
 	public function getProviderId(): string {
 		return self::PROVIDER_ID;
 	}
 
+	#[\Override]
 	public function loadWeightCalculator(): array {
 		return [];
 	}
 
+	#[\Override]
 	public function getRelatedFromItem(CirclesManager $circlesManager, string $itemId): ?IRelatedResource {
 		$related = new RelatedResource(self::PROVIDER_ID, $itemId);
 		$related->setTitle('Account ' . $itemId);
@@ -47,9 +50,11 @@ class AccountRelatedResourceProvider implements IRelatedResourceProvider {
 		return $related;
 	}
 
+	#[\Override]
 	public function improveRelatedResource(CirclesManager $circlesManager, IRelatedResource $entry): void {
 	}
 
+	#[\Override]
 	public function getItemsAvailableToEntity(FederatedUser $entity): array {
 		return [];
 	}
