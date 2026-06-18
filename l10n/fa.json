@@ -1,18 +1,18 @@
 { "translations": {
     "Calendar" : "تقویم",
-    "Calendar \"%s\"" : "تقویم \"%s\"",
-    "Deck" : "برگه‌دان",
-    "Deck board \"%s\"" : "تخته برگه‌دان \"%s\"",
-    "Files" : "پوشه‌ها",
-    "File \"%s\"" : "پوشه \"%s\"",
+    "Calendar \"%s\"" : "تقویم «%s»",
+    "Deck" : "دک",
+    "Deck board \"%s\"" : "برد دک «%s»",
+    "Files" : "فایل‌ها",
+    "File \"%s\"" : "فایل «%s»",
     "Group Folder" : "پوشه گروهی",
-    "Group Folder \"%s\"" : "پوشه گروهی \"%s\"",
-    "Talk conversation" : "گفتگوی Talk",
+    "Group Folder \"%s\"" : "پوشه گروهی «%s»",
+    "Talk conversation" : "گفتگوی تاک",
     "Conversation with %s" : "گفتگو با %s",
-    "Talk" : "گفتگو",
-    "Talk conversation \"%s\"" : "گفتگوی Talk \"%s\"",
+    "Talk" : "تاک",
+    "Talk conversation \"%s\"" : "گفتگوی تاک «%s»",
     "Related Resources" : "منابع مرتبط",
-    "Displays resources related to current item in right panel" : "نمایش منابع مرتبط به این مورد در نوار سمت راست",
-    "Displays resources related to current item in right panel." : "نمایش منابع مرتبط به این مورد در نوار سمت راست"
+    "Displays resources related to current item in right panel" : "نمایش منابع مرتبط با آیتم جاری در پنل سمت راست",
+    "Displays resources related to current item in right panel." : "نمایش منابع مرتبط با آیتم جاری در پنل سمت راست"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }
