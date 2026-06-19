@@ -3,8 +3,8 @@ OC.L10N.register(
     {
     "Calendar" : "تقویم",
     "Calendar \"%s\"" : "تقویم «%s»",
-    "Deck" : "دک",
-    "Deck board \"%s\"" : "برد دک «%s»",
+    "Deck" : "کارتابل",
+    "Deck board \"%s\"" : "برد کارتابل «%s»",
     "Files" : "فایل‌ها",
     "File \"%s\"" : "فایل «%s»",
     "Group Folder" : "پوشه گروهی",
