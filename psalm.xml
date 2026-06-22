@@ -6,6 +6,7 @@
         xmlns="https://getpsalm.org/schema/config"
         xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
         errorBaseline="tests/psalm-baseline.xml"
+	    findUnusedBaselineEntry="true"
 >
     <stubs>
         <file name="tests/stub.phpstub" preloadClasses="true"/>
@@ -27,7 +28,6 @@
             <errorLevel type="suppress">
                 <referencedClass name="OC" />
                 <referencedClass name="OC\DB\Connection" />
-                <referencedClass name="OCA\Files\Event\LoadSidebar" />
                 <referencedClass name="OCA\Circles\CirclesManager" />
                 <referencedClass name="OCA\Circles\Model\Member" />
                 <referencedClass name="OCA\Circles\Model\FederatedUser" />
