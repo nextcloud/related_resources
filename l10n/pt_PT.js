@@ -13,6 +13,7 @@ OC.L10N.register(
     "Conversation with %s" : "Conversação com %s",
     "Talk" : "Falar",
     "Talk conversation \"%s\"" : "Conversa Talk \"%s\"",
+    "Related Resources" : "Recursos Relacionados",
     "Displays resources related to current item in right panel" : "Exibe recursos relacionados ao item atual no painel direito",
     "Displays resources related to current item in right panel." : "Exibe recursos relacionados ao item atual no painel direito."
 },
