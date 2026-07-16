@@ -544,6 +544,7 @@ namespace OC\DB\QueryBuilder {
         public function quoteAlias($alias) { }
 		public function runAcrossAllShards(): self { }
 		public function getOutputColumns(): array {}
+		public function forUpdate(ConflictResolutionMode $conflictResolutionMode = ConflictResolutionMode::Ordinary): self {}
     }
 }
 
@@ -1009,4 +1010,9 @@ namespace OC\Files\Storage\Wrapper{
 
 namespace OC\AppFramework\Middleware\Security\Exceptions {
 	class NotLoggedInException extends \Exception {}
+}
+
+namespace OCA\Files\Event {
+class LoadSidebar extends \OCP\EventDispatcher\Event {
+}
 }

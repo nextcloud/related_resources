@@ -17,7 +17,7 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\Util;
 
 /**
- * @template-implements IEventListener<Event>
+ * @template-implements IEventListener<LoadSidebar>
  */
 class LoadSidebarScript implements IEventListener {
 	public function handle(Event $event): void {
