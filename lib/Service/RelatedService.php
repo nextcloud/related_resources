@@ -7,7 +7,6 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-
 namespace OCA\RelatedResources\Service;
 
 use Exception;
@@ -85,7 +84,6 @@ class RelatedService {
 		}
 	}
 
-
 	/**
 	 * @param string $providerId
 	 * @param string $itemId
@@ -115,7 +113,6 @@ class RelatedService {
 
 		return ($chunk > -1) ? array_slice($result, 0, $chunk) : $result;
 	}
-
 
 	/**
 	 * Main method that will return resource related an item (identified by providerId and itemId)
@@ -215,7 +212,6 @@ class RelatedService {
 		return $result;
 	}
 
-
 	/**
 	 * get the RelatedResource from an item. including all recipient/virtual groups
 	 *
@@ -245,7 +241,6 @@ class RelatedService {
 
 		return $result;
 	}
-
 
 	/**
 	 * @param string $providerId
@@ -309,7 +304,6 @@ class RelatedService {
 	): string {
 		return 'relatedFromItem/' . $providerId . '::' . $itemId;
 	}
-
 
 	/**
 	 * @param IRelatedResourceProvider $provider
@@ -399,7 +393,6 @@ class RelatedService {
 		return 'availableItem/' . $providerId . '::' . $singleId;
 	}
 
-
 	/**
 	 * @param RelatedResource $current
 	 * @param RelatedResource[] $result
@@ -429,7 +422,6 @@ class RelatedService {
 			return false;
 		});
 	}
-
 
 	/**
 	 * @param IRelatedResource[] $result
@@ -465,7 +457,6 @@ class RelatedService {
 			return false;
 		});
 	}
-
 
 	/**
 	 * @param IRelatedResource[] $result
@@ -525,7 +516,6 @@ class RelatedService {
 		return $this->weightCalculators;
 	}
 
-
 	/**
 	 * @return IRelatedResourceProvider[]
 	 */
@@ -537,7 +527,6 @@ class RelatedService {
 		} catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
 			$this->logger->notice($e->getMessage());
 		}
-
 
 		try {
 			$providers[] = Server::get(AccountRelatedResourceProvider::class);

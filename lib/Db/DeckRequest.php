@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 
 namespace OCA\RelatedResources\Db;
 
@@ -30,7 +28,6 @@ class DeckRequest extends DeckRequestBuilder {
 		return $this->getDeckFromRequest($qb);
 	}
 
-
 	/**
 	 * @param int $boardId
 	 *
@@ -42,7 +39,6 @@ class DeckRequest extends DeckRequestBuilder {
 
 		return $this->getSharesFromRequest($qb);
 	}
-
 
 	/**
 	 * @param string $singleId
@@ -62,7 +58,6 @@ class DeckRequest extends DeckRequestBuilder {
 		return $this->getDecksFromRequest($qb);
 	}
 
-
 	/**
 	 * @param string $groupName
 	 *
@@ -80,7 +75,6 @@ class DeckRequest extends DeckRequestBuilder {
 
 		return $this->getDecksFromRequest($qb);
 	}
-
 
 	/**
 	 * @param string $userName

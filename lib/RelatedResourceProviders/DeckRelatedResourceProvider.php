@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 
 namespace OCA\RelatedResources\RelatedResourceProviders;
 
@@ -54,7 +52,6 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		return [];
 	}
 
-
 	/**
 	 * @param string $itemId
 	 *
@@ -81,7 +78,6 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		return $related;
 	}
 
-
 	public function getItemsAvailableToEntity(FederatedUser $entity): array {
 		switch ($entity->getBasedOn()->getSource()) {
 			case Member::TYPE_USER:
@@ -95,7 +91,6 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 			case Member::TYPE_CIRCLE:
 				// We skip circle shares for related resources as they are covered by team resources
 				return [];
-
 			default:
 				return [];
 		}
@@ -104,7 +99,6 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 			return (string)$board->getBoardId();
 		}, $shares);
 	}
-
 
 	public function improveRelatedResource(CirclesManager $circlesManager, IRelatedResource $entry): void {
 	}
@@ -142,7 +136,6 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		return $related;
 	}
 
-
 	/**
 	 * @param RelatedResource $related
 	 * @param DeckShare $share
@@ -163,7 +156,6 @@ class DeckRelatedResourceProvider implements IRelatedResourceProvider {
 		} catch (Exception $e) {
 		}
 	}
-
 
 	/**
 	 * @param CirclesManager $circlesManager
