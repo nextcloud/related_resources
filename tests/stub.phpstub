@@ -543,6 +543,7 @@ namespace OC\DB\QueryBuilder {
         public function getColumnName($column, $tableAlias = '') { }
         public function quoteAlias($alias) { }
 		public function runAcrossAllShards(): self { }
+		public function forUpdate(): self { }
 		public function getOutputColumns(): array {}
     }
 }
