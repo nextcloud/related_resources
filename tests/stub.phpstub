@@ -504,7 +504,7 @@ namespace OC\DB\QueryBuilder {
         public function setMaxResults($maxResults) { }
         public function getMaxResults() { }
         public function select(...$selects) { }
-        public function selectAlias($select, $alias) { }
+        public function selectAlias($select, $alias): self { }
         public function selectDistinct($select) { }
         public function addSelect(...$selects) { }
         public function delete($delete = null, $alias = null) { }
