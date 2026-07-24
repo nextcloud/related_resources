@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 
 namespace OCA\RelatedResources\Model;
 
@@ -22,10 +20,8 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	private int $recipientType = 0;
 	private string $recipientId = '';
 
-
 	public function __construct() {
 	}
-
 
 	/**
 	 * @param int $boardId
@@ -45,7 +41,6 @@ class DeckShare implements IQueryRow, JsonSerializable {
 		return $this->boardId;
 	}
 
-
 	/**
 	 * @param int $recipientType
 	 *
@@ -64,7 +59,6 @@ class DeckShare implements IQueryRow, JsonSerializable {
 		return $this->recipientType;
 	}
 
-
 	/**
 	 * @param string $recipientId
 	 *
@@ -82,7 +76,6 @@ class DeckShare implements IQueryRow, JsonSerializable {
 	public function getRecipientId(): string {
 		return $this->recipientId;
 	}
-
 
 	/**
 	 * @param array $data
