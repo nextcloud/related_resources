@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-
 /**
  * SPDX-FileCopyrightText: 2022 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
-
 
 namespace OCA\RelatedResources\Db;
 
@@ -31,7 +29,6 @@ class CalendarShareRequest extends CalendarShareRequestBuilder {
 		return $this->getCalendarFromRequest($qb);
 	}
 
-
 	/**
 	 * @param int $calendarId
 	 *
@@ -44,7 +41,6 @@ class CalendarShareRequest extends CalendarShareRequestBuilder {
 
 		return $this->getSharesFromRequest($qb);
 	}
-
 
 	/**
 	 * @param string $singleId
@@ -64,7 +60,6 @@ class CalendarShareRequest extends CalendarShareRequestBuilder {
 		return $this->getCalendarsFromRequest($qb);
 	}
 
-
 	/**
 	 * @param string $groupName
 	 *
@@ -82,7 +77,6 @@ class CalendarShareRequest extends CalendarShareRequestBuilder {
 
 		return $this->getCalendarsFromRequest($qb);
 	}
-
 
 	/**
 	 * @param string $userName
