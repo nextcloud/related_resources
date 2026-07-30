@@ -11,8 +11,8 @@ OC.L10N.register(
     "Group Folder \"%s\"" : "Grupės aplankas \"%s\"",
     "Talk conversation" : "„Pokalbiai\" pokalbis",
     "Conversation with %s" : "Pokalbis su %s",
-    "Talk" : "\"Talk\"",
-    "Talk conversation \"%s\"" : "„Pokalbių\" pokalbis \"%s\"",
+    "Talk" : "„Pokalbiai\"",
+    "Talk conversation \"%s\"" : "„Pokalbiai\" pokalbis \"%s\"",
     "Related Resources" : "Susiję ištekliai",
     "Displays resources related to current item in right panel" : "Dešiniajame skydelyje rodomi su dabartiniu elementu susiję ištekliai",
     "Displays resources related to current item in right panel." : "Dešiniajame skydelyje rodomi su dabartiniu elementu susiję ištekliai"
