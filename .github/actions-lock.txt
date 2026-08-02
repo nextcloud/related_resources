@@ -17,3 +17,4 @@ d1821b8a816578070ed8fd018f321f6d pr-feedback.yml
 6dc046dfbca5dc65d938265c518fcac4 psalm.yml
 2dbec18233063b42f4d8e03bbb43671c reuse.yml
 f5632e6d28c6afca9d4d46131fb48d57 update-nextcloud-ocp.yml
+28dcf55e283b85c292fea0d0b2a15a8a npm-build.yml
