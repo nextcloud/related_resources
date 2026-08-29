@@ -3,8 +3,8 @@ OC.L10N.register(
     {
     "Calendar" : "Takvim",
     "Calendar \"%s\"" : "\"%s\" takvimi",
-    "Deck" : "Tahta",
-    "Deck board \"%s\"" : "\"%s\" tahta panosu",
+    "Deck" : "Deste",
+    "Deck board \"%s\"" : "\"%s\" Deste panosu",
     "Files" : "Dosyalar",
     "File \"%s\"" : "\"%s\" dosyası",
     "Group Folder" : "Grup klasörü",
