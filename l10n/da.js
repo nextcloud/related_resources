@@ -9,10 +9,10 @@ OC.L10N.register(
     "File \"%s\"" : "Fil \"%s\"",
     "Group Folder" : "Gruppemappe",
     "Group Folder \"%s\"" : "Gruppemappe \"%s\"",
-    "Talk conversation" : "Snak samtale",
+    "Talk conversation" : "Talk samtale",
     "Conversation with %s" : "Samtale med %s",
-    "Talk" : "Snak",
-    "Talk conversation \"%s\"" : "Snak samtale \"%s\"",
+    "Talk" : "Talk",
+    "Talk conversation \"%s\"" : "Talk samtale \"%s\"",
     "Related Resources" : "Relaterede ressourcer",
     "Displays resources related to current item in right panel" : "Viser ressourcer relateret til det aktuelle element i højre panel",
     "Displays resources related to current item in right panel." : "Viser ressourcer relateret til det aktuelle element i højre panel."
