@@ -7,7 +7,7 @@ OC.L10N.register(
     "Deck board \"%s\"" : "Tabule v Deck \"%s\"",
     "Files" : "Súbory",
     "File \"%s\"" : "Súbor \"%s\"",
-    "Group Folder" : "Skupinový adresár",
+    "Group Folder" : "Skupinový priečinok",
     "Group Folder \"%s\"" : "Skupinový adresár \"%s\"",
     "Talk conversation" : "Konverzácia v Rozhovoroch",
     "Conversation with %s" : "Koverzácia s %s",
