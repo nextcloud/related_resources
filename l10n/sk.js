@@ -12,7 +12,7 @@ OC.L10N.register(
     "Talk conversation" : "Konverzácia v Rozhovoroch",
     "Conversation with %s" : "Koverzácia s %s",
     "Talk" : "Rozhovor",
-    "Talk conversation \"%s\"" : "Konverzácia v Rozhovore \"%s\"",
+    "Talk conversation \"%s\"" : "Konverzácia v Talku \"%s\"",
     "Related Resources" : "Súvisiace zdroje",
     "Displays resources related to current item in right panel" : "Zobrazuje zdroje súvisiace s aktuálnou položkou v pravom paneli",
     "Displays resources related to current item in right panel." : "Zobrazuje zdroje súvisiace s aktuálnou položkou v pravom paneli"
