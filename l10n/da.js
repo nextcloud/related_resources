@@ -3,8 +3,8 @@ OC.L10N.register(
     {
     "Calendar" : "Kalender",
     "Calendar \"%s\"" : "Kalender \"%s\"",
-    "Deck" : "Opslag",
-    "Deck board \"%s\"" : "Opslagstavle \"%s\"",
+    "Deck" : "Deck",
+    "Deck board \"%s\"" : "Deck-tavlen \"%s\"",
     "Files" : "Filer",
     "File \"%s\"" : "Fil \"%s\"",
     "Group Folder" : "Gruppemappe",
