@@ -2,7 +2,7 @@ OC.L10N.register(
     "related_resources",
     {
     "Calendar" : "Kalendár",
-    "Calendar \"%s\"" : "Kalendár \"%s\"",
+    "Calendar \"%s\"" : "Kalendár „%s“",
     "Deck" : "Nástenka",
     "Deck board \"%s\"" : "Tabule v Deck \"%s\"",
     "Files" : "Súbory",
