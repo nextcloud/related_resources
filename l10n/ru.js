@@ -10,7 +10,7 @@ OC.L10N.register(
     "Group Folder" : "Групповая папка",
     "Group Folder \"%s\"" : "Групповая папка «%s»",
     "Talk conversation" : "Обсуждение в «Конференциях»",
-    "Conversation with %s" : "Обсуждение с %s",
+    "Conversation with %s" : "Обсуждение: %s",
     "Talk" : "Конференции",
     "Talk conversation \"%s\"" : "Обсуждение «%s» в «Конференциях»",
     "Related Resources" : "Связанные ресурсы",
