@@ -8,7 +8,7 @@ OC.L10N.register(
     "Files" : "Súbory",
     "File \"%s\"" : "Súbor \"%s\"",
     "Group Folder" : "Skupinový priečinok",
-    "Group Folder \"%s\"" : "Skupinový adresár \"%s\"",
+    "Group Folder \"%s\"" : "Skupinový priečinok \"%s\"",
     "Talk conversation" : "Konverzácia v Talku",
     "Conversation with %s" : "Konverzácia s %s",
     "Talk" : "Talk",
